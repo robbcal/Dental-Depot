@@ -77,9 +77,27 @@ var Body = React.createClass({
 });
 
 var Content = React.createClass({
+  mixins: [ReactFireMixin],
+
+  getInitialState: function() {
+      return { 
+       cur_password: "null"
+      };
+  },
+
+  componentDidMount: function(){
+    const self = this;
+    var cur_uid = firebase.auth().currentUser.uid;
+    firebase.database().ref('users/'+cur_uid).once('value').then(function(snapshot) {
+      self.setState({
+        cur_password: snapshot.val().password
+      });
+    });
+  },
+
   addUser: function(){
     var cur_email = firebase.auth().currentUser.email;
-    var cur_password = "123456"
+    var cur_password = this.state.cur_password;
 
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
@@ -121,7 +139,6 @@ var Content = React.createClass({
       var errorMessage = error.message;
       alert(errorCode+" : "+errorMessage);
     });
-    
   },
 
   viewSpecificUser: function(){
