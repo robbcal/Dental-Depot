@@ -97,7 +97,7 @@ var Content = React.createClass({
 
   addUser: function(){
     var cur_email = firebase.auth().currentUser.email;
-    var cur_password = this.state.cur_password
+    var cur_password = this.state.cur_password;
    
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
