@@ -77,8 +77,6 @@ var Body = React.createClass({
 });
 
 var Content = React.createClass({
-  mixins: [ReactFireMixin],
-
   getInitialState: function() {
       return { 
        cur_password: "null"
@@ -93,12 +91,47 @@ var Content = React.createClass({
         cur_password: snapshot.val().password
       });
     });
+    
+    var ref = firebase.database().ref('users');
+    ref.on('child_added', function(data) {
+      var id=data.key
+      var firstName = data.val().firstname;
+      var lastName = data.val().lastname;
+      var email = data.val().user_email;
+      var address = data.val().address;
+      var contactNumber = data.val().contact_no;
+      var age = data.val().age;
+      var birthdate = data.val().birthday;
+      var userType = data.val().user_type;
+
+      $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
+    });
+
+    ref.on('child_changed', function(data) {
+      var id=data.key
+      var firstName = data.val().firstname;
+      var lastName = data.val().lastname;
+      var email = data.val().user_email;
+      var address = data.val().address;
+      var contactNumber = data.val().contact_no;
+      var age = data.val().age;
+      var birthdate = data.val().birthday;
+      var userType = data.val().user_type;
+
+      $("tr#"+id).replaceWith("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
+    });
+
+    ref.on('child_removed', function(data) {
+      var id=data.key
+      $("tr#"+id).remove();
+    });
+
   },
 
   addUser: function(){
     var cur_email = firebase.auth().currentUser.email;
     var cur_password = this.state.cur_password;
-
+   
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
     var email = document.getElementById("email").value;
@@ -146,22 +179,6 @@ var Content = React.createClass({
   },
 
   render: function() {
-    var viewUser = function() {
-      var ref = firebase.database().ref('users');
-      ref.on('child_added', function(data) {
-        var uid=data.key
-        var firstName = data.val().firstname;
-        var lastName = data.val().lastname;
-        var email = data.val().user_email;
-        var address = data.val().address;
-        var contactNumber = data.val().contact_no;
-        var age = data.val().age;
-        var birthdate = data.val().birthday;
-        var userType = data.val().user_type;
-
-        $("#userList").append("<tr onclick='viewSpecificUser()'><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
-      });
-    };
     return (
       <div>
         <br/><br/>
@@ -177,7 +194,7 @@ var Content = React.createClass({
           </div>
           <br/><br/>
           <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">    
-            <table className="table table-hover table-striped table-bordered /*adminTable*/">
+            <table className="table table-hover table-striped table-bordered /*adminTable*/" id="user_table">
               <thead>
                 <tr>
                   <th><center>USERNAME</center></th>
@@ -186,17 +203,7 @@ var Content = React.createClass({
                 </tr>
               </thead>
               <tbody id="userList">
-                <tr onClick={this.viewSpecificUser}>
-                  <td>sample</td>
-                  <td>sample</td>
-                  <td>sample</td>
-                </tr>
-                <tr onClick={this.viewSpecificUser}>
-                  <td>sample</td>
-                  <td>sample</td>
-                  <td>sample</td>
-                </tr>
-                {viewUser()}
+                
               </tbody>
             </table>
           </div>      
