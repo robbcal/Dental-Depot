@@ -3,13 +3,13 @@ var Header = React.createClass({
     firebase.auth().signOut().then(function() {
       window.location.replace("http://127.0.0.1:8080/");
     }, function(error) {
-      console.log(error); 
+      console.log(error);
     });
   },
 
   render: function() {
     return (
-      <div> 
+      <div>
         <div className="main-header">
           <div className="logo">
             <span className="logo-mini"><b>DD</b></span>
@@ -37,7 +37,7 @@ var Header = React.createClass({
             </div>
           </div>
         </div>
-      </div>            
+      </div>
     );
   }
 });
@@ -56,15 +56,15 @@ var Body = React.createClass({
 
 var Content = React.createClass({
   getInitialState: function() {
-      return { 
+      return {
        firstname: "null",
-        lastname: "null", 
-        fullName: "null", 
-         address: "null", 
-             age: "null", 
-       birthdate: "null", 
-           email: "null", 
-   contactNumber: "null", 
+        lastname: "null",
+        fullName: "null",
+         address: "null",
+             age: "null",
+       birthdate: "null",
+           email: "null",
+   contactNumber: "null",
         password: "null"
       };
   },
@@ -76,14 +76,14 @@ var Content = React.createClass({
     ref.on('value', function(snapshot) {
       self.setState({
        firstname: snapshot.val().firstname,
-        lastname: snapshot.val().lastname, 
-        fullName: snapshot.val().firstname+" "+snapshot.val().lastname, 
-         address: snapshot.val().address, 
-             age: snapshot.val().age, 
-       birthdate: snapshot.val().birthday, 
-           email: snapshot.val().user_email, 
+        lastname: snapshot.val().lastname,
+        fullName: snapshot.val().firstname+" "+snapshot.val().lastname,
+         address: snapshot.val().address,
+             age: snapshot.val().age,
+       birthdate: snapshot.val().birthday,
+           email: snapshot.val().user_email,
    contactNumber: snapshot.val().contact_no,
-        password: snapshot.val().password 
+        password: snapshot.val().password
       });
     });
   },
@@ -127,7 +127,7 @@ var Content = React.createClass({
     var age = document.getElementById("age").value;
     var birthdate = document.getElementById("birthdate").value;
     var password = document.getElementById("password").value;
-    
+
     firebase.auth().currentUser.updateEmail(email).then(function() {
       firebase.auth().currentUser.updatePassword(password).then(function() {
         firebase.database().ref('users/'+uid).update({
@@ -157,15 +157,65 @@ var Content = React.createClass({
         <div style={{position: 'relative', top: '30px', height: '500px', width: '1125px'}}>
           <div>
             <a href="Items.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
-            <a className="btn btn-primary pull-right" id="editInfoButton" href="" data-toggle="modal" data-target="#editInfoModal" onClick={this.showModal}>EDIT INFO</a>
+            <a className="btn btn-primary" id="editInfoButton" href="" data-toggle="modal" data-target="#editInfoModal"
+              style={{marginLeft: '900px'}} onClick={this.showModal}>EDIT INFO</a>
           </div>
-          <div style={{position: 'relative', top: '50px', height: '400px', backgroundColor:'white'}}>
-            <label>{this.state.fullName}</label><br/>
-            <label>{this.state.address}</label><br/>
-            <label>{this.state.age}</label><br/>
-            <label>{this.state.birthdate}</label><br/>
-            <label>{this.state.email}</label><br/>
-            <label>{this.state.contactNumber}</label><br/>
+          <div className="col-sm-11" style={{position: 'relative', top: '50px', height: '450px', backgroundColor:'white', borderRadius: '20px'}}>
+            <br/>
+            <br/>
+
+            <div className="col-sm-1"></div>
+
+            <div className="col-sm-11">
+              <h1><strong> {this.state.fullName} </strong></h1>
+              <h4> {this.state.address} </h4><br/><br/><br/>
+              <div className="row">
+                <div className="col-sm-1" style={{ marginTop: '10px'}}>
+                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
+                    <h4><i className="glyphicon glyphicon-hourglass"></i></h4>
+                  </span>
+                </div>
+                <div className="col-sm-6">
+                  <h5 style={{color: 'gray'}}><strong> AGE </strong></h5>
+                  <h4><strong> {this.state.age} YRS OLD </strong></h4><br/>
+                </div>
+                <div className="col-sm-1" style={{marginTop: '10px'}}>
+                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
+                    <h4><i className="glyphicon glyphicon-calendar"></i></h4>
+                  </span>
+                </div>
+                <div className="col-sm-3">
+                  <h5 style={{color: 'gray'}}><strong> BIRTHDAY </strong></h5>
+                  <h4><strong> {this.state.birthdate} </strong></h4><br/>
+                </div>
+              </div>
+              <br/>
+              <div className="row">
+                <div className="col-sm-1" style={{marginTop: '10px'}}>
+                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
+                    <h4><i className="glyphicon glyphicon-send"></i></h4>
+                  </span>
+                </div>
+                <div className="col-sm-6">
+                  <h5 style={{color: 'gray'}}><strong> EMAIL ADDRESS </strong></h5>
+                  <h4><strong> {this.state.email} </strong></h4><br/>
+                </div>
+                <div className="col-sm-1" style={{marginTop: '10px'}}>
+                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
+                    <h4><i className="glyphicon glyphicon-phone"></i></h4>
+                  </span>
+                </div>
+                <div className="col-sm-4">
+                  <h5 style={{color: 'gray'}}><strong> CONTACT NUMBER </strong></h5>
+                  <h4><strong> {this.state.contactNumber} </strong></h4><br/>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-sm-12"></div>
+            <div className="col-sm-12"></div>
+
+            
           </div>
         </div>
 
@@ -178,40 +228,40 @@ var Content = React.createClass({
                   <h4 className="modal-title">Edit Info</h4>
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  
-                    <span>
-                      <label>First Name</label>
-                      <input type="text" id="firstName" className="form-control" onChange={this.onFirstName} value={this.state.firstname}/>
-                    </span>
-                    <span>
-                      <label>Last Name</label>
-                      <input type="text" id="lastName" className="form-control" onChange={this.onLastName} value={this.state.lastname}/>
-                    </span>
-                    <span>
-                      <label>Email</label>
-                      <input type="email" id="email" className="form-control" onChange={this.onEmail} value={this.state.email}/>
-                    </span>
-                    <span>
-                      <label>Address</label>
-                      <input type="text" id="address" className="form-control" onChange={this.onAddress} value={this.state.address}/>
-                    </span>
-                    <span>
-                      <label>Contact Number</label>
-                      <input type="text" id="contactNumber" className="form-control" onChange={this.onContactNumber} value={this.state.contactNumber}/>
-                    </span>
-                    <span>
-                      <label>Age</label>
-                      <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age}/>
-                    </span>
-                    <span>
-                      <label>Birthdate</label>
-                      <input type="date" id="birthdate" className="form-control" onChange={this.onBirthdate} value={this.state.birthdate}/>
-                    </span>
-                    <span>
-                      <label>Password</label>
-                      <input type="password" id="password" className="form-control" onChange={this.onPassword} value={this.state.password}/>
-                    </span> 
-                  
+
+                  <span>
+                    <label>First Name</label>
+                    <input type="text" id="firstName" className="form-control" onChange={this.onFirstName} value={this.state.firstname}/>
+                  </span>
+                  <span>
+                    <label>Last Name</label>
+                    <input type="text" id="lastName" className="form-control" onChange={this.onLastName} value={this.state.lastname}/>
+                  </span>
+                  <span>
+                    <label>Email</label>
+                    <input type="email" id="email" className="form-control" onChange={this.onEmail} value={this.state.email}/>
+                  </span>
+                  <span>
+                    <label>Address</label>
+                    <input type="text" id="address" className="form-control" onChange={this.onAddress} value={this.state.address}/>
+                  </span>
+                  <span>
+                    <label>Contact Number</label>
+                    <input type="text" id="contactNumber" className="form-control" onChange={this.onContactNumber} value={this.state.contactNumber}/>
+                  </span>
+                  <span>
+                    <label>Age</label>
+                    <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age}/>
+                  </span>
+                  <span>
+                    <label>Birthdate</label>
+                    <input type="date" id="birthdate" className="form-control" onChange={this.onBirthdate} value={this.state.birthdate}/>
+                  </span>
+                  <span>
+                    <label>Password</label>
+                    <input type="password" id="password" className="form-control" onChange={this.onPassword} value={this.state.password}/>
+                  </span>
+
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
@@ -223,6 +273,8 @@ var Content = React.createClass({
         </div>
 
       </div>
+
+
     );
   }
 });
@@ -235,7 +287,7 @@ var MainContent = React.createClass({
   componentWillMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
-        if (user) { 
+        if (user) {
           var uid = firebase.auth().currentUser.uid;
           firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
             self.setState({ signedIn: true, type: snapshot.val().user_type });
@@ -245,7 +297,7 @@ var MainContent = React.createClass({
           window.location.replace("http://127.0.0.1:8080/");
         }
       }, function(error) {
-        console.log(error); 
+        console.log(error);
     });
   },
 
@@ -266,7 +318,7 @@ var MainContent = React.createClass({
       res = (
         <div>
         </div>
-      );    
+      );
     }
     return(
       res
