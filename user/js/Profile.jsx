@@ -7,36 +7,40 @@ var Header = React.createClass({
     });
   },
 
+  componentDidUpdate: function(){
+    $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+  },
+
   render: function() {
     return (
       <div>
-        <div className="main-header">
-          <div className="logo">
-            <span className="logo-mini"><b>DD</b></span>
-            <span className="logo-lg"><b>Dental Depot</b></span>
+          <div className="main-header">
+              <div className="logo">
+                  <span className="logo-mini"><b>DD</b></span>
+                  <span className="logo-lg" id="mainHeader">Dental Depot</span>
+              </div>
+              <div className="navbar navbar-static-top" role="navigation">
+                  <div className="navbar-custom-menu">
+                      <ul className="nav navbar-nav">
+                          <li className="dropdown user user-menu">
+                              <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
+                                  <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
+                              </a>
+                              <ul className="dropdown-menu" style={{width:'100px'}}>
+                                  <li className="user-body">
+                                      <div className="profileButton">
+                                          <a className="btn btn-default btn-flat" href="Profile.html" style={{width:'100px'}}>PROFILE</a>
+                                      </div>
+                                      <div className="logoutButton">
+                                          <button className="btn btn-default btn-flat" onClick={this.logout} style={{width:'100px'}}>LOGOUT</button>
+                                      </div>
+                                  </li>
+                              </ul>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
           </div>
-          <div className="navbar navbar-static-top" role="navigation">
-            <div className="navbar-custom-menu">
-              <ul className="nav navbar-nav">
-                <li className="dropdown user user-menu">
-                  <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
-                    <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
-                  </a>
-                  <ul className="dropdown-menu" style={{width:'100px'}}>
-                    <li className="user-body">
-                      <div className="profileButton">
-                        <a className="btn btn-default btn-flat" href="Profile.html" style={{width:'100px'}}>PROFILE</a>
-                      </div>
-                      <div className="logoutButton">
-                        <button className="btn btn-default btn-flat" onClick={this.logout} style={{width:'100px'}}>LOGOUT</button>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }
@@ -45,10 +49,25 @@ var Header = React.createClass({
 var Body = React.createClass({
   render: function() {
     return (
-      <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1', position:'relative', left: '-120px'}}>
-        <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-          <Content/>
-        </div>
+      <div>
+          <div className="main-sidebar">
+              <div className="sidebar">
+                  <ul className="sidebar-menu">
+                      <br/>
+                      <li className="header">NAVIGATION</li>
+                      <li><a href="Items.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
+                      <li className="active"><a href="Profile.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Profile</span></a></li>
+                  </ul>
+              </div>
+          </div>
+
+          <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+              <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                  <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
+                      <Content/>
+                  </div>
+              </div>
+          </div>
       </div>
     );
   }
@@ -152,120 +171,115 @@ var Content = React.createClass({
   },
 
   render: function() {
-    return (
-      <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div style={{position: 'absolute', display: 'block'}}>
-        <div  style={{position: 'relative', left: '30%'}}>
-          <br/>
-          <div>
-            <a href="Items.html" className="pull-left" ><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
-            <a className="btn btn-primary pull-right" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal"
-               onClick={this.showModal}>EDIT INFO
-            </a>
-          </div>
-          <div className="col-xs-12"></div><div className="col-xs-12"></div><div className="col-xs-12"></div>
-
-          <div className="col-xs-11 box">
-            <div className="col-sm-1"></div>
-
-            <div className="col-xs-11">
-              <h2><strong> {this.state.fullName} </strong></h2>
-              <h4> {this.state.address} </h4><br/><br/>
-              <div className="row">
-                <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                  <img src="../bootstrap/icons/age.png" height="45px"/>
-                </div>
-                <div className="col-sm-6">
-                  <h5 style={{color: 'gray'}}><strong> AGE </strong></h5>
-                  <h4><strong> {this.state.age} YRS OLD </strong></h4><br/>
-                </div>
-                <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                  <img src="../bootstrap/icons/bday.png" height="45px"/>
-                </div>
-                <div className="col-sm-3">
-                  <h5 style={{color: 'gray'}}><strong> BIRTHDAY </strong></h5>
-                  <h4><strong> {this.state.birthdate} </strong></h4><br/>
-                </div>
+      return (
+          <div id="userProfileContent">
+              <div className="row" id="userProfileButtons">
+                  <div className="col-sm-6">
+                      <a href="Items.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
+                  </div>
+                  <div className="col-sm-6">
+                      <a className="btn btn-primary pull-right" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal"
+                          onClick={this.showModal}>EDIT INFO
+                      </a>
+                  </div>
               </div>
-              <br/>
-              <div className="row">
-                <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                  <img src="../bootstrap/icons/message.png" height="45px"/>
-                </div>
-                <div className="col-sm-6">
-                  <h5 style={{color: 'gray'}}><strong> EMAIL ADDRESS </strong></h5>
-                  <h4><strong> {this.state.email} </strong></h4><br/>
-                </div>
-                <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                  <img src="../bootstrap/icons/phone-book.png" height="45px"/>
-                </div>
-                <div className="col-sm-4">
-                  <h5 style={{color: 'gray'}}><strong> CONTACT NUMBER </strong></h5>
-                  <h4><strong> {this.state.contactNumber} </strong></h4><br/>
-                </div>
+
+              <div className="row col-xs-8 box" id="userProfileMainContent">
+                  <div>
+                      <h2><strong> {this.state.fullName} </strong></h2>
+                      <h4> {this.state.address} </h4><br/><br/>
+                      <div className="row">
+                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                              <img src="../bootstrap/icons/age.png" height="45px"/>
+                          </div>
+                          <div className="col-sm-6">
+                              <h5 style={{color: 'gray'}}><strong> AGE </strong></h5>
+                              <h4><strong> {this.state.age} YRS OLD </strong></h4><br/>
+                          </div>
+                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                              <img src="../bootstrap/icons/bday.png" height="45px"/>
+                          </div>
+                          <div className="col-sm-3">
+                              <h5 style={{color: 'gray'}}><strong> BIRTHDAY </strong></h5>
+                              <h4><strong> {this.state.birthdate} </strong></h4><br/>
+                          </div>
+                      </div>
+                      <br/>
+                      <div className="row">
+                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                              <img src="../bootstrap/icons/message.png" height="45px"/>
+                          </div>
+                          <div className="col-sm-6">
+                              <h5 style={{color: 'gray'}}><strong> EMAIL ADDRESS </strong></h5>
+                              <h4><strong> {this.state.email} </strong></h4><br/>
+                          </div>
+                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                              <img src="../bootstrap/icons/phone-book.png" height="45px"/>
+                          </div>
+                          <div className="col-sm-4">
+                              <h5 style={{color: 'gray'}}><strong> CONTACT NUMBER </strong></h5>
+                              <h4><strong> {this.state.contactNumber} </strong></h4><br/>
+                          </div>
+                      </div>
+                  </div>
               </div>
-            </div>
-           </div> 
-          </div>
-        </div>
 
-        <div className="example-modal">
-          <div className="modal fade bs-example-modal-lg" id="editInfoModal">
-            <div className="modal-dialog modal-md">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 className="modal-title">Edit Info</h4>
-                </div>
-                <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              {/*MODAL CONTENT*/}
+              <div className="example-modal">
+                  <div className="modal fade bs-example-modal-lg" id="editInfoModal">
+                      <div className="modal-dialog modal-md">
+                          <div className="modal-content">
+                              <div className="modal-header">
+                                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                  <h4 className="modal-title">Edit Info</h4>
+                              </div>
+                              <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                  <span>
-                    <label>First Name</label>
-                    <input type="text" id="firstName" className="form-control" onChange={this.onFirstName} value={this.state.firstname}/>
-                  </span>
-                  <span>
-                    <label>Last Name</label>
-                    <input type="text" id="lastName" className="form-control" onChange={this.onLastName} value={this.state.lastname}/>
-                  </span>
-                  <span>
-                    <label>Email</label>
-                    <input type="email" id="email" className="form-control" onChange={this.onEmail} value={this.state.email}/>
-                  </span>
-                  <span>
-                    <label>Address</label>
-                    <input type="text" id="address" className="form-control" onChange={this.onAddress} value={this.state.address}/>
-                  </span>
-                  <span>
-                    <label>Contact Number</label>
-                    <input type="text" id="contactNumber" className="form-control" onChange={this.onContactNumber} value={this.state.contactNumber}/>
-                  </span>
-                  <span>
-                    <label>Age</label>
-                    <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age}/>
-                  </span>
-                  <span>
-                    <label>Birthdate</label>
-                    <input type="date" id="birthdate" className="form-control" onChange={this.onBirthdate} value={this.state.birthdate}/>
-                  </span>
-                  <span>
-                    <label>Password</label>
-                    <input type="password" id="password" className="form-control" onChange={this.onPassword} value={this.state.password}/>
-                  </span>
+                                  <span>
+                                      <label>First Name</label>
+                                      <input type="text" id="firstName" className="form-control" onChange={this.onFirstName} value={this.state.firstname}/>
+                                  </span>
+                                  <span>
+                                      <label>Last Name</label>
+                                      <input type="text" id="lastName" className="form-control" onChange={this.onLastName} value={this.state.lastname}/>
+                                  </span>
+                                  <span>
+                                      <label>Email</label>
+                                      <input type="email" id="email" className="form-control" onChange={this.onEmail} value={this.state.email}/>
+                                  </span>
+                                  <span>
+                                      <label>Address</label>
+                                      <input type="text" id="address" className="form-control" onChange={this.onAddress} value={this.state.address}/>
+                                  </span>
+                                  <span>
+                                      <label>Contact Number</label>
+                                      <input type="text" id="contactNumber" className="form-control" onChange={this.onContactNumber} value={this.state.contactNumber}/>
+                                  </span>
+                                  <span>
+                                      <label>Age</label>
+                                      <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age}/>
+                                  </span>
+                                  <span>
+                                      <label>Birthdate</label>
+                                      <input type="date" id="birthdate" className="form-control" onChange={this.onBirthdate} value={this.state.birthdate}/>
+                                  </span>
+                                  <span>
+                                      <label>Password</label>
+                                      <input type="password" id="password" className="form-control" onChange={this.onPassword} value={this.state.password}/>
+                                  </span>
 
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                  <button type="button" className="btn btn-primary" onClick={this.editUser}>SAVE</button>
-                </div>
+                              </div>
+                              <div className="modal-footer">
+                                  <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
+                                  <button type="button" className="btn btn-primary" onClick={this.editUser}>SAVE</button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
               </div>
-            </div>
           </div>
-        </div>
-      </div>
-
-
-    );
-  }
+      );
+    }
 });
 
 var MainContent = React.createClass({
@@ -298,8 +312,8 @@ var MainContent = React.createClass({
       }else if(this.state.type == "user"){
         res = (
           <div>
-            <Header/>
-            <Body/>
+              <Header/>
+              <Body/>
           </div>
         );
       }
