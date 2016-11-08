@@ -3,7 +3,7 @@ var Header = React.createClass({
     firebase.auth().signOut().then(function() {
       window.location.replace("http://127.0.0.1:8080/");
     }, function(error) {
-      console.log(error); 
+      console.log(error);
     });
   },
 
@@ -13,7 +13,7 @@ var Header = React.createClass({
 
   render: function() {
     return (
-      <div> 
+      <div>
         <div className="main-header">
           <div className="logo">
             <span className="logo-mini"><b>DD</b></span>
@@ -29,13 +29,13 @@ var Header = React.createClass({
                   <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
                     <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
                   </a>
-                  <ul className="dropdown-menu" style={{width:'100px'}}>
-                    <li className="user-body">
-                      <div className="profileButton">
-                        <button className="btn btn-default btn-flat" data-toggle="modal" data-target="#profileModal" style={{width:'100px'}}>PROFILE</button>
+                  <ul className="dropdown-menu" style={{width: 100, paddingTop: 0, borderBottomWidth: 0, borderTopWidth: 0, borderRightWidth: 0, borderLeftWidth: 0}}>
+                    <li className="user-body" style={{paddingTop: 0, paddingBottom: 0, paddingLeft: 0, paddingRight: 0}}>
+                      <div className="profileButton" style={{paddingRight: 0, width: 145, right: 0}}>
+                        <button className="btn btn-default btn-flat" data-toggle="modal" data-target="#profileModal" style={{width: 160, paddingLeft: 0, paddingRight: 0}}>PROFILE</button>
                       </div>
-                      <div className="logoutButton">
-                        <button className="btn btn-default btn-flat" onClick={this.logout} style={{width:'100px'}}>LOGOUT</button>
+                      <div className="logoutButton" style={{right: 0}}>
+                        <button className="btn btn-default btn-flat" onClick={this.logout} style={{width: 160, paddingLeft: 0, paddingRight: 0}}>LOGOUT</button>
                       </div>
                     </li>
                   </ul>
@@ -44,7 +44,7 @@ var Header = React.createClass({
             </div>
           </div>
         </div>
-      </div>            
+      </div>
     );
   }
 });
@@ -64,10 +64,10 @@ var Body = React.createClass({
           </div>
         </div>
 
-        <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>  
+        <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
           <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
             <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-              <Content/>  
+              <Content/>
             </div>
           </div>
         </div>
@@ -78,7 +78,7 @@ var Body = React.createClass({
 
 var Content = React.createClass({
   getInitialState: function() {
-      return { 
+      return {
        cur_password: "null"
       };
   },
@@ -91,7 +91,7 @@ var Content = React.createClass({
         cur_password: snapshot.val().password
       });
     });
-    
+
     var ref = firebase.database().ref('users');
     ref.on('child_added', function(data) {
       var id=data.key
@@ -131,7 +131,7 @@ var Content = React.createClass({
   addUser: function(){
     var cur_email = firebase.auth().currentUser.email;
     var cur_password = this.state.cur_password;
-   
+
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
     var email = document.getElementById("email").value;
@@ -183,17 +183,17 @@ var Content = React.createClass({
       <div>
         <br/><br/>
         <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">  
+          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span className="pull-left">
               <input type="text" id="userSearch" /*className="searchBox"*//>
-                <button id="userSearchButton"><img src="../bootstrap/icons/search.png" height="15px"/></button>
-              </span>
+              <button id="userSearchButton"><img src="../bootstrap/icons/search.png" height="15px"/></button>
+            </span>
             <span className="pull-right">
               <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal">ADD USER</a>
             </span>
           </div>
           <br/><br/>
-          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">    
+          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <table className="table table-hover table-striped table-bordered /*adminTable*/" id="user_table">
               <thead>
                 <tr>
@@ -203,10 +203,10 @@ var Content = React.createClass({
                 </tr>
               </thead>
               <tbody id="userList">
-                
+
               </tbody>
             </table>
-          </div>      
+          </div>
         </div>
 
         <div className="example-modal">
@@ -218,7 +218,7 @@ var Content = React.createClass({
                   <h4 className="modal-title">ADD USER</h4>
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  
+
                   <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                     <span>
                       <label>First Name</label>
@@ -257,8 +257,8 @@ var Content = React.createClass({
                         <option value="user">User</option>
                       </select>
                     </span>
-                  </div>  
-                  
+                  </div>
+
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
@@ -268,7 +268,7 @@ var Content = React.createClass({
             </div>
           </div>
         </div>
-        
+
       </div>
     );
   }
@@ -282,7 +282,7 @@ var MainContent = React.createClass({
   componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
-        if (user) { 
+        if (user) {
           var uid = firebase.auth().currentUser.uid;
           firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
             self.setState({ signedIn: true, type: snapshot.val().user_type });
@@ -293,7 +293,7 @@ var MainContent = React.createClass({
           window.location.replace("http://127.0.0.1:8080/");
         }
       }, function(error) {
-        console.log(error); 
+        console.log(error);
     });
   },
 
@@ -302,10 +302,12 @@ var MainContent = React.createClass({
     if(this.state.signedIn == true){
       if(this.state.type == "admin"){
         res = (
-          <div>
-            <Header/>
-            <Body/>
-          </div>
+
+            <div>
+              <Header/>
+              <Body/>
+            </div>
+
         );
       }else if(this.state.type == "user"){
         window.location.replace("../user/Items.html");

@@ -3,7 +3,7 @@ var Header = React.createClass({
     firebase.auth().signOut().then(function() {
       window.location.replace("http://127.0.0.1:8080/");
     }, function(error) {
-      console.log(error); 
+      console.log(error);
     });
   },
 
@@ -13,7 +13,7 @@ var Header = React.createClass({
 
   render: function() {
     return (
-      <div> 
+      <div>
         <div className="main-header">
           <div className="logo">
             <span className="logo-mini"><b>DD</b></span>
@@ -29,13 +29,13 @@ var Header = React.createClass({
                   <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
                     <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
                   </a>
-                  <ul className="dropdown-menu" style={{width:'100px'}}>
-                    <li className="user-body">
-                      <div className="profileButton">
-                        <button className="btn btn-default btn-flat" data-toggle="modal" data-target="#profileModal" style={{width:'100px'}}>PROFILE</button>
+                  <ul className="dropdown-menu" style={{width: 100, paddingTop: 0, borderWidth: 0, right: 10, top: 49}}>
+                    <li className="user-body" style={{paddingTop: 0, paddingBottom: 0, paddingLeft: 0, paddingRight: 0}}>
+                      <div className="profileButton" style={{paddingRight: 0, width: 145, right: 0}}>
+                        <button className="btn btn-default btn-flat" data-toggle="modal" data-target="#profileModal" style={{width: 160, paddingLeft: 0, paddingRight: 0, backgroundColor: '#ffffff'}}>PROFILE</button>
                       </div>
-                      <div className="logoutButton">
-                        <button className="btn btn-default btn-flat" onClick={this.logout} style={{width:'100px'}}>LOGOUT</button>
+                      <div className="logoutButton" style={{right: 0}}>
+                        <button className="btn btn-default btn-flat" onClick={this.logout} style={{width: 160, paddingLeft: 0, paddingRight: 0, backgroundColor: '#ffffff'}}>LOGOUT</button>
                       </div>
                     </li>
                   </ul>
@@ -44,7 +44,7 @@ var Header = React.createClass({
             </div>
           </div>
         </div>
-      </div>            
+      </div>
     );
   }
 });
@@ -58,16 +58,18 @@ var Body = React.createClass({
             <ul className="sidebar-menu">
               <li className="header">NAVIGATION</li>
               <li className="active"><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" height="15px"/></i><span> Inventory</span></a></li>
-              <li><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" height="15px"/></i><span> Users</span></a></li>
+              <li><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" height="15px"/></i><span> Users</span>
+
+              </a> </li>
               <li><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" height="15px"/></i><span> Logs</span></a></li>
             </ul>
           </div>
         </div>
 
-        <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>  
+        <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
           <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
             <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-              <Content/>  
+              <Content/>
             </div>
           </div>
         </div>
@@ -141,7 +143,7 @@ var Content = React.createClass({
       snapshot.forEach(function(childSnapshot) {
         console.log(childSnapshot.val().key);
         //var childData = childSnapshot.val();
-        
+
       });
     });
   },
@@ -157,12 +159,12 @@ var Content = React.createClass({
               <button id="inventoryButton"><img src="../bootstrap/icons/search.png" height="15px"/></button>
             </span>
             <span className="pull-right">
-              <a className="btn btn-primary" id="addItem" href="" data-toggle="modal" data-target="#addItemModal">ADD ITEM</a>&nbsp; 
+              <a className="btn btn-primary" id="addItem" href="" data-toggle="modal" data-target="#addItemModal">ADD ITEM</a>&nbsp;
               <button className="btn btn-primary" id="addTransaction">ADD TRANSACTION</button>
             </span>
           </div>
           <br/><br/>
-          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">  
+          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <table className="table table-hover table-striped table-bordered /*adminTable*/">
               <thead>
                 <tr>
@@ -177,7 +179,7 @@ var Content = React.createClass({
                 </tr>
               </tbody>
             </table>
-          </div>      
+          </div>
         </div>
 
         <div className="example-modal">
@@ -202,7 +204,7 @@ var Content = React.createClass({
                   <h4 className="modal-title">New Item</h4>
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  
+
                   <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                     <span>
                       <label>ID</label>
@@ -234,8 +236,8 @@ var Content = React.createClass({
                       <label>Date</label>
                       <input type="date" id="newDate" className="form-control"/>
                     </span>
-                  </div>  
-                  
+                  </div>
+
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
@@ -289,9 +291,9 @@ var Content = React.createClass({
                       <span className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <label>Date</label>
                         <input type="date" id="existingDate" className="form-control"/>
-                      </span>  
-                    </div>  
-                  
+                      </span>
+                    </div>
+
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
@@ -315,7 +317,7 @@ var MainContent = React.createClass({
   componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
-      if (user) { 
+      if (user) {
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
@@ -326,7 +328,7 @@ var MainContent = React.createClass({
         window.location.replace("http://127.0.0.1:8080/");
       }
     }, function(error) {
-      console.log(error); 
+      console.log(error);
     });
   },
 
@@ -342,7 +344,7 @@ var MainContent = React.createClass({
         );
       }else if(this.state.type == "user"){
         window.location.replace("../user/Items.html");
-      } 
+      }
     }else{
       res = (
         <div>

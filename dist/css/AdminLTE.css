@@ -21,10 +21,11 @@ body {
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: 'Source Sans Pro', 'zzz', Helvetica, Arial, sans-serif;
+  font-family: 'Montserrat', 'zzz', Helvetica, Arial, sans-serif;
   font-weight: 400;
   overflow-x: hidden;
   overflow-y: auto;
+
 }
 /* Layout */
 .wrapper {
@@ -4726,4 +4727,17 @@ table.text-center th {
   .table-responsive > .table tr td {
     white-space: normal!important;
   }
+}
+
+::-webkit-input-placeholder {
+   font-style: italic;
+}
+:-moz-placeholder {
+   font-style: italic;
+}
+::-moz-placeholder {
+   font-style: italic;
+}
+:-ms-input-placeholder {
+   font-style: italic;
 }
