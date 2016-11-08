@@ -153,36 +153,34 @@ var Content = React.createClass({
 
   render: function() {
     return (
-      <div>
-        <div style={{position: 'relative', top: '30px', height: '500px', width: '1125px'}}>
+      <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div style={{position: 'absolute', display: 'block'}}>
+        <div  style={{position: 'relative', left: '30%'}}>
+          <br/>
           <div>
-            <a href="Items.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
-            <a className="btn btn-primary" id="editInfoButton" href="" data-toggle="modal" data-target="#editInfoModal"
-              style={{marginLeft: '900px'}} onClick={this.showModal}>EDIT INFO</a>
+            <a href="Items.html" className="pull-left" ><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
+            <a className="btn btn-primary pull-right" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal"
+               onClick={this.showModal}>EDIT INFO
+            </a>
           </div>
-          <div className="col-sm-11" style={{position: 'relative', top: '50px', height: '450px', backgroundColor:'white', borderRadius: '20px'}}>
-            <br/>
-            <br/>
+          <div className="col-xs-12"></div><div className="col-xs-12"></div><div className="col-xs-12"></div>
 
+          <div className="col-xs-11 box">
             <div className="col-sm-1"></div>
 
-            <div className="col-sm-11">
-              <h1><strong> {this.state.fullName} </strong></h1>
-              <h4> {this.state.address} </h4><br/><br/><br/>
+            <div className="col-xs-11">
+              <h2><strong> {this.state.fullName} </strong></h2>
+              <h4> {this.state.address} </h4><br/><br/>
               <div className="row">
-                <div className="col-sm-1" style={{ marginTop: '10px'}}>
-                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
-                    <h4><i className="glyphicon glyphicon-hourglass"></i></h4>
-                  </span>
+                <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                  <img src="../bootstrap/icons/age.png" height="45px"/>
                 </div>
                 <div className="col-sm-6">
                   <h5 style={{color: 'gray'}}><strong> AGE </strong></h5>
                   <h4><strong> {this.state.age} YRS OLD </strong></h4><br/>
                 </div>
-                <div className="col-sm-1" style={{marginTop: '10px'}}>
-                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
-                    <h4><i className="glyphicon glyphicon-calendar"></i></h4>
-                  </span>
+                <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                  <img src="../bootstrap/icons/bday.png" height="45px"/>
                 </div>
                 <div className="col-sm-3">
                   <h5 style={{color: 'gray'}}><strong> BIRTHDAY </strong></h5>
@@ -191,19 +189,15 @@ var Content = React.createClass({
               </div>
               <br/>
               <div className="row">
-                <div className="col-sm-1" style={{marginTop: '10px'}}>
-                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
-                    <h4><i className="glyphicon glyphicon-send"></i></h4>
-                  </span>
+                <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                  <img src="../bootstrap/icons/message.png" height="45px"/>
                 </div>
                 <div className="col-sm-6">
                   <h5 style={{color: 'gray'}}><strong> EMAIL ADDRESS </strong></h5>
                   <h4><strong> {this.state.email} </strong></h4><br/>
                 </div>
-                <div className="col-sm-1" style={{marginTop: '10px'}}>
-                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
-                    <h4><i className="glyphicon glyphicon-phone"></i></h4>
-                  </span>
+                <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                  <img src="../bootstrap/icons/phone-book.png" height="45px"/>
                 </div>
                 <div className="col-sm-4">
                   <h5 style={{color: 'gray'}}><strong> CONTACT NUMBER </strong></h5>
@@ -211,11 +205,7 @@ var Content = React.createClass({
                 </div>
               </div>
             </div>
-
-            <div className="col-sm-12"></div>
-            <div className="col-sm-12"></div>
-
-            
+           </div> 
           </div>
         </div>
 
@@ -271,7 +261,6 @@ var Content = React.createClass({
             </div>
           </div>
         </div>
-
       </div>
 
 
