@@ -4741,3 +4741,15 @@ table.text-center th {
 :-ms-input-placeholder {
    font-style: italic;
 }
+
+.has-error .control-label,
+.has-error .help-block,
+.has-error .form-control-feedback {
+    color: #f39c12;
+}
+
+.has-success .control-label,
+.has-success .help-block,
+.has-success .form-control-feedback {
+    color: #18bc9c;
+}
