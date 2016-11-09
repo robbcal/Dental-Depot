@@ -174,7 +174,6 @@ var Content = React.createClass({
       $('#errorModal').appendTo("body").modal('show');
       $('#editConfirmation').modal('hide');
     });
-    
   },
 
   render: function() {
@@ -230,67 +229,6 @@ var Content = React.createClass({
               </div>
 
               {/*MODAL CONTENT*/}
-
-              <div className="example-modal">
-                  <div className="modal fade bs-example-modal-lg" id="editConfirmation">
-                      <div className="modal-dialog modal-md">
-                          <div className="modal-content">
-                              <div className="modal-header">
-                                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                  <h4 className="modal-title">Confirmation</h4>
-                              </div>
-                              <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                                  <h4><strong> Are you sure you want to edit this profile? </strong></h4>
-
-                              </div>
-                              <div className="modal-footer">
-                                  <button type="button" className="btn btn-default pull-left" data-dismiss="modal">NO</button>
-                                  <button type="button" className="btn btn-primary" onClick={this.editUser}>YES</button>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-              <div className="example-modal">
-                  <div className="modal fade bs-example-modal-lg" id="errorModal">
-                      <div className="modal-dialog modal-sm">
-                          <div className="modal-content">
-                              <div className="modal-header">
-                                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                  <h4 className="modal-title">Error</h4>
-                              </div>
-                              <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                                  <h4><strong id="errorMessage"> Error </strong></h4>
-
-                              </div>
-                              <div className="modal-footer">
-                                  <button type="button" className="btn btn-default pull-right" data-dismiss="modal">OK</button>
-                                  
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-              <div className="example-modal">
-                  <div className="modal fade bs-example-modal-lg" id="informSuccess">
-                      <div className="modal-dialog modal-md">
-                          <div className="modal-content">
-                              <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                  <h4><strong> Profile Updated! </strong></h4>
-                              </div>
-                              <div className="modal-footer">
-                                <center>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal">OK</button>
-                                </center>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
 
               <div className="example-modal">
                   <div className="modal fade bs-example-modal-lg" id="editInfoModal">
