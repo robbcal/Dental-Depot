@@ -59,6 +59,14 @@ var Header = React.createClass({
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> refs/remotes/origin/Cha
+=======
+>>>>>>> Cha
+>>>>>>> origin/master
+>>>>>>> dbd065c6323007732409b8896e251c279f0dccbb
     );
   }
 });
@@ -90,6 +98,14 @@ var Body = React.createClass({
 
             {/* LOGOUT MODAL CONTENT */}
         </div>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> refs/remotes/origin/Cha
+=======
+>>>>>>> Cha
+>>>>>>> origin/master
+>>>>>>> dbd065c6323007732409b8896e251c279f0dccbb
     );
   }
 });
@@ -310,6 +326,14 @@ var Content = React.createClass({
                                   </span>
                               </div>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> refs/remotes/origin/Cha
+=======
+>>>>>>> Cha
+>>>>>>> origin/master
+>>>>>>> dbd065c6323007732409b8896e251c279f0dccbb
                           </div>
                           <div className="modal-footer">
                               <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
