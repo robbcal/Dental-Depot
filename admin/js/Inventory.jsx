@@ -22,6 +22,7 @@ var Header = React.createClass({
                     <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span className="sr-only">Toggle navigation</span>
                     </a>
+                    {/* comment */}
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li className="dropdown user user-menu">
