@@ -7,51 +7,62 @@ var Header = React.createClass({
           });
         },
 
+        componentDidUpdate: function(){
+          $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+        },
+
         render: function() {
-          return (
-            <div>
-                <div className="main-header">
-                    <div className="logo">
-                        <span className="logo-mini"><b>DD</b></span>
-                        <span className="logo-lg"><b>Dental Depot</b></span>
-                    </div>
-                    <div className="navbar navbar-static-top" role="navigation">
-                        <div className="navbar-custom-menu">
-                            <ul className="nav navbar-nav">
-                                <li className="dropdown user user-menu">
-                                    <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
-                                        <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
-                                    </a>
-                                    <ul className="dropdown-menu" style={{width:'100px'}}>
-                                        <li className="user-body">
-                                            <div className="profileButton">
-                                                <a className="btn btn-default btn-flat" href="Profile.html" style={{width:'100px'}}>PROFILE</a>
-                                            </div>
-                                            <div className="logoutButton">
-                                                <button className="btn btn-default btn-flat" onClick={this.logout} style={{width:'100px'}}>LOGOUT</button>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
+            return (
+                <div>
+                    <div className="main-header">
+                        <div className="logo">
+                            <span className="logo-lg" id="mainHeader">Dental Depot</span>
+
+                        </div>
+                        <div className="navbar navbar-static-top" role="navigation">
+                            <div className="navbar-custom-menu">
+                                <ul className="nav navbar-nav">
+                                    <li className="dropdown user user-menu">
+                                        <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
+                                            <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-          );
-        }
+              );
+            }
       });
 
       var Body = React.createClass({
-        render: function() {
-          return (
-            <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                    <Content/>
-                </div>
-            </div>
-          );
-        }
+          render: function() {
+            return (
+              <div>
+                  <div className="main-sidebar">
+                      <div className="sidebar">
+                          <ul className="sidebar-menu">
+                              <br/>
+                              <li className="header">NAVIGATION</li>
+                              <li className="active"><a href="Items.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
+                              <li><a href="Profile.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Profile</span></a></li>
+                          </ul>
+                      </div>
+                  </div>
+
+                  <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                      <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                          <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
+                              <Content/>
+                          </div>
+                      </div>
+                  </div>
+
+                  {/* LOGOUT MODAL CONTENT */}
+              </div>
+            );
+          }
       });
 
       var Content = React.createClass({

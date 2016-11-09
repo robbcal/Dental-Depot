@@ -1,6 +1,3 @@
-#mainHeader{
-    margin-left: -15px;
-}
 #userProfileContent{
     padding: 50px;
     margin-top: -10px;
@@ -9,12 +6,4 @@
     padding: 30px;
     margin-top: 30px;
     margin-left: 0px;
-}
-#sidebarMainTabs{
-    margin-left: 10px;
-}
-#sidebarImage{
-    height: 15px;
-    margin-left: 10px;
-    margin-top: -2px;
 }

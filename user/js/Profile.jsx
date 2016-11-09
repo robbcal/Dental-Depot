@@ -16,8 +16,8 @@ var Header = React.createClass({
       <div>
           <div className="main-header">
               <div className="logo">
-                  <span className="logo-mini"><b>DD</b></span>
                   <span className="logo-lg" id="mainHeader">Dental Depot</span>
+
               </div>
               <div className="navbar navbar-static-top" role="navigation">
                   <div className="navbar-custom-menu">
@@ -26,16 +26,6 @@ var Header = React.createClass({
                               <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
                                   <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
                               </a>
-                              <ul className="dropdown-menu" style={{width:'100px'}}>
-                                  <li className="user-body">
-                                      <div className="profileButton">
-                                          <a className="btn btn-default btn-flat" href="Profile.html" style={{width:'100px'}}>PROFILE</a>
-                                      </div>
-                                      <div className="logoutButton">
-                                          <button className="btn btn-default btn-flat" onClick={this.logout} style={{width:'100px'}}>LOGOUT</button>
-                                      </div>
-                                  </li>
-                              </ul>
                           </li>
                       </ul>
                   </div>
@@ -68,6 +58,8 @@ var Body = React.createClass({
                   </div>
               </div>
           </div>
+
+          {/* LOGOUT MODAL CONTENT */}
       </div>
     );
   }

@@ -10,6 +10,21 @@
  * Core: General Layout Style
  * -------------------------
  */
+
+/*LAMDAG ADDITIONS*/
+#sidebarMainTabs{
+    margin-left: 10px;
+}
+#sidebarImage{
+    height: 15px;
+    margin-left: 10px;
+    margin-top: -2px;
+}
+#mainHeader{
+    margin-left: -15px;
+}
+/*LAMDAG ADDITIONS*/
+
 html,
 body {
   min-height: 100%;
