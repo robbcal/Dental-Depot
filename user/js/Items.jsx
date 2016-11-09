@@ -20,11 +20,14 @@ var Header = React.createClass({
 
                         </div>
                         <div className="navbar navbar-static-top" role="navigation">
+                            <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                              <span className="sr-only">Toggle navigation</span>
+                            </a>
                             <div className="navbar-custom-menu">
                                 <ul className="nav navbar-nav">
                                     <li className="dropdown user user-menu">
                                         <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
-                                            <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
+                                            <span onClick={this.logout}><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
                                         </a>
                                     </li>
                                 </ul>

@@ -16,15 +16,18 @@ var Header = React.createClass({
       <div>
           <div className="main-header">
               <div className="logo">
+                  <span className="logo-mini"><b>DD</b></span>
                   <span className="logo-lg" id="mainHeader">Dental Depot</span>
-
               </div>
               <div className="navbar navbar-static-top" role="navigation">
+                  <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span className="sr-only">Toggle navigation</span>
+                  </a>
                   <div className="navbar-custom-menu">
                       <ul className="nav navbar-nav">
                           <li className="dropdown user user-menu">
                               <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
-                                  <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
+                                  <span onClick={this.logout}><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
                               </a>
                           </li>
                       </ul>
@@ -166,9 +169,7 @@ var Content = React.createClass({
       return (
           <div id="userProfileContent">
               <div className="row" id="userProfileButtons">
-                  <div className="col-sm-6">
-                      <a href="Items.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
-                  </div>
+                  <div className="col-sm-6"></div>
                   <div className="col-sm-6">
                       <a className="btn btn-primary pull-right" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal"
                           onClick={this.showModal}>EDIT INFO
@@ -217,6 +218,30 @@ var Content = React.createClass({
               </div>
 
               {/*MODAL CONTENT*/}
+              
+              <div className="example-modal">
+                  <div className="modal fade bs-example-modal-lg" id="editConfirmation">
+                      <div className="modal-dialog modal-md">
+                          <div className="modal-content">
+                              <div className="modal-header">
+                                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                  <h4 className="modal-title">Confirmation</h4>
+                              </div>
+                              <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                                  <h4><strong> Are you sure you want to edit this profile? </strong></h4>
+
+                              </div>
+                              <div className="modal-footer">
+                                  <button type="button" className="btn btn-default pull-left" data-dismiss="modal">NO</button>
+                                  <button type="button" className="btn btn-primary" onClick={this.editUser}>YES</button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+
               <div className="example-modal">
                   <div className="modal fade bs-example-modal-lg" id="editInfoModal">
                       <div className="modal-dialog modal-md">
@@ -263,12 +288,17 @@ var Content = React.createClass({
                               </div>
                               <div className="modal-footer">
                                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                                  <button type="button" className="btn btn-primary" onClick={this.editUser}>SAVE</button>
+                                  <button type="button" className="btn btn-primary" id="editConfirmBtn" data-toggle="modal" data-target="#editConfirmation"
+                          onClick={this.showModal}>SAVE</button>
                               </div>
                           </div>
                       </div>
                   </div>
               </div>
+
+              
+
+
           </div>
       );
     }
