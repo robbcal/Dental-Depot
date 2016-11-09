@@ -251,40 +251,50 @@ var Content = React.createClass({
                                   <h4 className="modal-title">Edit Info</h4>
                               </div>
                               <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                                  <span>
-                                      <label>First Name</label>
-                                      <input type="text" id="firstName" className="form-control" onChange={this.onFirstName} value={this.state.firstname}/>
-                                  </span>
-                                  <span>
-                                      <label>Last Name</label>
-                                      <input type="text" id="lastName" className="form-control" onChange={this.onLastName} value={this.state.lastname}/>
-                                  </span>
-                                  <span>
-                                      <label>Email</label>
-                                      <input type="email" id="email" className="form-control" onChange={this.onEmail} value={this.state.email}/>
-                                  </span>
-                                  <span>
-                                      <label>Address</label>
-                                      <input type="text" id="address" className="form-control" onChange={this.onAddress} value={this.state.address}/>
-                                  </span>
-                                  <span>
-                                      <label>Contact Number</label>
-                                      <input type="text" id="contactNumber" className="form-control" onChange={this.onContactNumber} value={this.state.contactNumber}/>
-                                  </span>
-                                  <span>
-                                      <label>Age</label>
-                                      <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age}/>
-                                  </span>
-                                  <span>
-                                      <label>Birthdate</label>
-                                      <input type="date" id="birthdate" className="form-control" onChange={this.onBirthdate} value={this.state.birthdate}/>
-                                  </span>
-                                  <span>
-                                      <label>Password</label>
-                                      <input type="password" id="password" className="form-control" onChange={this.onPassword} value={this.state.password}/>
-                                  </span>
-
+                                  <div className="row">
+                                      <div className="col-sm-6" id="editInfoModalComponents">
+                                          <label>First Name</label>
+                                          <input type="text" id="firstName" className="form-control" onChange={this.onFirstName} value={this.state.firstname}/>
+                                      </div>
+                                  </div>
+                                  <div className="row">
+                                      <div className="col-sm-6" id="editInfoModalComponents">
+                                          <label>Last Name</label>
+                                          <input type="text" id="lastName" className="form-control" onChange={this.onLastName} value={this.state.lastname}/>
+                                      </div>
+                                  </div>
+                                  <div className="row">
+                                      <div className="col-sm-6" id="editInfoModalComponents">
+                                          <label>Email</label>
+                                          <input type="email" id="email" className="form-control" onChange={this.onEmail} value={this.state.email}/>
+                                      </div>
+                                      <div className="col-sm-6" id="editInfoModalComponents">
+                                          <label>Contact Number</label>
+                                          <input type="text" id="contactNumber" className="form-control" onChange={this.onContactNumber} value={this.state.contactNumber}/>
+                                      </div>
+                                  </div>
+                                  <div className="row">
+                                      <div id="editInfoModalComponents">
+                                          <label>Address</label>
+                                          <input type="text" id="address" className="form-control" onChange={this.onAddress} value={this.state.address}/>
+                                      </div>
+                                  </div>
+                                  <div className="row">
+                                      <div className="col-sm-8" id="editInfoModalComponents">
+                                          <label>Birthdate</label>
+                                          <input type="date" id="birthdate" className="form-control" onChange={this.onBirthdate} value={this.state.birthdate}/>
+                                      </div>
+                                      <div className="col-sm-4" id="editInfoModalComponents">
+                                          <label>Age</label>
+                                          <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age}/>
+                                      </div>
+                                  </div>
+                                  <div className="row">
+                                      <div className="col-sm-6" id="editInfoModalComponents">
+                                          <label>Password</label>
+                                          <input type="password" id="password" className="form-control" onChange={this.onPassword} value={this.state.password}/>
+                                      </div>
+                                  </div>
                               </div>
                               <div className="modal-footer">
                                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
