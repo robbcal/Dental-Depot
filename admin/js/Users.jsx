@@ -109,11 +109,7 @@ var Content = React.createClass({
         cur_password: snapshot.val().password
       });
     });
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> master
     var ref = firebase.database().ref('users');
     ref.on('child_added', function(data) {
       var id=data.key
@@ -204,23 +200,6 @@ var Content = React.createClass({
     return (
       <div>
           <br/><br/>
-<<<<<<< HEAD
-          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">    
-            <table className="table table-hover table-striped table-bordered /*adminTable*/" id="user_table">
-              <thead>
-                <tr>
-                  <th><center>USERNAME</center></th>
-                  <th><center>EMAIL ADDRESS</center></th>
-                  <th><center>USER TYPE</center></th>
-                </tr>
-              </thead>
-              <tbody id="userList">
-                
-              </tbody>
-            </table>
-          </div>      
-        </div>
-=======
           <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   <span className="pull-left">
@@ -242,7 +221,6 @@ var Content = React.createClass({
                           </tr>
                       </thead>
                       <tbody id="userList">
->>>>>>> master
 
                       </tbody>
                   </table>
