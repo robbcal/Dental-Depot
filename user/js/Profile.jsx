@@ -21,7 +21,7 @@ var Header = React.createClass({
               </div>
               <div className="navbar navbar-static-top" role="navigation">
                   <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-                    <span className="sr-only">Toggle navigation</span>
+                      <span className="sr-only">Toggle navigation</span>
                   </a>
                   <div className="navbar-custom-menu">
                       <ul className="nav navbar-nav">
@@ -49,7 +49,7 @@ var Body = React.createClass({
                       <br/>
                       <li className="header">NAVIGATION</li>
                       <li><a href="Items.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
-                      <li className="active"><a href="Profile.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Profile</span></a></li>
+                      <li className="active"><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
                   </ul>
               </div>
           </div>
@@ -218,7 +218,7 @@ var Content = React.createClass({
               </div>
 
               {/*MODAL CONTENT*/}
-              
+
               <div className="example-modal">
                   <div className="modal fade bs-example-modal-lg" id="editConfirmation">
                       <div className="modal-dialog modal-md">
@@ -306,7 +306,7 @@ var Content = React.createClass({
                   </div>
               </div>
 
-              
+
 
 
           </div>

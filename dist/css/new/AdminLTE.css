@@ -15,6 +15,9 @@
 #sidebarMainTabs{
     margin-left: 10px;
 }
+#sidebarProfileTab{
+    margin-left: 4px;
+}
 #sidebarImage{
     height: 15px;
     margin-left: 10px;
