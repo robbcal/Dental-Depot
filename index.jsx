@@ -17,12 +17,15 @@ var Content = React.createClass({
       }).catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
-        alert(errorMessage);
+        document.getElementById("errorMessage").innerHTML= errorMessage;
+        $('#errorModal').appendTo("body").modal('show');
         document.getElementById("email").value = "";
         document.getElementById("password").value = "";
       });
     }else{
-      alert("Input required data!");
+      //alert("Input required data!");
+      document.getElementById("errorMessage").innerHTML= "Input required data";
+      $('#errorModal').appendTo("body").modal('show');
     }
   },
 
@@ -71,7 +74,27 @@ var Content = React.createClass({
         </div>
 			</div>
 
+     <div className="example-modal">
+        <div className="modal fade bs-example-modal-lg" id="errorModal">
+            <div className="modal-dialog modal-sm">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h5 className="modal-title">Error</h5>
+                    </div>
+                    <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
+                        <h5><strong id="errorMessage"> Error </strong></h5>
+
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-default pull-right" data-dismiss="modal">OK</button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
 
     </div>
     );
