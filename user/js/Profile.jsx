@@ -106,6 +106,10 @@ var Content = React.createClass({
     $('#editInfoModal').appendTo("body").modal('show');
   },
 
+  showConfirmationModal: function(){
+    $('#editConfirmation').appendTo("body").modal('show');
+  },
+
   onFirstName: function(e) {
     this.setState({firstname: e.target.value});
   },
@@ -154,15 +158,23 @@ var Content = React.createClass({
           birthday: birthdate,
           password: password
         });
-        alert("Profile edited");
+        $('#editConfirmation').modal('hide');
+        $('#editInfoModal').modal('hide');
+        $('#informSuccess').appendTo("body").modal('show');
+       //alert("Profile edited");
       }, function(error) {
-        console.log(error);
+        //alert(error);
+        document.getElementById("errorMessage").innerHTML= error;
+        $('#errorModal').appendTo("body").modal('show');
+        $('#editConfirmation').modal('hide');
       });
     }, function(error) {
-      console.log(error);
+      //alert(error);
+      document.getElementById("errorMessage").innerHTML= error;
+      $('#errorModal').appendTo("body").modal('show');
+      $('#editConfirmation').modal('hide');
     });
-
-    $('#editInfoModal').modal('hide');
+    
   },
 
   render: function() {
@@ -241,6 +253,44 @@ var Content = React.createClass({
                   </div>
               </div>
 
+              <div className="example-modal">
+                  <div className="modal fade bs-example-modal-lg" id="errorModal">
+                      <div className="modal-dialog modal-sm">
+                          <div className="modal-content">
+                              <div className="modal-header">
+                                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                  <h4 className="modal-title">Error</h4>
+                              </div>
+                              <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                                  <h4><strong id="errorMessage"> Error </strong></h4>
+
+                              </div>
+                              <div className="modal-footer">
+                                  <button type="button" className="btn btn-default pull-right" data-dismiss="modal">OK</button>
+                                  
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div className="example-modal">
+                  <div className="modal fade bs-example-modal-lg" id="informSuccess">
+                      <div className="modal-dialog modal-md">
+                          <div className="modal-content">
+                              <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                  <h4><strong> Profile Updated! </strong></h4>
+                              </div>
+                              <div className="modal-footer">
+                                <center>
+                                  <button type="button" className="btn btn-default" data-dismiss="modal">OK</button>
+                                </center>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
 
               <div className="example-modal">
                   <div className="modal fade bs-example-modal-lg" id="editInfoModal">
@@ -299,7 +349,7 @@ var Content = React.createClass({
                               <div className="modal-footer">
                                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
                                   <button type="button" className="btn btn-primary" id="editConfirmBtn" data-toggle="modal" data-target="#editConfirmation"
-                          onClick={this.showModal}>SAVE</button>
+                          onClick={this.showConfirmationModal}>SAVE</button>
                               </div>
                           </div>
                       </div>
