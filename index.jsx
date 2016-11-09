@@ -5,7 +5,7 @@ var Content = React.createClass({
     if(email && password){
       firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
         var uid = firebase.auth().currentUser.uid;
-        alert("Success");
+        //alert("Success");
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           var type = snapshot.val().user_type
           if(type == "admin"){
@@ -42,6 +42,7 @@ var Content = React.createClass({
   render: function() {
     return (
     <div>
+      {/* <div className="se-pre-con" disabled></div> */}
       <div className="login-box" style={{ width: 500}}>
         <div className="login-logo col-lg-12 col-md-12 col-sm-12" style={{ paddingLeft: 50, paddingRight: 10, paddingBottom: 10, marginBottom: 0}}>
           <a href="http://127.0.0.1:8080/">
@@ -69,6 +70,9 @@ var Content = React.createClass({
           <br/><br/>
         </div>
 			</div>
+
+
+
     </div>
     );
   }
@@ -106,6 +110,7 @@ var Main = React.createClass({
     }else{
       res = (
         <div>
+          <div className="se-pre-con"></div>
         </div>
       );
       if(this.state.type == "admin"){
