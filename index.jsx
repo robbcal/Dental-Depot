@@ -1,12 +1,11 @@
-
 var Content = React.createClass({
   login: function(){
-		var form = document.getElementById("emailForm").formValidation();
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
     if(email && password){
       firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
         var uid = firebase.auth().currentUser.uid;
+        alert("Success");
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           var type = snapshot.val().user_type
           if(type == "admin"){
@@ -17,14 +16,27 @@ var Content = React.createClass({
         });
       }).catch(function(error) {
         var errorCode = error.code;
-        var errorMessage = "Incorrect email and/or password";
+        var errorMessage = error.message;
         alert(errorMessage);
         document.getElementById("email").value = "";
         document.getElementById("password").value = "";
       });
     }else{
-
+      alert("Input required data!");
     }
+  },
+
+  reset: function(){
+    var auth = firebase.auth();
+    var emailAddress = document.getElementById("fg_email").value;
+
+    auth.sendPasswordResetEmail(emailAddress).then(function() {
+      alert("Email sent.");
+      document.getElementById("fg_email").value = "";
+      $('#forgotPassModal').modal('hide');
+    }, function(error) {
+      alert(error);
+    });
   },
 
   render: function() {
@@ -44,20 +56,18 @@ var Content = React.createClass({
             </div>
           </a>
         </div>
-				<div className="login-box-body" style={{ paddingLeft: 0, paddingRight: 30, backgroundColor: '#d2d6de'}}>
-					<form id="emailForm" className="form-horizontal" style={{width: 476.5, height: 150, marginTop: 200}}>
-						<div className="form-group has-feedback" style={{marginLeft: 15}}>
-							<input required type="email" id="email" className="form-control" placeholder="email address" style={{width: 476.5, height: 39, borderRadius: 7}}/>
-						</div>
-						<div className="form-group has-feedback" style={{marginLeft: 15}}>
-							<input required type="password" id="password" className="form-control" placeholder="password" style={{width: 476.5, height: 39, borderRadius: 7}} />
-						</div>
-						<div className="col-lg-12 col-md-12 col-sm-12" style={{width: 432, paddingLeft: 0, paddingRight: 12}}>
-							<center><button className="btn btn-primary col-lg-12 col-md-12 col-sm-12" style={{width: 475, height: 39, borderRadius: 7, left: 15, marginTop: 3}} onClick={this.login}>LOGIN</button></center>
-						</div>
-					</form>
-					<br/><br/>
-				</div>
+        <div className="login-box-body" style={{ paddingLeft: 0, paddingRight: 30, backgroundColor: '#d2d6de'}}>
+          <div className="form-group has-feedback" style={{marginLeft: 15}}>
+            <input required type="email" id="email" className="form-control" placeholder="email address" style={{width: 476.5, height: 39, borderRadius: 7}}/>
+          </div>
+          <div className="form-group has-feedback" style={{marginLeft: 15}}>
+            <input required type="password" id="password" className="form-control" placeholder="password" style={{width: 476.5, height: 39, borderRadius: 7}} />
+          </div>
+          <div className="col-lg-12 col-md-12 col-sm-12" style={{width: 432, paddingLeft: 0, paddingRight: 12}}>
+            <center><button className="btn btn-primary col-lg-12 col-md-12 col-sm-12" style={{width: 475, height: 39, borderRadius: 7, left: 15, marginTop: 3}} onClick={this.login}>LOGIN</button></center>
+          </div>
+          <br/><br/>
+        </div>
 			</div>
     </div>
     );
@@ -90,16 +100,13 @@ var Main = React.createClass({
     if(this.state.signedIn == false){
       res = (
         <div>
-					<Content/>
+          <Content/>
         </div>
-          );
+      );
     }else{
       res = (
-				<body className="hold-transition login-page">
-					<div>
-						<center><i className="fa fa-refresh fa-spin" style={{fontSize: 60}}></i></center>
-					</div>
-				</body>
+        <div>
+        </div>
       );
       if(this.state.type == "admin"){
         window.location.replace("admin/Inventory.html");

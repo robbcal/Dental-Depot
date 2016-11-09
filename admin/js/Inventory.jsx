@@ -11,6 +11,10 @@ var Header = React.createClass({
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
   },
 
+  showConfirmLogout: function(){
+    $('#confirmModal').appendTo("body").modal("show");
+  },
+
   render: function() {
     return (
       <div>
@@ -26,19 +30,40 @@ var Header = React.createClass({
             <div className="navbar-custom-menu">
               <ul className="nav navbar-nav">
                 <li className="dropdown user user-menu">
-                  <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
-                    <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
+                  <a href="#" className="btn btn-default" data-toggle="modal" data-target="#confirmModal" style={{borderWidth: 0, lineHeight: 0, color: "rgba(255, 255, 255, 0.15)", top: 3, right: 5}} onClick={this.showConfirmLogout}>
+                    <span><img style={{top: 5, right: 15}} className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
                   </a>
-                  <ul className="dropdown-menu" style={{width: 100, paddingTop: 0, borderWidth: 0, right: 10, top: 49}}>
+                  <div className="example-modal">
+                    <div className="modal" id="confirmModal">
+                      <div className="modal-dialog">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">x</span>
+                            </button>
+                            <h4 className="modal-title">Log-out</h4>
+                          </div>
+                          <div className="modal-body">
+                            <center><p> Are you sure you want to log-out?</p></center>
+                          </div>
+                          <div className="modal-footer">
+                            <button type="button" className="btn btn-default pull-left" data-dismiss="modal" aria-label="No">NO</button>
+                            <button type="button" className="btn btn-primary" data-dismiss="modal" aria-label="No" onClick={this.logout}>YES</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <ul className="dropdown-menu" style={{width: 100, paddingTop: 0, borderWidth: 0, right: 10, top: 49}}>
                     <li className="user-body" style={{paddingTop: 0, paddingBottom: 0, paddingLeft: 0, paddingRight: 0}}>
-                      <div className="profileButton" style={{paddingRight: 0, width: 145, right: 0}}>
-                        <button className="btn btn-default btn-flat" data-toggle="modal" data-target="#profileModal" style={{width: 160, paddingLeft: 0, paddingRight: 0, backgroundColor: '#ffffff'}}>PROFILE</button>
-                      </div>
-                      <div className="logoutButton" style={{right: 0}}>
-                        <button className="btn btn-default btn-flat" onClick={this.logout} style={{width: 160, paddingLeft: 0, paddingRight: 0, backgroundColor: '#ffffff'}}>LOGOUT</button>
-                      </div>
+                    <div className="profileButton" style={{paddingRight: 0, width: 145, right: 0}}>
+                    <button className="btn btn-default btn-flat" data-toggle="modal" data-target="#profileModal" style={{width: 160, paddingLeft: 0, paddingRight: 0, backgroundColor: '#ffffff'}}>PROFILE</button>
+                    </div>
+                    <div className="logoutButton" style={{right: 0}}>
+                    <button className="btn btn-default btn-flat" onClick={this.logout} style={{width: 160, paddingLeft: 0, paddingRight: 0, backgroundColor: '#ffffff'}}>LOGOUT</button>
+                    </div>
                     </li>
-                  </ul>
+                  </ul> */}
                 </li>
               </ul>
             </div>
@@ -258,41 +283,41 @@ var Content = React.createClass({
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                    <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                      <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                        <label>Item</label>
-                        <input type="text" id="existingItem" className="form-control"/>
-                      </span>
-                      <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                        <label>Stock</label>
-                        <input type="text" id="stock" readOnly className="form-control"/>
-                      </span>
-                      <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                        <label>Number</label>
-                        <input type="number" id="existingNumber" className="form-control"/>
-                      </span>
-                      <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                        <label>Description</label>
-                        <textarea id="existingDescription" readOnly className="form-control"></textarea>
-                      </span>
-                    </div>
+                  <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                      <label>Item</label>
+                      <input type="text" id="existingItem" className="form-control"/>
+                    </span>
+                    <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                      <label>Stock</label>
+                      <input type="text" id="stock" readOnly className="form-control"/>
+                    </span>
+                    <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                      <label>Number</label>
+                      <input type="number" id="existingNumber" className="form-control"/>
+                    </span>
+                    <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                      <label>Description</label>
+                      <textarea id="existingDescription" readOnly className="form-control"></textarea>
+                    </span>
+                  </div>
 
-                    <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                      <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                        <span>
-                          <label>Price</label>
-                          <input type="number" id="existingPrice" className="form-control"/>
-                        </span>
-                        <span>
-                          <label>User</label>
-                          <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
-                        </span>
-                      </div>
-                      <span className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                        <label>Date</label>
-                        <input type="date" id="existingDate" className="form-control"/>
+                  <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                      <span>
+                        <label>Price</label>
+                        <input type="number" id="existingPrice" className="form-control"/>
+                      </span>
+                      <span>
+                        <label>User</label>
+                        <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
                       </span>
                     </div>
+                    <span className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                      <label>Date</label>
+                      <input type="date" id="existingDate" className="form-control"/>
+                    </span>
+                  </div>
 
                 </div>
                 <div className="modal-footer">
