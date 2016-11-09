@@ -11,6 +11,10 @@ var Header = React.createClass({
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         },
 
+        showConfirmLogout: function(){
+          $('#confirmModal').appendTo("body").modal("show");
+        },
+
         render: function() {
             return (
                 <div>
@@ -26,9 +30,30 @@ var Header = React.createClass({
                             <div className="navbar-custom-menu">
                                 <ul className="nav navbar-nav">
                                     <li className="dropdown user user-menu">
-                                        <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
-                                            <span onClick={this.logout}><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
-                                        </a>
+                                        <a href="#" className="btn btn-default" data-toggle="modal" data-target="#confirmModal" style={{borderWidth: 0, lineHeight: 0, color: "rgba(255, 255, 255, 0.15)", top: 3, right: 5}} onClick={this.showConfirmLogout}>
+                                  <span><img style={{top: 5, right: 15}} className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
+                                </a>
+                                <div className="example-modal">
+                                  <div className="modal" id="confirmModal">
+                                    <div className="modal-dialog">
+                                      <div className="modal-content">
+                                        <div className="modal-header">
+                                          <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">x</span>
+                                          </button>
+                                          <h4 className="modal-title">Log-out</h4>
+                                        </div>
+                                        <div className="modal-body">
+                                          <center><p> Are you sure you want to log-out?</p></center>
+                                        </div>
+                                        <div className="modal-footer">
+                                          <button type="button" className="btn btn-default pull-left" data-dismiss="modal" aria-label="No">NO</button>
+                                          <button type="button" className="btn btn-primary" data-dismiss="modal" aria-label="No" onClick={this.logout}>YES</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                                     </li>
                                 </ul>
                             </div>
