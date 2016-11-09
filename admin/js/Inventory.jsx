@@ -13,6 +13,7 @@ var Header = React.createClass({
 
   render: function() {
     return (
+<<<<<<< HEAD
       <div>
           <div className="main-header">
               <div className="logo">
@@ -45,12 +46,36 @@ var Header = React.createClass({
               </div>
           </div>
       </div>
+=======
+        <div>
+            <div className="main-header">
+                <div className="logo">
+                    <span className="logo-lg" id="mainHeader">Dental Depot</span>
+                </div>
+                <div className="navbar navbar-static-top" role="navigation">
+                    <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <span className="sr-only">Toggle navigation</span>
+                    </a>
+                    <div className="navbar-custom-menu">
+                        <ul className="nav navbar-nav">
+                            <li className="dropdown user user-menu">
+                                <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
+                                    <span onClick={this.logout}><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+>>>>>>> refs/remotes/origin/Cha
     );
   }
 });
 
 var Body = React.createClass({
   render: function() {
+<<<<<<< HEAD
     return (
       <div>
           <div className="main-sidebar">
@@ -72,6 +97,33 @@ var Body = React.createClass({
               </div>
           </div>
       </div>
+=======
+      return (
+        <div>
+            <div className="main-sidebar">
+                <div className="sidebar">
+                    <ul className="sidebar-menu">
+                        <br/>
+                        <li className="header">NAVIGATION</li>
+                        <li className="active"><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
+                        <li><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Users</span></a></li>
+                        <li><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Logs</span></a></li>
+                        <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
+                        <Content/>
+                    </div>
+                </div>
+            </div>
+
+            {/* LOGOUT MODAL CONTENT */}
+        </div>
+>>>>>>> refs/remotes/origin/Cha
     );
   }
 });
@@ -274,6 +326,7 @@ var Content = React.createClass({
                                       <textarea id="existingDescription" readOnly className="form-control"></textarea>
                                   </span>
                               </div>
+<<<<<<< HEAD
 
                               <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                   <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -292,6 +345,26 @@ var Content = React.createClass({
                                   </span>
                               </div>
 
+=======
+
+                              <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                  <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                      <span>
+                                          <label>Price</label>
+                                          <input type="number" id="existingPrice" className="form-control"/>
+                                      </span>
+                                      <span>
+                                          <label>User</label>
+                                          <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
+                                      </span>
+                                  </div>
+                                  <span className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                      <label>Date</label>
+                                      <input type="date" id="existingDate" className="form-control"/>
+                                  </span>
+                              </div>
+
+>>>>>>> refs/remotes/origin/Cha
                           </div>
                           <div className="modal-footer">
                               <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
