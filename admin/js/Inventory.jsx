@@ -11,46 +11,8 @@ var Header = React.createClass({
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
   },
 
-  showConfirmLogout: function(){
-    $('#confirmModal').appendTo("body").modal("show");
-  },
-
   render: function() {
     return (
-<<<<<<< HEAD
-      <div>
-          <div className="main-header">
-              <div className="logo">
-                  <span className="logo-mini"><b>DD</b></span>
-                  <span className="logo-lg"><b>Dental Depot</b></span>
-              </div>
-              <div className="navbar navbar-static-top" role="navigation">
-                  <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-                      <span className="sr-only">Toggle navigation</span>
-                  </a>
-                  <div className="navbar-custom-menu">
-                      <ul className="nav navbar-nav">
-                          <li className="dropdown user user-menu">
-                              <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
-                                  <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
-                              </a>
-                              <ul className="dropdown-menu" style={{width:'100px'}}>
-                                  <li className="user-body">
-                                      <div className="profileButton">
-                                          <button className="btn btn-default btn-flat" data-toggle="modal" data-target="#profileModal" style={{width:'100px'}}>PROFILE</button>
-                                      </div>
-                                      <div className="logoutButton">
-                                          <button className="btn btn-default btn-flat" onClick={this.logout} style={{width:'100px'}}>LOGOUT</button>
-                                      </div>
-                                  </li>
-                              </ul>
-                          </li>
-                      </ul>
-                  </div>
-              </div>
-          </div>
-      </div>
-=======
         <div>
             <div className="main-header">
                 <div className="logo">
@@ -63,70 +25,21 @@ var Header = React.createClass({
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li className="dropdown user user-menu">
-                                <a href="#" className="btn btn-default" data-toggle="modal" data-target="#confirmModal" style={{borderWidth: 0, lineHeight: 0, color: "rgba(255, 255, 255, 0.15)", top: 3, right: 5}} onClick={this.showConfirmLogout}>
-                                  <span><img style={{top: 5, right: 15}} className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
-                                </a>
-                                <div className="example-modal">
-                                  <div className="modal" id="confirmModal">
-                                    <div className="modal-dialog">
-                                      <div className="modal-content">
-                                        <div className="modal-header">
-                                          <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">x</span>
-                                          </button>
-                                          <h4 className="modal-title">Log-out</h4>
-                                        </div>
-                                        <div className="modal-body">
-                                          <center><p> Are you sure you want to log-out?</p></center>
-                                        </div>
-                                        <div className="modal-footer">
-                                          <button type="button" className="btn btn-default pull-left" data-dismiss="modal" aria-label="No">NO</button>
-                                          <button type="button" className="btn btn-primary" data-dismiss="modal" aria-label="No" onClick={this.logout}>YES</button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
+                                <a href="#"><span onClick={this.logout}>
+                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
+                                </span></a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
->>>>>>> refs/remotes/origin/Cha
-=======
->>>>>>> Cha
->>>>>>> origin/master
     );
   }
 });
 
 var Body = React.createClass({
   render: function() {
-<<<<<<< HEAD
-    return (
-      <div>
-          <div className="main-sidebar">
-              <div className="sidebar">
-                  <ul className="sidebar-menu">
-                      <li className="header">NAVIGATION</li>
-                      <li className="active"><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" height="15px"/></i><span> Inventory</span></a></li>
-                      <li><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" height="15px"/></i><span> Users</span></a></li>
-                      <li><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" height="15px"/></i><span> Logs</span></a></li>
-                  </ul>
-              </div>
-          </div>
-
-          <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-              <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                  <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                      <Content/>
-                  </div>
-              </div>
-          </div>
-      </div>
-=======
       return (
         <div>
             <div className="main-sidebar">
@@ -152,11 +65,6 @@ var Body = React.createClass({
 
             {/* LOGOUT MODAL CONTENT */}
         </div>
-<<<<<<< HEAD
->>>>>>> refs/remotes/origin/Cha
-=======
->>>>>>> Cha
->>>>>>> origin/master
     );
   }
 });
@@ -359,7 +267,6 @@ var Content = React.createClass({
                                       <textarea id="existingDescription" readOnly className="form-control"></textarea>
                                   </span>
                               </div>
-<<<<<<< HEAD
 
                               <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                   <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -378,30 +285,6 @@ var Content = React.createClass({
                                   </span>
                               </div>
 
-=======
-
-                              <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                  <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                      <span>
-                                          <label>Price</label>
-                                          <input type="number" id="existingPrice" className="form-control"/>
-                                      </span>
-                                      <span>
-                                          <label>User</label>
-                                          <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
-                                      </span>
-                                  </div>
-                                  <span className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                      <label>Date</label>
-                                      <input type="date" id="existingDate" className="form-control"/>
-                                  </span>
-                              </div>
-
-<<<<<<< HEAD
->>>>>>> refs/remotes/origin/Cha
-=======
->>>>>>> Cha
->>>>>>> origin/master
                           </div>
                           <div className="modal-footer">
                               <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>

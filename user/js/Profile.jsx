@@ -30,30 +30,9 @@ var Header = React.createClass({
                   <div className="navbar-custom-menu">
                       <ul className="nav navbar-nav">
                           <li className="dropdown user user-menu">
-                              <a href="#" className="btn btn-default" data-toggle="modal" data-target="#confirmModal" style={{borderWidth: 0, lineHeight: 0, color: "rgba(255, 255, 255, 0.15)", top: 3, right: 5}} onClick={this.showConfirmLogout}>
-                                  <span><img style={{top: 5, right: 15}} className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
-                                </a>
-                                <div className="example-modal">
-                                  <div className="modal" id="confirmModal">
-                                    <div className="modal-dialog">
-                                      <div className="modal-content">
-                                        <div className="modal-header">
-                                          <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">x</span>
-                                          </button>
-                                          <h4 className="modal-title">Log-out</h4>
-                                        </div>
-                                        <div className="modal-body">
-                                          <center><p> Are you sure you want to log-out?</p></center>
-                                        </div>
-                                        <div className="modal-footer">
-                                          <button type="button" className="btn btn-default pull-left" data-dismiss="modal" aria-label="No">NO</button>
-                                          <button type="button" className="btn btn-primary" data-dismiss="modal" aria-label="No" onClick={this.logout}>YES</button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
+                              <a href="#"><span onClick={this.logout}>
+                                  <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
+                              </span></a>
                           </li>
                       </ul>
                   </div>
@@ -86,8 +65,6 @@ var Body = React.createClass({
                   </div>
               </div>
           </div>
-
-          {/* LOGOUT MODAL CONTENT */}
       </div>
     );
   }
@@ -186,6 +163,7 @@ var Content = React.createClass({
         $('#editConfirmation').modal('hide');
         $('#editInfoModal').modal('hide');
         $('#informSuccess').appendTo("body").modal('show');
+        setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
       }, function(error) {
         document.getElementById("errorMessage").innerHTML= error;
         $('#errorModal').appendTo("body").modal('show');
@@ -196,7 +174,7 @@ var Content = React.createClass({
       $('#errorModal').appendTo("body").modal('show');
       $('#editConfirmation').modal('hide');
     });
-    
+
   },
 
   render: function() {
@@ -255,42 +233,35 @@ var Content = React.createClass({
 
               <div className="example-modal">
                   <div className="modal fade bs-example-modal-lg" id="editConfirmation">
-                      <div className="modal-dialog modal-md">
+                      <div className="modal-dialog modal-sm">
                           <div className="modal-content">
-                              <div className="modal-header">
-                                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                  <h4 className="modal-title">Confirmation</h4>
+                              <div className="modal-body">
+                                  <center>
+                                      <h5>Are you sure you want to edit this profile?</h5>
+                                      <button type="button" className="btn btn-primary" onClick={this.editUser} id="confirmProfileEdit">YES</button>
+                                      <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmProfileEdit">NO</button>
+                                  </center>
                               </div>
-                              <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                                  <h4><strong> Are you sure you want to edit this profile? </strong></h4>
-
-                              </div>
-                              <div className="modal-footer">
-                                  <button type="button" className="btn btn-default pull-left" data-dismiss="modal">NO</button>
-                                  <button type="button" className="btn btn-primary" onClick={this.editUser}>YES</button>
-                              </div>
                           </div>
                       </div>
                   </div>
               </div>
 
               <div className="example-modal">
-                  <div className="modal fade bs-example-modal-lg" id="errorModal">
+                  <div className="modal modal-danger" id="errorModal">
                       <div className="modal-dialog modal-sm">
                           <div className="modal-content">
                               <div className="modal-header">
                                   <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                  <h5 className="modal-title">Error</h5>
+                                  <center><h5 className="modal-title">ERROR</h5></center>
                               </div>
                               <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                                  <h5><strong id="errorMessage"> Error </strong></h5>
-
-                              </div>
-                              <div className="modal-footer">
-                                  <button type="button" className="btn btn-default pull-right" data-dismiss="modal">OK</button>
-                                  
+                                  <center>
+                                      <h5 id="errorMessage">Error</h5>
+                                      <br/>
+                                      <button type="button" className="btn btn-default btn-sm pull-right" data-dismiss="modal">OK</button>
+                                  </center>
                               </div>
                           </div>
                       </div>
@@ -298,16 +269,13 @@ var Content = React.createClass({
               </div>
 
               <div className="example-modal">
-                  <div className="modal fade bs-example-modal-lg" id="informSuccess">
+                  <div className="modal modal-success" id="informSuccess">
                       <div className="modal-dialog modal-md">
                           <div className="modal-content">
                               <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                  <h4><strong> Profile Updated! </strong></h4>
-                              </div>
-                              <div className="modal-footer">
-                                <center>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal">OK</button>
-                                </center>
+                                  <center>
+                                      <h4><strong>Successfully Updated Profile.</strong></h4>
+                                  </center>
                               </div>
                           </div>
                       </div>
@@ -358,7 +326,7 @@ var Content = React.createClass({
                                       </div>
                                       <div className="col-sm-4" id="editInfoModalComponents">
                                           <label>Age</label>
-                                          <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age}/>
+                                          <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age} disabled/>
                                       </div>
                                   </div>
                                   <div className="row">
@@ -371,7 +339,7 @@ var Content = React.createClass({
                               <div className="modal-footer">
                                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
                                   <button type="button" className="btn btn-primary" id="editConfirmBtn" data-toggle="modal" data-target="#editConfirmation"
-                          onClick={this.showConfirmationModal}>SAVE</button>
+                                      onClick={this.showConfirmationModal}>SAVE</button>
                               </div>
                           </div>
                       </div>
