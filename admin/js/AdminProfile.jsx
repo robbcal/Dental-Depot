@@ -188,15 +188,12 @@ var Content = React.createClass({
           $('#editConfirmation').modal('hide');
           $('#editInfoModal').modal('hide');
           $('#informSuccess').appendTo("body").modal('show');
-         //alert("Profile edited");
         }, function(error) {
-          //alert(error);
           document.getElementById("errorMessage").innerHTML= error;
           $('#errorModal').appendTo("body").modal('show');
           $('#editConfirmation').modal('hide');
         });
       }, function(error) {
-        //alert(error);
         document.getElementById("errorMessage").innerHTML= error;
         $('#errorModal').appendTo("body").modal('show');
         $('#editConfirmation').modal('hide');
