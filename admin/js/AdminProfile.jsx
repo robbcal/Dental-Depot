@@ -152,36 +152,39 @@ var Content = React.createClass({
     var birthdate = document.getElementById("birthdate").value;
     var password = document.getElementById("password").value;
 
-    firebase.auth().currentUser.updateEmail(email).then(function() {
-      firebase.auth().currentUser.updatePassword(password).then(function() {
-        firebase.database().ref('users/'+uid).update({
-          firstname: firstname,
-          lastname: lastname,
-          user_email: email,
-          address: address,
-          contact_no: contactnumber,
-          age: age,
-          birthday: birthdate,
-          password: password
+    if(firstname && lastname && address && contactnumber && email && age && birthdate && password){
+      firebase.auth().currentUser.updateEmail(email).then(function() {
+        firebase.auth().currentUser.updatePassword(password).then(function() {
+          firebase.database().ref('users/'+uid).update({
+            firstname: firstname,
+            lastname: lastname,
+            user_email: email,
+            address: address,
+            contact_no: contactnumber,
+            age: age,
+            birthday: birthdate,
+            password: password
+          });
+          $('#editConfirmation').modal('hide');
+          $('#editInfoModal').modal('hide');
+          $('#informSuccess').appendTo("body").modal('show');
+        }, function(error) {
+          document.getElementById("errorMessage").innerHTML= error;
+          $('#errorModal').appendTo("body").modal('show');
+          $('#editConfirmation').modal('hide');
         });
-        $('#editConfirmation').modal('hide');
-        $('#editInfoModal').modal('hide');
-        $('#informSuccess').appendTo("body").modal('show');
-        setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
       }, function(error) {
         document.getElementById("errorMessage").innerHTML= error;
         $('#errorModal').appendTo("body").modal('show');
         $('#editConfirmation').modal('hide');
       });
-    }, function(error) {
-      //alert(error);
-      document.getElementById("errorMessage").innerHTML= error;
+    }else{
+      document.getElementById("errorMessage").innerHTML= "Missing input.";
       $('#errorModal').appendTo("body").modal('show');
       $('#editConfirmation').modal('hide');
-    });
-
+    }
   },
-
+  
   render: function() {
       return (
           <div id="userProfileContent">
