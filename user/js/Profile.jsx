@@ -148,49 +148,33 @@ var Content = React.createClass({
     var birthdate = document.getElementById("birthdate").value;
     var password = document.getElementById("password").value;
 
-    if(firstname && lastname && address && contactnumber && email && age && birthdate && password){
-      firebase.auth().currentUser.updateEmail(email).then(function() {
-        firebase.auth().currentUser.updatePassword(password).then(function() {
-          firebase.database().ref('users/'+uid).update({
-            firstname: firstname,
-            lastname: lastname,
-            user_email: email,
-            address: address,
-            contact_no: contactnumber,
-            age: age,
-            birthday: birthdate,
-            password: password
-          });
-          $('#editConfirmation').modal('hide');
-          $('#editInfoModal').modal('hide');
-          $('#informSuccess').appendTo("body").modal('show');
-        }, function(error) {
-          document.getElementById("errorMessage").innerHTML= error;
-          $('#errorModal').appendTo("body").modal('show');
-          $('#editConfirmation').modal('hide');
+    firebase.auth().currentUser.updateEmail(email).then(function() {
+      firebase.auth().currentUser.updatePassword(password).then(function() {
+        firebase.database().ref('users/'+uid).update({
+          firstname: firstname,
+          lastname: lastname,
+          user_email: email,
+          address: address,
+          contact_no: contactnumber,
+          age: age,
+          birthday: birthdate,
+          password: password
         });
-<<<<<<< HEAD
-=======
         $('#editConfirmation').modal('hide');
         $('#editInfoModal').modal('hide');
         $('#informSuccess').appendTo("body").modal('show');
         setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
->>>>>>> 8f5b60cf6e406a4c79001c02818303331d236a96
       }, function(error) {
         document.getElementById("errorMessage").innerHTML= error;
         $('#errorModal').appendTo("body").modal('show');
         $('#editConfirmation').modal('hide');
       });
-    }else{
-      document.getElementById("errorMessage").innerHTML= "Missing input.";
+    }, function(error) {
+      document.getElementById("errorMessage").innerHTML= error;
       $('#errorModal').appendTo("body").modal('show');
       $('#editConfirmation').modal('hide');
-<<<<<<< HEAD
-    }
-=======
     });
 
->>>>>>> 8f5b60cf6e406a4c79001c02818303331d236a96
   },
 
   render: function() {
