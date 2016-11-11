@@ -168,10 +168,7 @@ var Content = React.createClass({
           $('#editConfirmation').modal('hide');
           $('#editInfoModal').modal('hide');
           $('#informSuccess').appendTo("body").modal('show');
-<<<<<<< HEAD
-=======
           setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
->>>>>>> master
         }, function(error) {
           document.getElementById("errorMessage").innerHTML= error;
           $('#errorModal').appendTo("body").modal('show');
