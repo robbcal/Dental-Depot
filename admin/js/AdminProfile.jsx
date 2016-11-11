@@ -168,6 +168,7 @@ var Content = React.createClass({
           $('#editConfirmation').modal('hide');
           $('#editInfoModal').modal('hide');
           $('#informSuccess').appendTo("body").modal('show');
+          setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
         }, function(error) {
           document.getElementById("errorMessage").innerHTML= error;
           $('#errorModal').appendTo("body").modal('show');
@@ -184,7 +185,7 @@ var Content = React.createClass({
       $('#editConfirmation').modal('hide');
     }
   },
-  
+
   render: function() {
       return (
           <div id="userProfileContent">
