@@ -153,14 +153,14 @@ var Content = React.createClass({
 
   render: function() {
     return (
-      <div>
+      <div className="container">
         <div style={{position: 'relative', top: '30px', height: '500px', width: '1125px'}}>
           <div>
             <a href="Items.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
             <a className="btn btn-primary" id="editInfoButton" href="" data-toggle="modal" data-target="#editInfoModal"
               style={{marginLeft: '900px'}} onClick={this.showModal}>EDIT INFO</a>
           </div>
-          <div className="col-sm-11" style={{position: 'relative', top: '50px', height: '450px', backgroundColor:'white', borderRadius: '20px'}}>
+          <div className="col-sm-11" style={{position: 'relative', top: '50px', height: '450px', backgroundColor:'white', borderRadius: ''}}>
             <br/>
             <br/>
 
@@ -215,7 +215,7 @@ var Content = React.createClass({
             <div className="col-sm-12"></div>
             <div className="col-sm-12"></div>
 
-            
+
           </div>
         </div>
 
