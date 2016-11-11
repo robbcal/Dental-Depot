@@ -152,7 +152,8 @@ var Content = React.createClass({
     firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
       user_email: user,
       date: date,
-      action_performed: action
+      action_performed: action,
+      stock: stock
     });
     alert("Item added");
     document.getElementById("newItem").value="";
