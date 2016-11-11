@@ -183,65 +183,6 @@ var Content = React.createClass({
   },
 
   render: function() {
-<<<<<<< HEAD
-    return (
-      <div className="container">
-        <div style={{position: 'relative', top: '30px', height: '500px', width: '1125px'}}>
-          <div>
-            <a href="Items.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
-            <a className="btn btn-primary" id="editInfoButton" href="" data-toggle="modal" data-target="#editInfoModal"
-              style={{marginLeft: '900px'}} onClick={this.showModal}>EDIT INFO</a>
-          </div>
-          <div className="col-sm-11" style={{position: 'relative', top: '50px', height: '450px', backgroundColor:'white', borderRadius: ''}}>
-            <br/>
-            <br/>
-
-            <div className="col-sm-1"></div>
-
-            <div className="col-sm-11">
-              <h1><strong> {this.state.fullName} </strong></h1>
-              <h4> {this.state.address} </h4><br/><br/><br/>
-              <div className="row">
-                <div className="col-sm-1" style={{ marginTop: '10px'}}>
-                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
-                    <h4><i className="glyphicon glyphicon-hourglass"></i></h4>
-                  </span>
-                </div>
-                <div className="col-sm-6">
-                  <h5 style={{color: 'gray'}}><strong> AGE </strong></h5>
-                  <h4><strong> {this.state.age} YRS OLD </strong></h4><br/>
-                </div>
-                <div className="col-sm-1" style={{marginTop: '10px'}}>
-                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
-                    <h4><i className="glyphicon glyphicon-calendar"></i></h4>
-                  </span>
-                </div>
-                <div className="col-sm-3">
-                  <h5 style={{color: 'gray'}}><strong> BIRTHDAY </strong></h5>
-                  <h4><strong> {this.state.birthdate} </strong></h4><br/>
-                </div>
-              </div>
-              <br/>
-              <div className="row">
-                <div className="col-sm-1" style={{marginTop: '10px'}}>
-                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
-                    <h4><i className="glyphicon glyphicon-send"></i></h4>
-                  </span>
-                </div>
-                <div className="col-sm-6">
-                  <h5 style={{color: 'gray'}}><strong> EMAIL ADDRESS </strong></h5>
-                  <h4><strong> {this.state.email} </strong></h4><br/>
-                </div>
-                <div className="col-sm-1" style={{marginTop: '10px'}}>
-                  <span className="badge" style={{height: '40px', width: '40px', borderRadius: '50%', padding: '1px', backgroundColor: '#323299'}}>
-                    <h4><i className="glyphicon glyphicon-phone"></i></h4>
-                  </span>
-                </div>
-                <div className="col-sm-4">
-                  <h5 style={{color: 'gray'}}><strong> CONTACT NUMBER </strong></h5>
-                  <h4><strong> {this.state.contactNumber} </strong></h4><br/>
-                </div>
-=======
       return (
           <div id="userProfileContent">
               <div className="row" id="userProfileButtons">
@@ -251,27 +192,8 @@ var Content = React.createClass({
                           onClick={this.showModal}>EDIT INFO
                       </a>
                   </div>
->>>>>>> 0152d5db6ad68fbc05e7a7d5215ef43fb89f2daa
               </div>
 
-<<<<<<< HEAD
-            <div className="col-sm-12"></div>
-            <div className="col-sm-12"></div>
-
-
-          </div>
-        </div>
-
-        <div className="example-modal">
-          <div className="modal fade bs-example-modal-lg" id="editInfoModal">
-            <div className="modal-dialog modal-md">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 className="modal-title">Edit Info</h4>
-                </div>
-                <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-=======
               <div className="row col-xs-8 box" id="userProfileMainContent">
                   <div>
                       <h2><strong> {this.state.fullName} </strong></h2>
@@ -311,7 +233,6 @@ var Content = React.createClass({
                       </div>
                   </div>
               </div>
->>>>>>> 0152d5db6ad68fbc05e7a7d5215ef43fb89f2daa
 
               {/*MODAL CONTENT*/}
 
