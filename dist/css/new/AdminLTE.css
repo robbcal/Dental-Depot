@@ -26,6 +26,29 @@
 #mainHeader{
     margin-left: -15px;
 }
+.modal {
+  text-align: center;
+  padding: 0!important;
+}
+
+.modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
+#confirmProfileEdit{
+    margin: 10px;
+}
+
 /*LAMDAG ADDITIONS*/
 
 html,
@@ -2326,10 +2349,10 @@ a:focus {
 .btn-app {
   border-radius: 3px;
   position: relative;
-  padding: 15px 5px;
-  margin: 0 0 10px 10px;
-  min-width: 80px;
-  height: 60px;
+  padding: 5px 5px;
+  margin: 0 0 5px 5px;
+  min-width: 100px;
+  height: 40px;
   text-align: center;
   color: #666;
   border: 1px solid #ddd;
@@ -2339,7 +2362,7 @@ a:focus {
 .btn-app > .fa,
 .btn-app > .glyphicon,
 .btn-app > .ion {
-  font-size: 20px;
+  font-size: 15px;
   display: block;
 }
 .btn-app:hover {
@@ -4947,4 +4970,16 @@ table.text-center th {
   .table-responsive > .table tr td {
     white-space: normal !important;
   }
+}
+::-webkit-input-placeholder {
+   font-style: italic;
+}
+:-moz-placeholder {
+   font-style: italic;
+}
+::-moz-placeholder {
+   font-style: italic;
+}
+:-ms-input-placeholder {
+   font-style: italic;
 }

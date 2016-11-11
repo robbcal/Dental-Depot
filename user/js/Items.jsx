@@ -11,6 +11,10 @@ var Header = React.createClass({
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         },
 
+        showConfirmLogout: function(){
+          $('#confirmModal').appendTo("body").modal("show");
+        },
+
         render: function() {
             return (
                 <div>
@@ -26,9 +30,9 @@ var Header = React.createClass({
                             <div className="navbar-custom-menu">
                                 <ul className="nav navbar-nav">
                                     <li className="dropdown user user-menu">
-                                        <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
-                                            <span onClick={this.logout}><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
-                                        </a>
+                                        <a href="#"><span onClick={this.logout}>
+                                            <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
+                                        </span></a>
                                     </li>
                                 </ul>
                             </div>

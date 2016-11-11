@@ -11,6 +11,10 @@ var Header = React.createClass({
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
   },
 
+  showConfirmLogout: function(){
+    $('#confirmModal').appendTo("body").modal("show");
+  },
+
   render: function() {
     return (
       <div>
@@ -26,9 +30,9 @@ var Header = React.createClass({
                   <div className="navbar-custom-menu">
                       <ul className="nav navbar-nav">
                           <li className="dropdown user user-menu">
-                              <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
-                                  <span onClick={this.logout}><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
-                              </a>
+                              <a href="#"><span onClick={this.logout}>
+                                  <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
+                              </span></a>
                           </li>
                       </ul>
                   </div>
@@ -61,8 +65,6 @@ var Body = React.createClass({
                   </div>
               </div>
           </div>
-
-          {/* LOGOUT MODAL CONTENT */}
       </div>
     );
   }
@@ -146,34 +148,38 @@ var Content = React.createClass({
     var birthdate = document.getElementById("birthdate").value;
     var password = document.getElementById("password").value;
 
-    firebase.auth().currentUser.updateEmail(email).then(function() {
-      firebase.auth().currentUser.updatePassword(password).then(function() {
-        firebase.database().ref('users/'+uid).update({
-          firstname: firstname,
-          lastname: lastname,
-          user_email: email,
-          address: address,
-          contact_no: contactnumber,
-          age: age,
-          birthday: birthdate,
-          password: password
+    if(firstname && lastname && address && contactnumber && email && age && birthdate && password){
+      firebase.auth().currentUser.updateEmail(email).then(function() {
+        firebase.auth().currentUser.updatePassword(password).then(function() {
+          firebase.database().ref('users/'+uid).update({
+            firstname: firstname,
+            lastname: lastname,
+            user_email: email,
+            address: address,
+            contact_no: contactnumber,
+            age: age,
+            birthday: birthdate,
+            password: password
+          });
+          $('#editConfirmation').modal('hide');
+          $('#editInfoModal').modal('hide');
+          $('#informSuccess').appendTo("body").modal('show');
+          setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
+        }, function(error) {
+          document.getElementById("errorMessage").innerHTML= error;
+          $('#errorModal').appendTo("body").modal('show');
+          $('#editConfirmation').modal('hide');
         });
-        $('#editConfirmation').modal('hide');
-        $('#editInfoModal').modal('hide');
-        $('#informSuccess').appendTo("body").modal('show');
-       //alert("Profile edited");
       }, function(error) {
-        //alert(error);
         document.getElementById("errorMessage").innerHTML= error;
         $('#errorModal').appendTo("body").modal('show');
         $('#editConfirmation').modal('hide');
       });
-    }, function(error) {
-      //alert(error);
-      document.getElementById("errorMessage").innerHTML= error;
+    }else{
+      document.getElementById("errorMessage").innerHTML= "Missing input.";
       $('#errorModal').appendTo("body").modal('show');
       $('#editConfirmation').modal('hide');
-    });
+    }
   },
 
   render: function() {
@@ -310,6 +316,57 @@ var Content = React.createClass({
               {/*MODAL CONTENT*/}
 
               <div className="example-modal">
+                  <div className="modal fade bs-example-modal-lg" id="editConfirmation">
+                      <div className="modal-dialog modal-sm">
+                          <div className="modal-content">
+                              <div className="modal-body">
+                                  <center>
+                                      <h5>Are you sure you want to edit this profile?</h5>
+                                      <button type="button" className="btn btn-primary" onClick={this.editUser} id="confirmProfileEdit">YES</button>
+                                      <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmProfileEdit">NO</button>
+                                  </center>
+                              </div>
+
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div className="example-modal">
+                  <div className="modal modal-danger" id="errorModal">
+                      <div className="modal-dialog modal-sm">
+                          <div className="modal-content">
+                              <div className="modal-header">
+                                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                  <center><h5 className="modal-title">ERROR</h5></center>
+                              </div>
+                              <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                  <center>
+                                      <h5 id="errorMessage">Error</h5>
+                                      <br/>
+                                      <button type="button" className="btn btn-default btn-sm pull-right" data-dismiss="modal">OK</button>
+                                  </center>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div className="example-modal">
+                  <div className="modal modal-success" id="informSuccess">
+                      <div className="modal-dialog modal-md">
+                          <div className="modal-content">
+                              <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                  <center>
+                                      <h4><strong>Successfully Updated Profile.</strong></h4>
+                                  </center>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div className="example-modal">
                   <div className="modal fade bs-example-modal-lg" id="editInfoModal">
                       <div className="modal-dialog modal-md">
                           <div className="modal-content">
@@ -353,7 +410,7 @@ var Content = React.createClass({
                                       </div>
                                       <div className="col-sm-4" id="editInfoModalComponents">
                                           <label>Age</label>
-                                          <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age}/>
+                                          <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age} disabled/>
                                       </div>
                                   </div>
                                   <div className="row">
@@ -366,15 +423,12 @@ var Content = React.createClass({
                               <div className="modal-footer">
                                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
                                   <button type="button" className="btn btn-primary" id="editConfirmBtn" data-toggle="modal" data-target="#editConfirmation"
-                          onClick={this.showConfirmationModal}>SAVE</button>
+                                      onClick={this.showConfirmationModal}>SAVE</button>
                               </div>
                           </div>
                       </div>
                   </div>
               </div>
-
-
-
 
           </div>
       );

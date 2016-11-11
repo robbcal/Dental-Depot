@@ -22,12 +22,13 @@ var Header = React.createClass({
                     <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span className="sr-only">Toggle navigation</span>
                     </a>
+                    {/* comment */}
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li className="dropdown user user-menu">
-                                <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
-                                    <span onClick={this.logout}><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
-                                </a>
+                                <a href="#"><span onClick={this.logout}>
+                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
+                                </span></a>
                             </li>
                         </ul>
                     </div>

@@ -8,22 +8,51 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="dist/css/new/AdminLTE.css">
+    <link rel="stylesheet" href="dist/css/new/index.css">
     <link rel="stylesheet" href="plugins/iCheck/square/blue.css">
+
+    <style>
+        .no-js #loader{
+            display: none;
+        }
+        .js #loader{
+            display: block;
+            position: absolute;
+            left: 100px;
+            top: 0;
+        }
+        .se-pre-con{
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: url(dist/simple-pre-loader/images/loader-128x/Preloader_2.gif) center no-repeat #fff;
+        }
+    </style>
+
   </head>
+
   <body class="hold-transition login-page">
-    <div id="main">
-    </div>
+    <div class="se-pre-con"></div>
+    <div id="main"></div>
 
     <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="plugins/iCheck/icheck.min.js"></script>
 
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
-    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
     <script src="https://cdn.firebase.com/libs/reactfire/0.6.0/reactfire.min.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/3.5.0/firebase-app.js"></script>
@@ -35,13 +64,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
 
     <script src="firebaseConfig.js"></script>
-    
-    <script type="text/babel" src="index.jsx">
-      
-    </script>  
+    <script src="../dist/js/app.min.js"></script>
+
+    <script type="text/babel" src="index.jsx"></script>
+
+    <script>
+        $(window).load(function() {
+    		// Animate loader off screen
+    		$(".se-pre-con").fadeOut("slow");
+            $("#errorBox").hide();
+    	});
+    </script>
   </body>
 </html>
