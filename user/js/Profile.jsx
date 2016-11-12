@@ -18,19 +18,19 @@ var Header = React.createClass({
   render: function() {
     return (
       <div>
-          <div className="main-header">
-              <div className="logo">
-                  <span className="logo-mini"><b>DD</b></span>
-                  <span className="logo-lg" id="mainHeader">Dental Depot</span>
-              </div>
-              <div className="navbar navbar-static-top" role="navigation">
-                  <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-                      <span className="sr-only">Toggle navigation</span>
-                  </a>
-                  <div className="navbar-custom-menu">
-                      <ul className="nav navbar-nav">
-                          <li className="dropdown user user-menu">
-                              <a href="#"><span onClick={this.logout}>
+        <div className="main-header">
+          <div className="logo">
+            <span className="logo-mini"><b>DD</b></span>
+            <span className="logo-lg" id="mainHeader">Dental Depot</span>
+          </div>
+          <div className="navbar navbar-static-top" role="navigation">
+            <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+              <span className="sr-only">Toggle navigation</span>
+            </a>
+            <div className="navbar-custom-menu">
+              <ul className="nav navbar-nav">
+                <li className="dropdown user user-menu">
+                  <a href="#"><span onClick={this.logout}>
                                   <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
                               </span></a>
                           </li>
@@ -47,16 +47,16 @@ var Body = React.createClass({
   render: function() {
     return (
       <div>
-          <div className="main-sidebar">
-              <div className="sidebar">
-                  <ul className="sidebar-menu">
-                      <br/>
-                      <li className="header">NAVIGATION</li>
-                      <li><a href="Items.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
-                      <li className="active"><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
-                  </ul>
-              </div>
+        <div className="main-sidebar">
+          <div className="sidebar">
+            <ul className="sidebar-menu">
+              <br/>
+              <li className="header">NAVIGATION</li>
+              <li><a href="Items.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
+              <li className="active"><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
+            </ul>
           </div>
+        </div>
 
           <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
               <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
@@ -149,6 +149,7 @@ var Content = React.createClass({
     var password = document.getElementById("password").value;
 
     if(firstname && lastname && address && contactnumber && email && age && birthdate && password){
+     $("body").css("cursor", "progress");
       firebase.auth().currentUser.updateEmail(email).then(function() {
         firebase.auth().currentUser.updatePassword(password).then(function() {
           firebase.database().ref('users/'+uid).update({
@@ -161,6 +162,7 @@ var Content = React.createClass({
             birthday: birthdate,
             password: password
           });
+          $("body").css("cursor", "default");
           $('#editConfirmation').modal('hide');
           $('#editInfoModal').modal('hide');
           $('#informSuccess').appendTo("body").modal('show');
@@ -185,70 +187,70 @@ var Content = React.createClass({
   render: function() {
       return (
           <div id="userProfileContent">
-              <div className="row" id="userProfileButtons">
-                  <div className="col-sm-6"></div>
+            <div className="row" id="userProfileButtons">
+              <div className="col-sm-6"></div>
+              <div className="col-sm-6">
+                <a className="btn btn-primary pull-right" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal"
+                  onClick={this.showModal}>EDIT INFO
+                </a>
+              </div>
+            </div>
+
+            <div className="row col-xs-8 box" id="userProfileMainContent">
+              <div>
+                <h2><strong> {this.state.fullName} </strong></h2>
+                <h4> {this.state.address} </h4><br/><br/>
+                <div className="row">
+                  <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                    <img src="../bootstrap/icons/age.png" height="45px"/>
+                  </div>
                   <div className="col-sm-6">
-                      <a className="btn btn-primary pull-right" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal"
-                          onClick={this.showModal}>EDIT INFO
-                      </a>
+                    <h5 style={{color: 'gray'}}><strong> AGE </strong></h5>
+                    <h4><strong> {this.state.age} YRS OLD </strong></h4><br/>
                   </div>
-              </div>
-
-              <div className="row col-xs-8 box" id="userProfileMainContent">
-                  <div>
-                      <h2><strong> {this.state.fullName} </strong></h2>
-                      <h4> {this.state.address} </h4><br/><br/>
-                      <div className="row">
-                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                              <img src="../bootstrap/icons/age.png" height="45px"/>
-                          </div>
-                          <div className="col-sm-6">
-                              <h5 style={{color: 'gray'}}><strong> AGE </strong></h5>
-                              <h4><strong> {this.state.age} YRS OLD </strong></h4><br/>
-                          </div>
-                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                              <img src="../bootstrap/icons/bday.png" height="45px"/>
-                          </div>
-                          <div className="col-sm-3">
-                              <h5 style={{color: 'gray'}}><strong> BIRTHDAY </strong></h5>
-                              <h4><strong> {this.state.birthdate} </strong></h4><br/>
-                          </div>
-                      </div>
-                      <br/>
-                      <div className="row">
-                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                              <img src="../bootstrap/icons/message.png" height="45px"/>
-                          </div>
-                          <div className="col-sm-6">
-                              <h5 style={{color: 'gray'}}><strong> EMAIL ADDRESS </strong></h5>
-                              <h4><strong> {this.state.email} </strong></h4><br/>
-                          </div>
-                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                              <img src="../bootstrap/icons/phone-book.png" height="45px"/>
-                          </div>
-                          <div className="col-sm-4">
-                              <h5 style={{color: 'gray'}}><strong> CONTACT NUMBER </strong></h5>
-                              <h4><strong> {this.state.contactNumber} </strong></h4><br/>
-                          </div>
-                      </div>
+                  <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                    <img src="../bootstrap/icons/bday.png" height="45px"/>
                   </div>
+                  <div className="col-sm-3">
+                    <h5 style={{color: 'gray'}}><strong> BIRTHDAY </strong></h5>
+                    <h4><strong> {this.state.birthdate} </strong></h4><br/>
+                  </div>
+                </div>
+                <br/>
+                <div className="row">
+                  <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                    <img src="../bootstrap/icons/message.png" height="45px"/>
+                  </div>
+                  <div className="col-sm-6">
+                    <h5 style={{color: 'gray'}}><strong> EMAIL ADDRESS </strong></h5>
+                    <h4><strong> {this.state.email} </strong></h4><br/>
+                  </div>
+                  <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                    <img src="../bootstrap/icons/phone-book.png" height="45px"/>
+                  </div>
+                  <div className="col-sm-4">
+                    <h5 style={{color: 'gray'}}><strong> CONTACT NUMBER </strong></h5>
+                    <h4><strong> {this.state.contactNumber} </strong></h4><br/>
+                  </div>
+                </div>
               </div>
+            </div>
 
-              {/*MODAL CONTENT*/}
+            {/*MODAL CONTENT*/}
 
-              <div className="example-modal">
-                  <div className="modal fade bs-example-modal-lg" id="editConfirmation">
-                      <div className="modal-dialog modal-sm">
-                          <div className="modal-content">
-                              <div className="modal-body">
-                                  <center>
-                                      <h5>Are you sure you want to edit this profile?</h5>
-                                      <button type="button" className="btn btn-primary" onClick={this.editUser} id="confirmProfileEdit">YES</button>
-                                      <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmProfileEdit">NO</button>
-                                  </center>
-                              </div>
+            <div className="example-modal">
+              <div className="modal fade bs-example-modal-lg" id="editConfirmation">
+                <div className="modal-dialog modal-sm">
+                  <div className="modal-content">
+                    <div className="modal-body">
+                      <center>
+                        <h5>Are you sure you want to edit this profile?</h5>
+                        <button type="button" className="btn btn-primary" onClick={this.editUser} id="confirmProfileEdit">YES</button>
+                        <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmProfileEdit">NO</button>
+                      </center>
+                    </div>
 
-                          </div>
+                  </div>
                       </div>
                   </div>
               </div>

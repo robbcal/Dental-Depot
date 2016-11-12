@@ -73,6 +73,7 @@
     margin-top: 3px;
 }
 #errorBox{
+    display: none;
     padding: 10px;
     margin-left: 3px;
 }
