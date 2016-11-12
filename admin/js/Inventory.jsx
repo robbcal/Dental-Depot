@@ -94,6 +94,7 @@ var Content = React.createClass({
       var stock = data.val().stock;
       
       $("#itemList").append("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+      $("#item").append("<option id="+id+" value="+id+">"+itemName+"</option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();
@@ -107,6 +108,7 @@ var Content = React.createClass({
       var stock = data.val().stock;
 
       $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+      $("option#"+id).replaceWith("<option id="+id+" value="+id+">"+itemName+"</option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();
@@ -118,7 +120,6 @@ var Content = React.createClass({
       var id=data.key
       $("tr#"+id).remove();
     });
-
   },
 
   generateIDandDate: function(){
@@ -140,20 +141,26 @@ var Content = React.createClass({
     var date = document.getElementById("newDate").value;
     var description = document.getElementById("newDescription").value;
     var action = "Add new item.";
-    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
 
     firebase.database().ref('items/'+itemID).set({
       key: itemID,
       item_name: itemName,
       description: description,
-      stock: stock,
+      stock: Number(stock),
       price: price
     });
-    firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+    /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
       user_email: user,
       date: date,
       action_performed: action,
-      stock: stock
+      stock: Number(stock)
+    });*/
+    firebase.database().ref('items/'+itemID+"/item_history/").push().set({
+      user_email: user,
+      date: date,
+      action_performed: action,
+      stock: Number(stock)
     });
     alert("Item added");
     document.getElementById("newItem").value="";
@@ -164,17 +171,70 @@ var Content = React.createClass({
   },
 
   displayItemOnModal: function(){
-    var ref = firebase.database().ref('items');
-    ref.once('value', function(snapshot) {
-      snapshot.forEach(function(childSnapshot) {
-        console.log(childSnapshot.val().key);
-        //var childData = childSnapshot.val();
-
+    var itemVal = document.getElementById("item").value;
+    
+    if(itemVal == ""){
+      document.getElementById("ID").value = "";
+      document.getElementById("existingDescription").value = "";
+      document.getElementById("existingPrice").value = "";
+      document.getElementById("existingStock").value = "";
+    }else{
+      var itemId = $("#item").val();
+      var ref = firebase.database().ref('items/'+itemId);
+      ref.once('value', function(snapshot) {
+        document.getElementById("ID").value = itemId;
+        document.getElementById("existingDescription").value = snapshot.val().description;
+        document.getElementById("existingPrice").value = snapshot.val().price;
+        document.getElementById("existingStock").value = snapshot.val().stock;
       });
-    });
+    }
+  },
+
+  updateItem: function(){
+    var id = document.getElementById("ID").value;
+    var price = document.getElementById("existingPrice").value;
+    var curStock = document.getElementById("existingStock").value;
+    var addNumber = document.getElementById("additionalNumber").value;
+    var date = document.getElementById("existingDate").value;
+    var userEmail = firebase.auth().currentUser.email;
+    var action = "Add stock/s to item."
+    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+
+    if(id && price && curStock && addNumber && date){
+      var newStock = Number(curStock) + Number(addNumber);
+      firebase.database().ref('items/'+id).update({
+        price: price,
+        stock: newStock
+      })
+      /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+        user_email: user,
+        date: date,
+        action_performed: action,
+        stock: additionalStock
+      });*/
+      firebase.database().ref('items/'+id+"/item_history/").push().set({
+        user_email: userEmail,
+        date: date,
+        action_performed: action,
+        stock: addNumber
+      });
+      alert("Item stock added!");
+      $("#item").val("");
+      document.getElementById("ID").value = "";
+      document.getElementById("existingPrice").value = "";
+      document.getElementById("existingStock").value = "";
+      document.getElementById("additionalNumber").value = "";
+      $('#existingItemModal').modal('hide');
+      document.getElementById("additionalNumber").value = "";
+    }else{
+      alert("Missing input.");
+    }
   },
 
   render: function() {
+    /*$("#update").click(function(){
+      this.displayItemOnModal;
+    });*/
     return (
       <div>
         <form id="itemIDForm" type="get" action="SpecificItem.html">
@@ -215,7 +275,7 @@ var Content = React.createClass({
               <div className="modal-content">
                 <div className="modal-body">
                   <a className="btn btn-primary" href="" data-toggle="modal" data-target="#newItemModal" onClick={this.generateIDandDate}>NEW ITEM</a>&nbsp;
-                  <a className="btn btn-primary pull-right" href="" data-toggle="modal" data-target="#existingItemModal" onClick={this.displayItemOnModal}>EXISTING ITEM</a>
+                  <a className="btn btn-primary pull-right" href="" data-toggle="modal" data-target="#existingItemModal" onClick={this.generateIDandDate}>EXISTING ITEM</a>
                 </div>
               </div>
             </div>
@@ -284,19 +344,21 @@ var Content = React.createClass({
                   <h4 className="modal-title">Existing Item</h4>
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
+                    <input type="hidden" id="ID" readOnly className="form-control"/>
                     <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                       <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                         <label>Item</label>
-                        <input type="text" id="existingItem" className="form-control"/>
+                        <select id="item" className="form-control" onChange={this.displayItemOnModal}>
+                          <option id="header" value="">- Choose an item -</option>
+                        </select>
                       </span>
                       <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                         <label>Stock</label>
-                        <input type="text" id="stock" readOnly className="form-control"/>
+                        <input type="text" id="existingStock" readOnly className="form-control"/>
                       </span>
                       <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                         <label>Number</label>
-                        <input type="number" id="existingNumber" className="form-control"/>
+                        <input type="number" id="additionalNumber" className="form-control" min="1"/>
                       </span>
                       <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                         <label>Description</label>
@@ -324,7 +386,7 @@ var Content = React.createClass({
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                  <button type="button" className="btn btn-primary">UPDATE</button>
+                  <button type="button" id="update" className="btn btn-primary" onClick={this.updateItem}>UPDATE</button>
                 </div>
               </div>
             </div>

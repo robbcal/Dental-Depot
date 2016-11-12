@@ -102,9 +102,9 @@ itemDescription: "null",
       });
     });
     var refHistory = firebase.database().ref('items/'+itemID+'/item_history');
-    refHistory.once('child_added', function(data) {
+    refHistory.on('child_added', function(data) {
       self.setState({
-        latestHistory: data.val().date
+        latestHistory: data.val().date 
       })
     })
   },
@@ -119,7 +119,7 @@ itemDescription: "null",
 
   addStock: function(){
     var now = new Date();
-    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
     var additionalStock = document.getElementById("addNumber").value;
     var date = document.getElementById("addDate").value;
     var user = firebase.auth().currentUser.email;
@@ -127,12 +127,17 @@ itemDescription: "null",
     var uid = firebase.auth().currentUser.uid;
 
     if(additionalStock && date){
-      var newStock = parseInt(this.state.itemStock) + parseInt(additionalStock);  
+      var newStock = Number(this.state.itemStock) + Number(additionalStock);  
       firebase.database().ref('items/'+itemID).update({
         stock: newStock
       })
-      
-      firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+      /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+        user_email: user,
+        date: date,
+        action_performed: action,
+        stock: additionalStock
+      });*/
+      firebase.database().ref('items/'+itemID+"/item_history/").push().set({
         user_email: user,
         date: date,
         action_performed: action,
@@ -148,26 +153,33 @@ itemDescription: "null",
 
   deleteStock: function(){
     var now = new Date();
-    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
     var diminishedStock = document.getElementById("deleteNumber").value;
     var date = document.getElementById("deleteDate").value;
     var user = firebase.auth().currentUser.email;
     var action = "Delete stock/s from item."
     var uid = firebase.auth().currentUser.uid;
     var curStock = this.state.itemStock;
+    
     if(diminishedStock && date){
       if(diminishedStock <= curStock){
-        var newStock = parseInt(curStock) - parseInt(diminishedStock);  
+        var newStock = Number(curStock) - Number(diminishedStock);  
         firebase.database().ref('items/'+itemID).update({
           stock: newStock
         })
-        firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+        /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+          user_email: user,
+          date: date,
+          action_performed: action,
+          stock: diminishedStock
+        });*/
+        firebase.database().ref('items/'+itemID+"/item_history/").push().set({
           user_email: user,
           date: date,
           action_performed: action,
           stock: diminishedStock
         });
-        alert("Item stock added!");
+        alert("Item stock deleted!");
         $('#deleteStockModal').modal('hide');
         document.getElementById("addNumber").value = "";
       }else{
@@ -180,7 +192,7 @@ itemDescription: "null",
 
   editItem: function(){
     var now = new Date();
-    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
     var user = firebase.auth().currentUser.email;
     var action = "Edit item."
     var date = document.getElementById("editDate").value;
@@ -188,14 +200,18 @@ itemDescription: "null",
     var itemPrice = document.getElementById("editPrice").value;
     var itemDescription = document.getElementById("editDescription").value;
 
-    //alert(date+" : "+itemName+" : "+itemPrice+" : "+itemDescription);
     if(date && itemName && itemPrice && itemDescription){
       firebase.database().ref('items/'+itemID).update({
         item_name: itemName,
       description: itemDescription,
             price: itemPrice
       })
-      firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+      /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+        user_email: user,
+        date: date,
+        action_performed: action
+      });*/
+      firebase.database().ref('items/'+itemID+"/item_history/").push().set({
         user_email: user,
         date: date,
         action_performed: action
@@ -255,7 +271,7 @@ itemDescription: "null",
               <div className="modal-content">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 className="modal-title">Add Item</h4>
+                  <h4 className="modal-title">Add Stock</h4>
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   
@@ -270,7 +286,7 @@ itemDescription: "null",
                     </span>
                     <span>
                       <label>Number</label>
-                      <input type="number" id="addNumber" className="form-control"/>
+                      <input type="number" id="addNumber" className="form-control" min="1"/>
                     </span>
                     <span>
                       <label>User</label>
@@ -300,7 +316,7 @@ itemDescription: "null",
               <div className="modal-content">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 className="modal-title">Add Item</h4>
+                  <h4 className="modal-title">Delete Stock</h4>
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   
@@ -315,7 +331,7 @@ itemDescription: "null",
                     </span>
                     <span>
                       <label>Number</label>
-                      <input type="number" id="deleteNumber" className="form-control"/>
+                      <input type="number" id="deleteNumber" className="form-control" min="1"/>
                     </span>
                     <span>
                       <label>User</label>
@@ -385,7 +401,7 @@ itemDescription: "null",
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                  <button type="button" className="btn btn-primary" onClick={this.editItem}>ADD</button>
+                  <button type="button" className="btn btn-primary" onClick={this.editItem}>EDIT</button>
                 </div>
               </div>
             </div>
