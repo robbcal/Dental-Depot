@@ -13,38 +13,28 @@ var Header = React.createClass({
 
   render: function() {
     return (
-      <div>
-        <div className="main-header">
-          <div className="logo">
-            <span className="logo-mini"><b>DD</b></span>
-            <span className="logo-lg"><b>Dental Depot</b></span>
-          </div>
-          <div className="navbar navbar-static-top" role="navigation">
-            <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-              <span className="sr-only">Toggle navigation</span>
-            </a>
-            <div className="navbar-custom-menu">
-              <ul className="nav navbar-nav">
-                <li className="dropdown user user-menu">
-                  <a href="#" className="dropdown-toggle profile" data-toggle="dropdown">
-                    <span><img className="profileDropdown" src="../bootstrap/icons/tooth.png"/></span>
-                  </a>
-                  <ul className="dropdown-menu" style={{width: 100, paddingTop: 0, borderBottomWidth: 0, borderTopWidth: 0, borderRightWidth: 0, borderLeftWidth: 0}}>
-                    <li className="user-body" style={{paddingTop: 0, paddingBottom: 0, paddingLeft: 0, paddingRight: 0}}>
-                      <div className="profileButton" style={{paddingRight: 0, width: 145, right: 0}}>
-                        <button className="btn btn-default btn-flat" data-toggle="modal" data-target="#profileModal" style={{width: 160, paddingLeft: 0, paddingRight: 0}}>PROFILE</button>
-                      </div>
-                      <div className="logoutButton" style={{right: 0}}>
-                        <button className="btn btn-default btn-flat" onClick={this.logout} style={{width: 160, paddingLeft: 0, paddingRight: 0}}>LOGOUT</button>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
+        <div>
+            <div className="main-header">
+                <div className="logo">
+                    <span className="logo-lg" id="mainHeader">Dental Depot</span>
+                </div>
+                <div className="navbar navbar-static-top" role="navigation">
+                    <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <span className="sr-only">Toggle navigation</span>
+                    </a>
+                    {/* comment */}
+                    <div className="navbar-custom-menu">
+                        <ul className="nav navbar-nav">
+                            <li className="dropdown user user-menu">
+                                <a href="#"><span onClick={this.logout}>
+                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
+                                </span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     );
   }
 });
@@ -52,26 +42,30 @@ var Header = React.createClass({
 var Body = React.createClass({
   render: function() {
     return (
-      <div>
-        <div className="main-sidebar">
-          <div className="sidebar">
-            <ul className="sidebar-menu">
-              <li className="header">NAVIGATION</li>
-              <li><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" height="15px"/></i><span> Inventory</span></a></li>
-              <li className="active"><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" height="15px"/></i><span> Users</span></a></li>
-              <li><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" height="15px"/></i><span> Logs</span></a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-          <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-            <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-              <Content/>
+        <div>
+            <div className="main-sidebar">
+                <div className="sidebar">
+                    <ul className="sidebar-menu">
+                        <br/>
+                        <li className="header">NAVIGATION</li>
+                        <li><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
+                        <li className="active"><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Users</span></a></li>
+                        <li><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Logs</span></a></li>
+                        <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
+                    </ul>
+                </div>
             </div>
-          </div>
+
+            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
+                        <Content/>
+                    </div>
+                </div>
+            </div>
+
+            {/* LOGOUT MODAL CONTENT */}
         </div>
-      </div>
     );
   }
 });
@@ -181,93 +175,93 @@ var Content = React.createClass({
   render: function() {
     return (
       <div>
-        <br/><br/>
-        <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <span className="pull-left">
-              <input type="text" id="userSearch" /*className="searchBox"*//>
-              <button id="userSearchButton"><img src="../bootstrap/icons/search.png" height="15px"/></button>
-            </span>
-            <span className="pull-right">
-              <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal">ADD USER</a>
-            </span>
-          </div>
           <br/><br/>
-          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <table className="table table-hover table-striped table-bordered /*adminTable*/" id="user_table">
-              <thead>
-                <tr>
-                  <th><center>USERNAME</center></th>
-                  <th><center>EMAIL ADDRESS</center></th>
-                  <th><center>USER TYPE</center></th>
-                </tr>
-              </thead>
-              <tbody id="userList">
-
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="example-modal">
-          <div className="modal fade bs-example-modal-lg" id="addUserModal">
-            <div className="modal-dialog modal-md">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 className="modal-title">ADD USER</h4>
-                </div>
-                <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                  <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                    <span>
-                      <label>First Name</label>
-                      <input type="text" id="firstName" className="form-control"/>
-                    </span>
-                    <span>
-                      <label>Last Name</label>
-                      <input type="text" id="lastName" className="form-control"/>
-                    </span>
-                    <span>
-                      <label>Email</label>
-                      <input type="email" id="email" className="form-control"/>
-                    </span>
-                    <span>
-                      <label>Address</label>
-                      <input type="text" id="address" className="form-control"/>
-                    </span>
-                    <span>
-                      <label>Contact Number</label>
-                      <input type="text" id="contactNumber" className="form-control"/>
-                    </span>
-                    <span>
-                      <label>Age</label>
-                      <input type="number" id="age" className="form-control"/>
-                    </span>
-                  </div>
-                  <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                    <span>
-                      <label>Birthdate</label>
-                      <input type="date" id="birthdate" className="form-control"/>
-                    </span>
-                    <span>
-                      <label>User Type</label>
-                      <select id="userType" className="form-control">
-                        <option value="admin">Admin</option>
-                        <option value="user">User</option>
-                      </select>
-                    </span>
-                  </div>
-
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                  <button type="button" className="btn btn-primary" onClick={this.addUser}>ADD</button>
-                </div>
+          <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <span className="pull-left">
+                      <input type="text" id="userSearch" /*className="searchBox"*//>
+                      <button id="userSearchButton"><img src="../bootstrap/icons/search.png" height="15px"/></button>
+                  </span>
+                  <span className="pull-right">
+                      <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal">ADD USER</a>
+                  </span>
               </div>
-            </div>
+              <br/><br/>
+              <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <table className="table table-hover table-striped table-bordered /*adminTable*/" id="user_table">
+                      <thead>
+                          <tr>
+                              <th><center>USERNAME</center></th>
+                              <th><center>EMAIL ADDRESS</center></th>
+                              <th><center>USER TYPE</center></th>
+                          </tr>
+                      </thead>
+                      <tbody id="userList">
+
+                      </tbody>
+                  </table>
+              </div>
           </div>
-        </div>
+
+          <div className="example-modal">
+              <div className="modal fade bs-example-modal-lg" id="addUserModal">
+                  <div className="modal-dialog modal-md">
+                      <div className="modal-content">
+                          <div className="modal-header">
+                              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                              <h4 className="modal-title">ADD USER</h4>
+                          </div>
+                          <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                              <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                  <span>
+                                      <label>First Name</label>
+                                      <input type="text" id="firstName" className="form-control"/>
+                                  </span>
+                                  <span>
+                                      <label>Last Name</label>
+                                      <input type="text" id="lastName" className="form-control"/>
+                                  </span>
+                                  <span>
+                                      <label>Email</label>
+                                      <input type="email" id="email" className="form-control"/>
+                                  </span>
+                                  <span>
+                                      <label>Address</label>
+                                      <input type="text" id="address" className="form-control"/>
+                                  </span>
+                                  <span>
+                                      <label>Contact Number</label>
+                                      <input type="text" id="contactNumber" className="form-control"/>
+                                  </span>
+                                  <span>
+                                      <label>Age</label>
+                                      <input type="number" id="age" className="form-control"/>
+                                  </span>
+                              </div>
+                              <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                  <span>
+                                      <label>Birthdate</label>
+                                      <input type="date" id="birthdate" className="form-control"/>
+                                  </span>
+                                  <span>
+                                      <label>User Type</label>
+                                      <select id="userType" className="form-control">
+                                          <option value="admin">Admin</option>
+                                          <option value="user">User</option>
+                                      </select>
+                                  </span>
+                              </div>
+
+                          </div>
+                          <div className="modal-footer">
+                              <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
+                              <button type="button" className="btn btn-primary" onClick={this.addUser}>ADD</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
       </div>
     );
@@ -302,12 +296,10 @@ var MainContent = React.createClass({
     if(this.state.signedIn == true){
       if(this.state.type == "admin"){
         res = (
-
-            <div>
+          <div>
               <Header/>
               <Body/>
-            </div>
-
+          </div>
         );
       }else if(this.state.type == "user"){
         window.location.replace("../user/Items.html");
