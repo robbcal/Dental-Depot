@@ -63,7 +63,6 @@ var Body = React.createClass({
                     </div>
                 </div>
             </div>
-
             {/* LOGOUT MODAL CONTENT */}
         </div>
     );

@@ -87,7 +87,7 @@ var Content = React.createClass({
       });
     });
 
-    var ref = firebase.database().ref('items');
+    var ref = firebase.database().ref('items').orderByChild("item_name");
     ref.on('child_added', function(data) {
       var id=data.key
       var itemName = data.val().item_name;
@@ -250,7 +250,7 @@ var Content = React.createClass({
             </span>
             <span className="pull-right">
               <a className="btn btn-primary" id="addItem" href="" data-toggle="modal" data-target="#addItemModal">ADD ITEM</a>&nbsp; 
-              <button className="btn btn-primary" id="addTransaction">ADD TRANSACTION</button>
+              <a className="btn btn-primary" id="addTransaction" href="Transaction.html">ADD TRANSACTION</a>
             </span>
           </div>
           <br/><br/>
