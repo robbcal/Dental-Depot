@@ -20,6 +20,7 @@ var Header = React.createClass({
               <div>
                   <div className="main-header">
                       <div className="logo">
+                          <span className="logo-mini"><b>DD</b></span>
                           <span className="logo-lg" id="mainHeader">Dental Depot</span>
                       </div>
                       <div className="navbar navbar-static-top" role="navigation">
@@ -38,7 +39,6 @@ var Header = React.createClass({
                       </div>
                   </div>
               </div>
-              </div>
           );
         }
       });
@@ -52,10 +52,10 @@ var Header = React.createClass({
                           <ul className="sidebar-menu">
                               <br/>
                               <li className="header">NAVIGATION</li>
-                              <li><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
-                              <li><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Users</span></a></li>
-                              <li className="active"><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Logs</span></a></li>
-                              <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
+                              <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                              <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
+                              <li className="active"><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
+                              <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                           </ul>
                       </div>
                   </div>
@@ -68,7 +68,6 @@ var Header = React.createClass({
                       </div>
                   </div>
 
-                  {/* LOGOUT MODAL CONTENT */}
               </div>
           );
         }
@@ -77,9 +76,101 @@ var Header = React.createClass({
       var Content = React.createClass({
         render: function() {
           return (
-            <div>
-                <h1>LOGSSSSSSSSSSSSSs</h1>
-            </div>
+              <div id="mainContent">
+                  <div className="nav-tabs-custom">
+                      <ul className="nav nav-tabs">
+                          <li><a href="#sales" data-toggle="tab">SALES</a></li>
+                          <li className="active"><a href="#transaction" data-toggle="tab">TRANSACTION</a></li>
+                          <li><a href="#activity" data-toggle="tab">ACTIVITY</a></li>
+                      </ul>
+                      <div className="tab-content">
+                          <div className="tab-pane" id="sales">
+
+                          </div>
+                          <div className="active tab-pane" id="transaction">
+                              <div className="row">
+                                  <div className="col-sm-6 pull-right">
+                                      <div className="box-tools pull-right">
+                                          <div className="input-group input-group-sm" id="logsTransSearch">
+                                              <input type="text" name="table_search" className="form-control pull-right" placeholder="Search"/>
+                                              <div className="input-group-btn">
+                                                  <button type="submit" className="btn btn-default">
+                                                      <i className="fa fa-search"></i>
+                                                  </button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div className="row">
+                                  <div className="col-sm-12">
+                                      <div className="box-body">
+                                          <table id="example1" className="table table-bordered table-striped striped dataTable">
+                                              <thead>
+                                                  <tr>
+                                                      <th><center>TRANSACTION ID</center></th>
+                                                      <th><center>TOTAL</center></th>
+                                                      <th><center>DATE</center></th>
+                                                      <th><center>USER</center></th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody>
+                                                  <tr>
+                                                      <td>Trident</td>
+                                                      <td>Win 95+</td>
+                                                      <td> 4</td>
+                                                      <td>X</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>Trident</td>
+                                                      <td>Win 95+</td>
+                                                      <td> 4</td>
+                                                      <td>X</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>Trident</td>
+                                                      <td>Win 95+</td>
+                                                      <td> 4</td>
+                                                      <td>X</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div className="row" id="logsRowThree">
+                                  <div className="col-sm-5">
+                                      <div className="dataTables_info" id="example2_info" role="status" aria-live="polite">
+                                          Showing 1 to 10 of 57 entries
+                                      </div>
+                                  </div>
+                                  <div className="col-sm-7">
+                                      <div className="dataTables_paginate paging_simple_numbers pull-right" id="logsTransPagination">
+                                          <ul className="pagination">
+                                              <li className="paginate_button previous disabled">
+                                                  <a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0">Previous</a>
+                                              </li>
+                                              <li className="paginate_button active">
+                                                  <a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0">1</a>
+                                              </li>
+                                              <li className="paginate_button">
+                                                  <a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">2</a>
+                                              </li>
+                                              <li className="paginate_button next">
+                                                  <a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">Next</a>
+                                              </li>
+                                          </ul>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="tab-pane" id="activity">
+
+                          </div>
+                      </div>
+                  </div>
+
+              </div>
           );
         }
       });

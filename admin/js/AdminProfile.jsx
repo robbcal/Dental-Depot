@@ -21,6 +21,7 @@ var Header = React.createClass({
       <div>
           <div className="main-header">
               <div className="logo">
+                  <span className="logo-mini"><b>DD</b></span>
                   <span className="logo-lg" id="mainHeader">Dental Depot</span>
               </div>
               <div className="navbar navbar-static-top" role="navigation">
@@ -52,10 +53,10 @@ var Body = React.createClass({
                     <ul className="sidebar-menu">
                         <br/>
                         <li className="header">NAVIGATION</li>
-                        <li><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
-                        <li><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Users</span></a></li>
-                        <li><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Logs</span></a></li>
-                        <li className="active"><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
+                        <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                        <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
+                        <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
+                        <li className="active"><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -67,8 +68,6 @@ var Body = React.createClass({
                     </div>
                 </div>
             </div>
-
-            {/* LOGOUT MODAL CONTENT */}
         </div>
     );
   }
@@ -197,7 +196,7 @@ var Content = React.createClass({
                       </a>
                   </div>
               </div>
-
+              
               <div className="row col-xs-8 box" id="userProfileMainContent">
                   <div>
                       <h2><strong> {this.state.fullName} </strong></h2>
@@ -354,7 +353,6 @@ var Content = React.createClass({
                       </div>
                   </div>
               </div>
-
           </div>
       );
     }

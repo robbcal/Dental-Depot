@@ -16,13 +16,13 @@ var Header = React.createClass({
         <div>
             <div className="main-header">
                 <div className="logo">
+                    <span className="logo-mini"><b>DD</b></span>
                     <span className="logo-lg" id="mainHeader">Dental Depot</span>
                 </div>
                 <div className="navbar navbar-static-top" role="navigation">
                     <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span className="sr-only">Toggle navigation</span>
                     </a>
-                    {/* comment */}
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li className="dropdown user user-menu">
@@ -48,10 +48,10 @@ var Body = React.createClass({
                     <ul className="sidebar-menu">
                         <br/>
                         <li className="header">NAVIGATION</li>
-                        <li className="active"><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
-                        <li><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Users</span></a></li>
-                        <li><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Logs</span></a></li>
-                        <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
+                        <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                        <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
+                        <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
+                        <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -63,8 +63,6 @@ var Body = React.createClass({
                     </div>
                 </div>
             </div>
-
-            {/* LOGOUT MODAL CONTENT */}
         </div>
     );
   }
@@ -85,6 +83,36 @@ var Content = React.createClass({
       self.setState({
         curUser: snapshot.val().firstname+" "+snapshot.val().lastname
       });
+    });
+
+    var ref = firebase.database().ref('items');
+    ref.on('child_added', function(data) {
+        var id=data.key
+        var itemName = data.val().item_name;
+        var stock = data.val().stock;
+
+        $("#itemList").append("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+        $("#"+id+"").dblclick(function() {
+           document.getElementById("item_id").value = id;
+           document.getElementById("submit").click();
+        });
+    });
+
+    ref.on('child_changed', function(data) {
+        var id=data.key
+        var itemName = data.val().item_name;
+        var stock = data.val().stock;
+
+        $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+        $("#"+id+"").dblclick(function() {
+            document.getElementById("item_id").value = id;
+            document.getElementById("submit").click();
+        });
+    });
+
+    ref.on('child_removed', function(data) {
+        var id=data.key
+        $("tr#"+id).remove();
     });
   },
 
@@ -119,7 +147,8 @@ var Content = React.createClass({
     firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
       user_email: user,
       date: date,
-      action_performed: action
+      action_performed: action,
+      stock: stock
     });
     alert("Item added");
     document.getElementById("newItem").value="";
@@ -134,56 +163,57 @@ var Content = React.createClass({
     ref.once('value', function(snapshot) {
       snapshot.forEach(function(childSnapshot) {
         console.log(childSnapshot.val().key);
-        //var childData = childSnapshot.val();
-
       });
     });
   },
 
   render: function() {
     return (
-      <div>
-          <br/><br/>
-          <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-              <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <span className="pull-left">
-                      <input type="text" id="inventorySearch" /*className="searchBox"*//>
-                      <button id="inventoryButton"><img src="../bootstrap/icons/search.png" height="15px"/></button>
-                  </span>
-                  <span className="pull-right">
-                      <a className="btn btn-primary" id="addItem" href="" data-toggle="modal" data-target="#addItemModal">ADD ITEM</a>&nbsp;
-                      <button className="btn btn-primary" id="addTransaction">ADD TRANSACTION</button>
-                  </span>
-              </div>
-              <br/><br/>
-              <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <table className="table table-hover table-striped table-bordered /*adminTable*/">
-                      <thead>
-                          <tr>
-                              <th><center>NAME</center></th>
-                              <th><center>STOCK</center></th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td>sample</td>
-                              <td>sample</td>
-                          </tr>
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-
-          <div className="example-modal">
-              <div className="modal fade bs-example-modal-lg" id="addItemModal">
-                  <div className="modal-dialog modal-sm">
-                      <div className="modal-content">
-                          <div className="modal-body">
-                              <a className="btn btn-primary" href="" data-toggle="modal" data-target="#newItemModal" onClick={this.generateIDandDate}>NEW ITEM</a>&nbsp;
-                              <a className="btn btn-primary pull-right" href="" data-toggle="modal" data-target="#existingItemModal" onClick={this.displayItemOnModal}>EXISTING ITEM</a>
+      <div id="mainContent">
+          <form id="itemIDForm" type="get" action="SpecificItem.html">
+              <input type="hidden" id="item_id" name="item_id"/>
+              <button type="submit" value="Send" name="submit" id="submit" style={{display: 'none'}}></button>
+          </form>
+          <div className="box">
+              <div className="box-header" id="headerContent">
+                  <div className="col-sm-4">
+                      <div className="input-group input-group-sm">
+                          <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search"/>
+                          <div className="input-group-btn">
+                              <button type="submit" className="btn btn-default">
+                                  <i className="fa fa-search"></i>
+                              </button>
                           </div>
                       </div>
                   </div>
+                  <div className="col-sm-4"></div>
+                  <div className="btn-group col-sm-2">
+                      <button className="btn btn-primary">ADD ITEM</button>
+                      <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                          <span className="caret"></span>
+                          <span className="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <ul className="dropdown-menu" role="menu">
+                          <li><a data-toggle="modal" data-target="#newItemModal" onClick={this.generateIDandDate}>New Item</a></li>
+                          <li><a data-toggle="modal" data-target="#existingItemModal" onClick={this.displayItemOnModal}>Existing Item</a></li>
+                      </ul>
+                  </div>
+                  <div className="col-sm-2">
+                      <a className="btn btn-primary pull-right" id="addTransaction">ADD TRANSACTION</a>
+                  </div>
+              </div>
+              <div className="box-body">
+                  <table id="itemTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                      <thead>
+                          <tr>
+                              {/* <th className="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM ID</th> */}
+                              <th className="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM NAME</th>
+                              <th className="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">IN STOCK</th>
+                          </tr>
+                      </thead>
+                      <tbody id="itemList">
+                      </tbody>
+                  </table>
               </div>
           </div>
 
@@ -229,7 +259,6 @@ var Content = React.createClass({
                                       <input type="date" id="newDate" className="form-control"/>
                                   </span>
                               </div>
-
                           </div>
                           <div className="modal-footer">
                               <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
@@ -249,7 +278,6 @@ var Content = React.createClass({
                               <h4 className="modal-title">Existing Item</h4>
                           </div>
                           <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
                               <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                   <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                       <label>Item</label>

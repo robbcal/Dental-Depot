@@ -1,0 +1,493 @@
+var Header = React.createClass({
+  logout: function(){
+    firebase.auth().signOut().then(function() {
+      window.location.replace("http://127.0.0.1:8080/");
+    }, function(error) {
+      console.log(error);
+    });
+  },
+
+  componentDidUpdate: function(){
+    $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+  },
+
+  render: function() {
+    return (
+        <div>
+            <div className="main-header">
+                <div className="logo">
+                    <span className="logo-mini"><b>DD</b></span>
+                    <span className="logo-lg" id="mainHeader">Dental Depot</span>
+                </div>
+                <div className="navbar navbar-static-top" role="navigation">
+                    <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <span className="sr-only">Toggle navigation</span>
+                    </a>
+                    <div className="navbar-custom-menu">
+                        <ul className="nav navbar-nav">
+                            <li className="dropdown user user-menu">
+                                <a href="#"><span onClick={this.logout}>
+                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
+                                </span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+  }
+});
+
+var Body = React.createClass({
+  render: function() {
+      return (
+        <div>
+            <div className="main-sidebar">
+                <div className="sidebar">
+                    <ul className="sidebar-menu">
+                        <br/>
+                        <li className="header">NAVIGATION</li>
+                        <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                        <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
+                        <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
+                        <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
+                        <Content/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+  }
+});
+
+var Content = React.createClass({
+  getInitialState: function() {
+      return {
+        curUser: "null",
+         itemId: itemID,
+       itemName: "null",
+itemDescription: "null",
+      itemPrice: "null",
+      itemStock: "null",
+  latestHistory: "null"
+      };
+  },
+
+  componentWillMount: function(){
+    const self = this;
+    var uid = firebase.auth().currentUser.uid;
+    var refUser = firebase.database().ref('users/'+uid);
+    refUser.on('value', function(snapshot) {
+      self.setState({
+        curUser: snapshot.val().firstname+" "+snapshot.val().lastname
+      });
+    });
+    var ref = firebase.database().ref('items/'+itemID);
+    ref.on('value', function(snapshot) {
+      self.setState({
+         itemName: snapshot.val().item_name,
+  itemDescription: snapshot.val().description,
+        itemPrice: snapshot.val().price,
+        itemStock: snapshot.val().stock
+      });
+    });
+    var refHistory = firebase.database().ref('items/'+itemID+'/item_history');
+    refHistory.once('child_added', function(data) {
+      self.setState({
+        latestHistory: data.val().date
+      })
+    })
+  },
+
+  generateDate: function(){
+    var now = new Date();
+    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    document.getElementById("addDate").value = today;
+    document.getElementById("deleteDate").value = today;
+    document.getElementById("editDate").value = today;
+  },
+
+  addStock: function(){
+    var now = new Date();
+    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+    var additionalStock = document.getElementById("addNumber").value;
+    var date = document.getElementById("addDate").value;
+    var user = firebase.auth().currentUser.email;
+    var action = "Add stock/s to item."
+    var uid = firebase.auth().currentUser.uid;
+
+    if(additionalStock && date){
+      var newStock = parseInt(this.state.itemStock) + parseInt(additionalStock);
+      firebase.database().ref('items/'+itemID).update({
+        stock: newStock
+      })
+
+      firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+        user_email: user,
+        date: date,
+        action_performed: action,
+        stock: additionalStock
+      });
+      alert("Item stock added!");
+      $('#addStockModal').modal('hide');
+      document.getElementById("addNumber").value = "";
+    }else{
+      alert("Input number!");
+    }
+  },
+
+  deleteStock: function(){
+    var now = new Date();
+    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+    var diminishedStock = document.getElementById("deleteNumber").value;
+    var date = document.getElementById("deleteDate").value;
+    var user = firebase.auth().currentUser.email;
+    var action = "Delete stock/s from item."
+    var uid = firebase.auth().currentUser.uid;
+    var curStock = this.state.itemStock;
+    if(diminishedStock && date){
+      if(diminishedStock <= curStock){
+        var newStock = parseInt(curStock) - parseInt(diminishedStock);
+        firebase.database().ref('items/'+itemID).update({
+          stock: newStock
+        })
+        firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+          user_email: user,
+          date: date,
+          action_performed: action,
+          stock: diminishedStock
+        });
+        alert("Item stock added!");
+        $('#deleteStockModal').modal('hide');
+        document.getElementById("addNumber").value = "";
+      }else{
+        alert("Di ka ka-delete. Bogo ka ug math!");
+      }
+    }else{
+      alert("Input number!");
+    }
+  },
+
+  editItem: function(){
+    var now = new Date();
+    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+    var user = firebase.auth().currentUser.email;
+    var action = "Edit item."
+    var date = document.getElementById("editDate").value;
+    var itemName = document.getElementById("editItem").value;
+    var itemPrice = document.getElementById("editPrice").value;
+    var itemDescription = document.getElementById("editDescription").value;
+
+    if(date && itemName && itemPrice && itemDescription){
+      firebase.database().ref('items/'+itemID).update({
+        item_name: itemName,
+      description: itemDescription,
+            price: itemPrice
+      })
+      firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+        user_email: user,
+        date: date,
+        action_performed: action
+      });
+      alert("Item edited!");
+      $('#editItemModal').modal('hide');
+    }else{
+      alert("Missing input.");
+    }
+  },
+
+  deleteItem: function(){
+    firebase.database().ref('items/'+itemID).remove();
+    alert("Item deleted.");
+    window.location.replace("Inventory.html");
+  },
+
+  onItemName: function(e) {
+    this.setState({itemName: e.target.value});
+  },
+
+  onItemPrice: function(e) {
+    this.setState({itemPrice: e.target.value});
+  },
+
+  onItemDescription: function(e) {
+    this.setState({itemDescription: e.target.value});
+  },
+
+  render: function() {
+    return (
+        <div id="mainContent">
+            <div className="col-sm-4 pull-left">
+                <a href="Inventory.html"><img src="../bootstrap/icons/left-arrow.png" id="backButton"/></a>
+            </div>
+            <div className="col-sm-4"></div>
+            <div className="btn-group col-sm-2">
+                <button className="btn btn-primary">ITEM STOCK</button>
+                <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span className="caret"></span>
+                    <span className="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul className="dropdown-menu" role="menu">
+                    <li><a data-toggle="modal" data-target="#addStockModal" onClick={this.generateIDandDate}>Add</a></li>
+                    <li><a data-toggle="modal" data-target="#editItemModal" onClick={this.generateDate}>Edit</a></li>
+                    <li><a data-toggle="modal" data-target="#deleteStockModal" onClick={this.generateDate}>Delete</a></li>
+                </ul>
+            </div>
+            <div className="col-sm-2">
+                <a className="btn btn-primary pull-right" data-target="#deleteItemModal">DELETE ITEM</a>
+            </div>
+
+            <div className="row col-sm-8 box" id="specificItemContent">
+                <h2><strong>{this.state.itemName}</strong></h2>
+                <h4>{this.state.itemDescription}</h4>
+                <br/><br/>
+                <div className="row">
+                    <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                        <img src="../bootstrap/icons/price-tag.png" height="45px"/>
+                    </div>
+                    <div className="col-sm-6">
+                        <h5 style={{color: 'gray'}}><strong>ITEM PRICE</strong></h5>
+                        <h4><strong>{this.state.itemPrice}</strong></h4><br/>
+                    </div>
+                    <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                        <img src="../bootstrap/icons/calendar.png" height="45px"/>
+                    </div>
+                    <div className="col-sm-3">
+                        <h5 style={{color: 'gray'}}><strong>DATE LAST UPDATED</strong></h5>
+                        <h4><strong>{this.state.latestHistory}</strong></h4>
+                        <br/>
+                    </div>
+                </div>
+                <br/>
+                <div className="row">
+                    <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                        <img src="../bootstrap/icons/message.png" height="45px"/>
+                    </div>
+                    <div className="col-sm-6">
+                        <h5 style={{color: 'gray'}}><strong>ITEM IN STOCK</strong></h5>
+                        <h4><strong>{this.state.itemStock}</strong></h4><br/>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modalContent">
+                <div className="modal fade bs-example-modal-lg" id="addStockModal">
+                    <div className="modal-dialog modal-md">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Add Item</h4>
+                            </div>
+                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span>
+                                        <label>ID</label>
+                                        <input type="text" readOnly className="form-control" value={this.state.itemId}/>
+                                    </span>
+                                    <span>
+                                        <label>Item</label>
+                                        <input type="text" readOnly className="form-control" value={this.state.itemName}/>
+                                    </span>
+                                    <span>
+                                        <label>Number</label>
+                                        <input type="number" id="addNumber" className="form-control"/>
+                                    </span>
+                                    <span>
+                                        <label>User</label>
+                                        <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
+                                    </span>
+                                </div>
+                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span>
+                                        <label>Date</label>
+                                        <input type="date" id="addDate" className="form-control"/>
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
+                                <button type="button" className="btn btn-primary" onClick={this.addStock}>ADD</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade bs-example-modal-lg" id="deleteStockModal">
+                    <div className="modal-dialog modal-md">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Add Item</h4>
+                            </div>
+                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span>
+                                        <label>ID</label>
+                                        <input type="text" readOnly className="form-control" value={this.state.itemId}/>
+                                    </span>
+                                    <span>
+                                        <label>Item</label>
+                                        <input type="text" readOnly className="form-control" value={this.state.itemName}/>
+                                    </span>
+                                    <span>
+                                        <label>Number</label>
+                                        <input type="number" id="deleteNumber" className="form-control"/>
+                                    </span>
+                                    <span>
+                                        <label>User</label>
+                                        <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
+                                    </span>
+                                </div>
+                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span>
+                                        <label>Date</label>
+                                        <input type="date" id="deleteDate" className="form-control"/>
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
+                                <button type="button" className="btn btn-primary" onClick={this.deleteStock}>DELETE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade bs-example-modal-lg" id="editItemModal">
+                    <div className="modal-dialog modal-md">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Edit Item</h4>
+                            </div>
+                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span>
+                                        <label>ID</label>
+                                        <input type="text" readOnly className="form-control" value={this.state.itemId}/>
+                                    </span>
+                                    <span>
+                                        <label>Item</label>
+                                        <input type="text" id="editItem" className="form-control" onChange={this.onItemName} value={this.state.itemName}/>
+                                    </span>
+                                    <span>
+                                        <label>Stock</label>
+                                        <input type="number" readOnly className="form-control" value={this.state.itemStock}/>
+                                    </span>
+                                    <span>
+                                        <label>Price</label>
+                                        <input type="number" id="editPrice" className="form-control" onChange={this.onItemPrice} value={this.state.itemPrice}/>
+                                    </span>
+                                    <span>
+                                        <label>User</label>
+                                        <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
+                                    </span>
+                                </div>
+                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span>
+                                        <label>Description</label>
+                                        <textarea id="editDescription" className="form-control" onChange={this.onItemDescription} value={this.state.itemDescription}></textarea>
+                                    </span>
+                                    <span>
+                                        <label>Date</label>
+                                        <input type="date" id="editDate" className="form-control"/>
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
+                                <button type="button" className="btn btn-primary" onClick={this.editItem}>ADD</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade bs-example-modal-lg" id="deleteItemModal">
+                    <div className="modal-dialog modal-md">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Delete Item</h4>
+                            </div>
+                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h4><strong>Are you sure you want to delete this item?</strong></h4>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">NO</button>
+                                <button type="button" className="btn btn-primary" onClick={this.deleteItem}>YES</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+  }
+});
+
+var MainContent = React.createClass({
+  getInitialState: function() {
+      return { signedIn: false, type: 0 };
+  },
+
+  componentDidMount: function(){
+    const self = this;
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        var uid = firebase.auth().currentUser.uid;
+        firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
+          self.setState({ signedIn: true, type: snapshot.val().user_type });
+          $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+        });
+      } else {
+        self.setState({ signedIn: false });
+        window.location.replace("http://127.0.0.1:8080/");
+      }
+    }, function(error) {
+      console.log(error);
+    });
+  },
+
+  render: function() {
+    var res;
+    if(this.state.signedIn == true){
+      if(this.state.type == "admin"){
+        res = (
+          <div>
+              <Header/>
+              <Body/>
+          </div>
+        );
+      }else if(this.state.type == "user"){
+        window.location.replace("../user/Items.html");
+      }
+    }else{
+      res = (
+        <div>
+        </div>
+      );
+    }
+    return(
+      res
+    );
+  }
+});
+
+ReactDOM.render(
+  <MainContent/>,
+  document.getElementById('main')
+);

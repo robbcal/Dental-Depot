@@ -1,0 +1,14 @@
+#mainContent{
+    padding: 50px;
+    margin-top: -10px;
+}
+
+#specificItemContent{
+    padding: 30px;
+    margin-top: 30px;
+    margin-left: 0px;
+}
+
+#backButton{
+    height: 25px;
+}
