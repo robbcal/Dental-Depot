@@ -84,7 +84,8 @@ var Content = React.createClass({
        birthdate: "null",
            email: "null",
    contactNumber: "null",
-        password: "null"
+        password: "null",
+        userType: "null"
       };
   },
 
@@ -102,7 +103,8 @@ var Content = React.createClass({
        birthdate: snapshot.val().birthday,
            email: snapshot.val().user_email,
    contactNumber: snapshot.val().contact_no,
-        password: snapshot.val().password
+        password: snapshot.val().password,
+        userType: snapshot.val().user_type
       });
     });
   },
@@ -115,6 +117,9 @@ var Content = React.createClass({
     $('#editConfirmation').appendTo("body").modal('show');
   },
 
+  onUserType: function(e) {
+    this.setState({userType: e.target.value});
+  },
   onFirstName: function(e) {
     this.setState({firstname: e.target.value});
   },
@@ -187,57 +192,47 @@ var Content = React.createClass({
 
   render: function() {
       return (
-          <div id="userProfileContent">
-              <div className="row" id="userProfileButtons">
-                  <div className="col-sm-6"></div>
-                  <div className="col-sm-6">
-                      <a className="btn btn-primary pull-right" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal"
-                          onClick={this.showModal}>EDIT INFO
-                      </a>
-                  </div>
-              </div>
+          <div className="row" id="userProfileContent">
+              <div className="col-md-4">
+                  <div className="box box-primary" id="basicInfo">
+                      <div className="box-body box-profile">
+                          <center>
+                              <img class="profile-user-img img-responsive img-circle" src="../bootstrap/icons/tooth.png" alt="User profile picture" id="imgUser"/>
+                          </center>
+                          <h3 className="profile-username text-center">{this.state.fullName}</h3>
 
-              <div className="row col-xs-8 box" id="userProfileMainContent">
-                  <div>
-                      <h2><strong> {this.state.fullName} </strong></h2>
-                      <h4> {this.state.address} </h4><br/><br/>
-                      <div className="row">
-                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                              <img src="../bootstrap/icons/age.png" height="45px"/>
-                          </div>
-                          <div className="col-sm-6">
-                              <h5 style={{color: 'gray'}}><strong> AGE </strong></h5>
-                              <h4><strong> {this.state.age} YRS OLD </strong></h4><br/>
-                          </div>
-                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                              <img src="../bootstrap/icons/bday.png" height="45px"/>
-                          </div>
-                          <div className="col-sm-3">
-                              <h5 style={{color: 'gray'}}><strong> BIRTHDAY </strong></h5>
-                              <h4><strong> {this.state.birthdate} </strong></h4><br/>
-                          </div>
-                      </div>
-                      <br/>
-                      <div className="row">
-                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                              <img src="../bootstrap/icons/message.png" height="45px"/>
-                          </div>
-                          <div className="col-sm-6">
-                              <h5 style={{color: 'gray'}}><strong> EMAIL ADDRESS </strong></h5>
-                              <h4><strong> {this.state.email} </strong></h4><br/>
-                          </div>
-                          <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                              <img src="../bootstrap/icons/phone-book.png" height="45px"/>
-                          </div>
-                          <div className="col-sm-4">
-                              <h5 style={{color: 'gray'}}><strong> CONTACT NUMBER </strong></h5>
-                              <h4><strong> {this.state.contactNumber} </strong></h4><br/>
-                          </div>
+                          <p className="text-muted text-center">{this.state.userType}</p>
+                          <br/>
+                          <a className="btn btn-primary pull-right btn-block" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal"
+                              onClick={this.showModal}>EDIT INFO
+                          </a>
                       </div>
                   </div>
               </div>
 
-              {/*MODAL CONTENT*/}
+              <div className="col-md-8">
+                  <div className="box box-default" id="basicInfo">
+                      <div className="box-header with-border">
+                          <h3 className="box-title">User Information</h3>
+                      </div>
+                      <div className="box-body">
+                          <strong><i className="fa fa-envelope-o margin-r-5"></i> Email Address</strong>
+                          <h5 className="text-muted" id="profileContents">{this.state.email}</h5>
+                          <hr/>
+                          <strong><i className="fa fa-birthday-cake margin-r-5"></i> Birthday</strong>
+                          <h5 className="text-muted" id="profileContents">{this.state.birthdate}</h5>
+                          <hr/>
+                          <strong><i className="fa fa-calendar margin-r-5"></i> Age</strong>
+                          <h5 className="text-muted" id="profileContents">{this.state.age} years old</h5>
+                          <hr/>
+                          <strong><i className="fa fa-map-marker margin-r-5"></i> Address</strong>
+                          <h5 className="text-muted" id="profileContents">{this.state.address}</h5>
+                          <hr/>
+                          <strong><i className="fa  fa-mobile-phone margin-r-5"></i> Contact Number</strong>
+                          <h5 className="text-muted" id="profileContents">{this.state.contactNumber}</h5>
+                      </div>
+                  </div>
+              </div>
 
               <div className="example-modal">
                   <div className="modal fade bs-example-modal-lg" id="editConfirmation">

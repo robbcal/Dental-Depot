@@ -1,6 +1,6 @@
 #mainContent{
     padding: 50px;
-    margin-top: -10px;
+    margin-top: -20px;
 }
 
 #specificItemContent{
@@ -11,4 +11,28 @@
 
 #backButton{
     height: 25px;
+}
+
+#itemContentImage{
+    height: 45px;
+}
+
+#itemContentName{
+    color: gray;
+}
+
+#itemContentCol{
+    margin-top: 9px;
+}
+
+.dropdown-menu{
+    right: 0;
+}
+
+#itemInfoContent{
+    margin-left: 25px;
+}
+
+#specificItemButtons{
+    margin: 5px;
 }

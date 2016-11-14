@@ -51,7 +51,7 @@ var Body = React.createClass({
                         <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
                         <li className="active"><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
                         <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
-                        <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                        <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                     </ul>
                 </div>
             </div>

@@ -1,14 +1,32 @@
-#userProfileContent{
+/*#userProfileContent{
     padding: 50px;
     margin-top: -10px;
 }
+
 #userProfileMainContent{
     padding: 30px;
     margin-top: 30px;
     margin-left: 0px;
-}
+}*/
+
 #editInfoModalComponents{
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 10px;
+}
+
+#userProfileContent{
+    margin-top: 40px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+}
+
+#imgUser{
+    height: 100px;
+    width: 100px;
+}
+
+#profileContents{
+    margin-left: 20px;
 }

@@ -51,7 +51,7 @@ var Body = React.createClass({
                         <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
                         <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
                         <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
-                        <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                        <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -210,6 +210,16 @@ itemDescription: "null",
     window.location.replace("Inventory.html");
   },
 
+  generateIDandDate: function(){
+    var now = new Date();
+    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var ID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
+    document.getElementById("newId").value = ID;
+    document.getElementById("newDate").value = today;
+    document.getElementById("existingDate").value = today;
+  },
+
+
   onItemName: function(e) {
     this.setState({itemName: e.target.value});
   },
@@ -228,52 +238,50 @@ itemDescription: "null",
             <div className="col-sm-4 pull-left">
                 <a href="Inventory.html"><img src="../bootstrap/icons/left-arrow.png" id="backButton"/></a>
             </div>
-            <div className="col-sm-4"></div>
-            <div className="btn-group col-sm-2">
-                <button className="btn btn-primary">ITEM STOCK</button>
-                <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <span className="caret"></span>
-                    <span className="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul className="dropdown-menu" role="menu">
-                    <li><a data-toggle="modal" data-target="#addStockModal" onClick={this.generateIDandDate}>Add</a></li>
-                    <li><a data-toggle="modal" data-target="#editItemModal" onClick={this.generateDate}>Edit</a></li>
-                    <li><a data-toggle="modal" data-target="#deleteStockModal" onClick={this.generateDate}>Delete</a></li>
-                </ul>
-            </div>
-            <div className="col-sm-2">
-                <a className="btn btn-primary pull-right" data-target="#deleteItemModal">DELETE ITEM</a>
-            </div>
-
-            <div className="row col-sm-8 box" id="specificItemContent">
-                <h2><strong>{this.state.itemName}</strong></h2>
-                <h4>{this.state.itemDescription}</h4>
-                <br/><br/>
-                <div className="row">
-                    <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                        <img src="../bootstrap/icons/price-tag.png" height="45px"/>
-                    </div>
-                    <div className="col-sm-6">
-                        <h5 style={{color: 'gray'}}><strong>ITEM PRICE</strong></h5>
-                        <h4><strong>{this.state.itemPrice}</strong></h4><br/>
-                    </div>
-                    <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                        <img src="../bootstrap/icons/calendar.png" height="45px"/>
-                    </div>
-                    <div className="col-sm-3">
-                        <h5 style={{color: 'gray'}}><strong>DATE LAST UPDATED</strong></h5>
-                        <h4><strong>{this.state.latestHistory}</strong></h4>
+            <br/><br/><br/>
+            <div className="col-md-4">
+                <div className="box box-primary" id="basicInfo">
+                    <div className="box-body box-profile">
+                        <h1 className="text-center">{this.state.itemName}</h1>
                         <br/>
+                        <p>Description:</p>
+                        <p className="text-muted">{this.state.itemDescription}</p>
+                        <br/>
+                        <center>
+                            <div className="btn-group" id="specificItemButtons">
+                                <button className="btn bg-navy">STOCK</button>
+                                <button type="button" className="btn bg-navy dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <span className="caret"></span>
+                                    <span className="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul className="dropdown-menu" role="menu">
+                                    <li><a data-toggle="modal" data-target="#addStockModal" onClick={this.generateIDandDate}>Add</a></li>
+                                    <li><a data-toggle="modal" data-target="#deleteStockModal" onClick={this.generateDate}>Delete</a></li>
+                                </ul>
+                            </div>
+                            <a className="btn btn-primary" id="specificItemButtons" data-toggle="modal" data-target="#editItemModal">EDIT</a>
+                            <a className="btn btn-danger" id="specificItemButtons" data-toggle="modal" data-target="#deleteItemModal">DELETE</a>
+                        </center>
                     </div>
                 </div>
-                <br/>
-                <div className="row">
-                    <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                        <img src="../bootstrap/icons/message.png" height="45px"/>
+            </div>
+
+            <div className="col-md-8">
+                <div className="box box-default" id="basicInfo">
+                    <div className="box-header with-border">
+                        <h3 className="box-title">Item Information</h3>
                     </div>
-                    <div className="col-sm-6">
-                        <h5 style={{color: 'gray'}}><strong>ITEM IN STOCK</strong></h5>
-                        <h4><strong>{this.state.itemStock}</strong></h4><br/>
+                    <div className="box-body">
+                        <br/>
+                        <strong><i className="fa fa-suitcase margin-r-5"></i> Items in Stock</strong>
+                        <h3 className="text-muted" id="itemInfoContent">{this.state.itemStock}</h3>
+                        <hr/>
+                        <strong><i className="fa fa-money margin-r-5"></i> Item Price</strong>
+                        <h3 className="text-muted" id="itemInfoContent">{this.state.itemPrice}</h3>
+                        <hr/>
+                        <strong><i className="fa fa-calendar margin-r-5"></i> Date Last Updated</strong>
+                        <h3 className="text-muted" id="itemInfoContent">{this.state.latestHistory}</h3>
+                        <hr/>
                     </div>
                 </div>
             </div>
@@ -415,21 +423,21 @@ itemDescription: "null",
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div className="modal fade bs-example-modal-lg" id="deleteItemModal">
-                    <div className="modal-dialog modal-md">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 className="modal-title">Delete Item</h4>
-                            </div>
-                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <h4><strong>Are you sure you want to delete this item?</strong></h4>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">NO</button>
-                                <button type="button" className="btn btn-primary" onClick={this.deleteItem}>YES</button>
-                            </div>
+            <div className="modal fade bs-example-modal-lg" id="deleteItemModal">
+                <div className="modal-dialog modal-md">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 className="modal-title">Delete Item</h4>
+                        </div>
+                        <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h4><strong>Are you sure you want to delete this item?</strong></h4>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-default pull-left" data-dismiss="modal">NO</button>
+                            <button type="button" className="btn btn-primary" onClick={this.deleteItem}>YES</button>
                         </div>
                     </div>
                 </div>

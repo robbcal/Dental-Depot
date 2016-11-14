@@ -8,9 +8,9 @@ var Content = React.createClass({
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           var type = snapshot.val().user_type
           if(type == "admin"){
-            window.location.replace("admin/AdminProfile.html");
+            window.location.replace("admin/Inventory.html");
           }else if(type == "user"){
-            window.location.replace("user/Profile.html");
+            window.location.replace("user/Items.html");
           }
         });
       }).catch(function(error) {
