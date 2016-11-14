@@ -116,13 +116,12 @@ itemDescription: "null",
     document.getElementById("editDate").value = today;
   },
 
-  addStock: function(){
+  restockItem: function(){
     var now = new Date();
-    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
     var additionalStock = document.getElementById("addNumber").value;
     var date = document.getElementById("addDate").value;
     var user = firebase.auth().currentUser.email;
-    var action = "Add stock/s to item."
+    var action = "Restocked item."
     var uid = firebase.auth().currentUser.uid;
 
     if(additionalStock && date){
@@ -130,33 +129,36 @@ itemDescription: "null",
       firebase.database().ref('items/'+itemID).update({
         stock: newStock
       })
-      /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
-        user_email: user,
-        date: date,
-        action_performed: action,
-        stock: additionalStock
-      });*/
+      
       firebase.database().ref('items/'+itemID+"/item_history/").push().set({
         user_email: user,
         date: date,
         action_performed: action,
         stock: additionalStock
       });
-      alert("Item stock added!");
-      $('#addStockModal').modal('hide');
+
+      firebase.database().ref("users/"+uid+"/activity").push().set({
+        action: action,
+        itemID: itemID,
+        itemName: this.state.itemName,
+        quantity: additionalStock,
+        date: date
+      });
+
+      alert(action);
+      $('#restockItemModal').modal('hide');
       document.getElementById("addNumber").value = "";
     }else{
       alert("Input number!");
     }
   },
 
-  deleteStock: function(){
+  releaseStock: function(){
     var now = new Date();
-    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
     var diminishedStock = document.getElementById("deleteNumber").value;
     var date = document.getElementById("deleteDate").value;
     var user = firebase.auth().currentUser.email;
-    var action = "Delete stock/s from item."
+    var action = "Released item."
     var uid = firebase.auth().currentUser.uid;
     var curStock = this.state.itemStock;
     
@@ -166,20 +168,24 @@ itemDescription: "null",
         firebase.database().ref('items/'+itemID).update({
           stock: newStock
         })
-        /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
-          user_email: user,
-          date: date,
-          action_performed: action,
-          stock: diminishedStock
-        });*/
+        
         firebase.database().ref('items/'+itemID+"/item_history/").push().set({
           user_email: user,
           date: date,
           action_performed: action,
           stock: diminishedStock
         });
-        alert("Item stock deleted!");
-        $('#deleteStockModal').modal('hide');
+
+        firebase.database().ref("users/"+uid+"/activity").push().set({
+          action: action,
+          itemID: itemID,
+          itemName: this.state.itemName,
+          quantity: diminishedStock,
+          date: date
+        });
+
+        alert(action);
+        $('#releaseStockModal').modal('hide');
         document.getElementById("addNumber").value = "";
       }else{
         alert("Di ka ka-delete. Bogo ka ug math!");
@@ -191,13 +197,13 @@ itemDescription: "null",
 
   editItem: function(){
     var now = new Date();
-    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
     var user = firebase.auth().currentUser.email;
-    var action = "Edit item."
+    var action = "Edited item."
     var date = document.getElementById("editDate").value;
     var itemName = document.getElementById("editItem").value;
     var itemPrice = document.getElementById("editPrice").value;
     var itemDescription = document.getElementById("editDescription").value;
+    var uid = firebase.auth().currentUser.uid;
 
     if(date && itemName && itemPrice && itemDescription){
       firebase.database().ref('items/'+itemID).update({
@@ -205,17 +211,22 @@ itemDescription: "null",
       description: itemDescription,
             price: itemPrice
       })
-      /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
-        user_email: user,
-        date: date,
-        action_performed: action
-      });*/
+  
       firebase.database().ref('items/'+itemID+"/item_history/").push().set({
         user_email: user,
         date: date,
         action_performed: action
       });
-      alert("Item edited!");
+
+      firebase.database().ref("users/"+uid+"/activity").push().set({
+        action: action,
+        itemID: itemID,
+        itemName: this.state.itemName,
+        quantity: "n/a",
+        date: date
+      });
+
+      alert(action);
       $('#editItemModal').modal('hide');
     }else{
       alert("Missing input.");
@@ -223,8 +234,21 @@ itemDescription: "null",
   },
 
   deleteItem: function(){
+    var now = new Date();
+    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var uid = firebase.auth().currentUser.uid;
+    var action = "Deleted item."
+
+    firebase.database().ref("users/"+uid+"/activity").push().set({
+      action: action,
+      itemID: itemID,
+      itemName: this.state.itemName,
+      quantity: "n/a",
+      date: today
+    });
+
     firebase.database().ref('items/'+itemID).remove();
-    alert("Item deleted.");
+    alert(action);
     window.location.replace("Inventory.html");
   },
 
@@ -248,8 +272,8 @@ itemDescription: "null",
           <div className="row">
             <a href="Inventory.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
             <div className="pull-right">
-              <a className="btn btn-primary" id="addStockButton" href="" data-toggle="modal" data-target="#addStockModal" onClick={this.generateDate}>ADD STOCK</a>&nbsp;
-              <a className="btn btn-primary" id="deleteStockButton" href="" data-toggle="modal" data-target="#deleteStockModal" onClick={this.generateDate}>DELETE STOCK</a>&nbsp;
+              <a className="btn btn-primary" id="restockItemButton" href="" data-toggle="modal" data-target="#restockItemModal" onClick={this.generateDate}>RESTOCK</a>&nbsp;
+              <a className="btn btn-primary" id="releaseStockButton" href="" data-toggle="modal" data-target="#releaseStockModal" onClick={this.generateDate}>RELEASE STOCK</a>&nbsp;
               <a className="btn btn-primary" id="editItemButton" href="" data-toggle="modal" data-target="#editItemModal" onClick={this.generateDate}>EDIT</a>&nbsp;
               <button className="btn btn-primary" id="deleteItemButton" href="" data-toggle="modal" data-target="#deleteItemModal">DELETE</button>          
             </div>        
@@ -265,12 +289,12 @@ itemDescription: "null",
         </div>
 
         <div className="example-modal">
-          <div className="modal fade bs-example-modal-lg" id="addStockModal">
+          <div className="modal fade bs-example-modal-lg" id="restockItemModal">
             <div className="modal-dialog modal-md">
               <div className="modal-content">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 className="modal-title">Add Stock</h4>
+                  <h4 className="modal-title">ReStock Item</h4>
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   
@@ -302,7 +326,7 @@ itemDescription: "null",
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                  <button type="button" className="btn btn-primary" onClick={this.addStock}>ADD</button>
+                  <button type="button" className="btn btn-primary" onClick={this.restockItem}>RESTOCK</button>
                 </div>
               </div>
             </div>
@@ -310,12 +334,12 @@ itemDescription: "null",
         </div>
 
         <div className="example-modal">
-          <div className="modal fade bs-example-modal-lg" id="deleteStockModal">
+          <div className="modal fade bs-example-modal-lg" id="releaseStockModal">
             <div className="modal-dialog modal-md">
               <div className="modal-content">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 className="modal-title">Delete Stock</h4>
+                  <h4 className="modal-title">Release Stock Item</h4>
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   
@@ -347,7 +371,7 @@ itemDescription: "null",
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                  <button type="button" className="btn btn-primary" onClick={this.deleteStock}>DELETE</button>
+                  <button type="button" className="btn btn-primary" onClick={this.releaseStock}>RELEASE</button>
                 </div>
               </div>
             </div>
@@ -379,7 +403,7 @@ itemDescription: "null",
                     </span>
                     <span>
                       <label>Price</label>
-                      <input type="number" id="editPrice" className="form-control" onChange={this.onItemPrice} value={this.state.itemPrice}/>
+                      <input type="number" id="editPrice" className="form-control" onChange={this.onItemPrice} value={this.state.itemPrice} step=".01"/>
                     </span>
                     <span>
                       <label>User</label>

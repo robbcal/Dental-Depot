@@ -86,7 +86,6 @@ var Content = React.createClass({
         curUser: snapshot.val().firstname+" "+snapshot.val().lastname
       });
     });
-
     var ref = firebase.database().ref('items').orderByChild("item_name");
     ref.on('child_added', function(data) {
       var id=data.key
@@ -99,7 +98,6 @@ var Content = React.createClass({
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();
       });
-      
     });
 
     ref.on('child_changed', function(data) {
@@ -113,12 +111,12 @@ var Content = React.createClass({
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();
       });
-
     });
 
     ref.on('child_removed', function(data) {
       var id=data.key
       $("tr#"+id).remove();
+      $("option#"+id).remove();
     });
   },
 
@@ -140,8 +138,7 @@ var Content = React.createClass({
     var user = firebase.auth().currentUser.email;
     var date = document.getElementById("newDate").value;
     var description = document.getElementById("newDescription").value;
-    var action = "Add new item.";
-    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+    var action = "Added item.";
 
     firebase.database().ref('items/'+itemID).set({
       key: itemID,
@@ -150,19 +147,21 @@ var Content = React.createClass({
       stock: Number(stock),
       price: price
     });
-    /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
-      user_email: user,
-      date: date,
-      action_performed: action,
-      stock: Number(stock)
-    });*/
-    firebase.database().ref('items/'+itemID+"/item_history/").push().set({
+    firebase.database().ref("items/"+itemID+"/item_history/").push().set({
       user_email: user,
       date: date,
       action_performed: action,
       stock: Number(stock)
     });
-    alert("Item added");
+    var uid = firebase.auth().currentUser.uid;
+    firebase.database().ref("users/"+uid+"/activity").push().set({
+      action: action,
+      itemID: itemID,
+      itemName: itemName,
+      quantity: stock,
+      date: date
+    });
+    alert(action);
     document.getElementById("newItem").value="";
     document.getElementById("newNumber").value="";
     document.getElementById("newPrice").value="";
@@ -191,34 +190,36 @@ var Content = React.createClass({
   },
 
   updateItem: function(){
+    var itemName = $("#item option:selected").text();
     var id = document.getElementById("ID").value;
     var price = document.getElementById("existingPrice").value;
     var curStock = document.getElementById("existingStock").value;
     var addNumber = document.getElementById("additionalNumber").value;
     var date = document.getElementById("existingDate").value;
     var userEmail = firebase.auth().currentUser.email;
-    var action = "Add stock/s to item."
-    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+    var action = "Restocked/Edited item."
 
     if(id && price && curStock && addNumber && date){
       var newStock = Number(curStock) + Number(addNumber);
       firebase.database().ref('items/'+id).update({
         price: price,
         stock: newStock
-      })
-      /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
-        user_email: user,
-        date: date,
-        action_performed: action,
-        stock: additionalStock
-      });*/
-      firebase.database().ref('items/'+id+"/item_history/").push().set({
+      });
+      firebase.database().ref("items/"+id+"/item_history/").push().set({
         user_email: userEmail,
         date: date,
         action_performed: action,
         stock: addNumber
       });
-      alert("Item stock added!");
+      var uid = firebase.auth().currentUser.uid;
+      firebase.database().ref("users/"+uid+"/activity").push().set({
+        action: action,
+        itemID: id,
+        itemName: itemName,
+        quantity: addNumber,
+        date: date
+      });
+      alert(action);
       $("#item").val("");
       document.getElementById("ID").value = "";
       document.getElementById("existingPrice").value = "";
@@ -232,9 +233,6 @@ var Content = React.createClass({
   },
 
   render: function() {
-    /*$("#update").click(function(){
-      this.displayItemOnModal;
-    });*/
     return (
       <div>
         <form id="itemIDForm" type="get" action="SpecificItem.html">
@@ -307,7 +305,7 @@ var Content = React.createClass({
                     </span>
                     <span>
                       <label>Price</label>
-                      <input type="number" id="newPrice" className="form-control"/>
+                      <input type="number" id="newPrice" className="form-control" step=".01"/>
                     </span>
                     <span>
                       <label>User</label>
@@ -370,7 +368,7 @@ var Content = React.createClass({
                       <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <span>
                           <label>Price</label>
-                          <input type="number" id="existingPrice" className="form-control"/>
+                          <input type="number" id="existingPrice" className="form-control" step=".01"/>
                         </span>
                         <span>
                           <label>User</label>

@@ -63,7 +63,6 @@ var Body = React.createClass({
                     </div>
                 </div>
             </div>
-
             {/* LOGOUT MODAL CONTENT */}
         </div>
     );
@@ -104,6 +103,12 @@ var Content = React.createClass({
       $("option#"+id).replaceWith("<option id="+id+" value="+id+"|"+itemStock+">"+itemName+"</option>");
     });
 
+    ref.on('child_removed', function(data) {
+      var id=data.key
+      
+      $("option#"+id).remove();
+    });
+
     var now = new Date();
     var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
     document.getElementById("date").value = today;
@@ -118,13 +123,12 @@ var Content = React.createClass({
       var itemVal = val.split('|');
       var curStock = itemVal[1];
       var reStock = Number(curStock) + Number(num);
-      //document.getElementById("stock").value = reStock;
       document.getElementById(id).value = id+"|"+reStock;
 
       var curTotal = document.getElementById("total").value;
       var newTotal = Number(curTotal) - Number(subtotal); 
 
-      document.getElementById("total").value = newTotal;
+      document.getElementById("total").value = newTotal.toFixed(2);;
       document.getElementById("stock").value = "";
       document.getElementById("number").value = "";
       document.getElementById("ID").value = "";
@@ -181,19 +185,81 @@ var Content = React.createClass({
       var subtotal = (Number(price) * Number(num))
       var runningTotal = Number(total) + subtotal ;
 
-      document.getElementById("total").value = runningTotal;
+      document.getElementById("total").value = runningTotal.toFixed(2);
       document.getElementById("stock").value = newStock;
       document.getElementById("number").max = newStock;
       document.getElementById(id).value = id+"|"+newStock;
       document.getElementById("number").value = "";
-      
-      $("#transactionTableBody").append("<tr id="+id+"><td class='delete'><button class='btn btn-default deleteRow' value="+id+">x</button></td><td class='name'>"+itemName+"</td><td class='number'>"+num+"</td><td class='subtotal'>"+subtotal+"</td></tr>");
-      
+
+      if($('#transactionTable tr > td:contains('+id+')').length == 0){
+          $("#transactionTableBody").append("<tr id="+id+"><td id='del' class='delete'><button class='btn btn-default deleteRow' value="+id+">x</button></td><td style='display:none'>"+id+"</td><td class='name' value="+id+">"+itemName+"</td><td id="+id+"A"+id+" class='number' value="+num+">"+num+"</td><td id="+id+"B"+id+" class='subtotal' value="+subtotal.toFixed(2)+">"+subtotal.toFixed(2)+"</td></tr>");
+      }else{
+        var transQty = $("td#"+id+"A"+id+"").text();
+        var transSubtotal = $("td#"+id+"B"+id+"").text();
+        var newQty = Number(transQty) + Number(num);
+        var newSubtotal = Number(transSubtotal) + Number(subtotal);
+
+        $("td#"+id+"A"+id+"").replaceWith("<td id="+id+"A"+id+" class='number' value="+newQty+">"+newQty+"</td>");
+        $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+">"+newSubtotal.toFixed(2)+"</td>");
+      }
     }else{
       document.getElementById("errorMessage").innerHTML= "Missing input.";
       $('#errorModal').appendTo("body").modal('show');
     }
   },
+
+  createTransaction: function(){
+    var date = document.getElementById("date").value;
+    var release = document.getElementById("release").value;
+    var total = document.getElementById("total").value;
+    var tableLength = document.getElementById("transactionTable").rows.length - 1;
+    var transactionItems = []
+    var now = new Date();
+    var transactionID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
+    var userEmail = firebase.auth().currentUser.email;
+
+    if(total != 0){
+      for(var y = 1; y <= tableLength; y++){
+        var itemID = document.getElementById("transactionTable").rows[y].cells[1].innerHTML;
+        var itemName = document.getElementById("transactionTable").rows[y].cells[2].innerHTML;
+        var qty = document.getElementById("transactionTable").rows[y].cells[3].innerHTML;
+        var subtotal = document.getElementById("transactionTable").rows[y].cells[4].innerHTML;
+
+        var itemElement = {id: itemID, name: itemName, qty: qty, subtotal: subtotal};
+        transactionItems.push(itemElement);
+      }
+      var transactionLength = transactionItems.length;
+      firebase.database().ref("transactions/"+date+"/"+transactionID).set({
+        total: total,
+        user_email: userEmail,
+        release_method: release
+      });
+      for(var a = 0; a < transactionLength; a++){
+        firebase.database().ref("transactions/"+date+"/"+transactionID+"/items_purchased/"+transactionItems[a].id).set({
+          item_name: transactionItems[a].name,
+          item_quantity: transactionItems[a].qty,
+          item_subtotal: transactionItems[a].subtotal
+        });
+        firebase.database().ref('items/'+transactionItems[a].id).once('value', function(snapshot) {
+          var stock = snapshot.val().stock;
+          var newQty = Number(stock) - Number(qty);
+          firebase.database().ref("items/"+transactionItems[a].id).update({
+            stock: newQty
+          });
+        });
+      }
+      document.getElementById("total").value = 0;
+      document.getElementById("stock").value = "";
+      document.getElementById("number").value = "";
+      document.getElementById("ID").value = "";
+      document.getElementById("price").value = "";
+      $("#item option:eq(0)").attr("selected", "selected");
+      $("#transactionTable tbody tr").remove(); 
+      alert("Transaction successful!");
+    }else{
+      alert("Shunga! Unsa imung i-transact kung walay sulod?");
+    }  
+  }, 
 
   render: function() {
     return (
@@ -208,7 +274,7 @@ var Content = React.createClass({
           </div>
           <div className="row">
             <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-              <input type="text" id="ID" className="form-control"/>
+              <input type="hidden" id="ID" className="form-control"/>
               <div className="row">
                 <label>Item:</label>
                 <select id="item" className="form-control" onChange={this.displayItemOnModal}>
@@ -238,8 +304,8 @@ var Content = React.createClass({
               </div>
               <div className="row">
                 <label>Release Method:</label>
-                <select id="releaseMethod" className="form-control">
-                  <option value="Over_the_counter">Over the counter</option>
+                <select id="release" className="form-control">
+                  <option value="Over the counter">Over the counter</option>
                   <option value="Shipping">Shipping</option>
                   <option value="Delivery">Delivery</option>
                 </select>
@@ -254,6 +320,7 @@ var Content = React.createClass({
                 <thead>
                   <tr>
                     <th></th>
+                    <th style={{display:'none'}}></th>
                     <th><center>ITEM</center></th>
                     <th><center>NUMBER</center></th>
                     <th><center>PRICE</center></th>
@@ -263,7 +330,7 @@ var Content = React.createClass({
 
                 </tbody>
               </table>
-              <button className="btn btn-primary pull-right" id="createTransactionButton">CREATE</button>
+              <button className="btn btn-primary pull-right" id="createTransactionButton" onClick={this.createTransaction}>CREATE</button>
             </div>
           </div>
         </div>
