@@ -86,6 +86,40 @@ var Content = React.createClass({
         curUser: snapshot.val().firstname+" "+snapshot.val().lastname
       });
     });
+
+    var ref = firebase.database().ref('items').orderByChild("item_name");
+    ref.on('child_added', function(data) {
+      var id=data.key
+      var itemName = data.val().item_name;
+      var stock = data.val().stock;
+      
+      $("#itemList").append("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+      $("#item").append("<option id="+id+" value="+id+">"+itemName+"</option>");
+      $("#"+id+"").dblclick(function() {
+        document.getElementById("item_id").value = id;
+        document.getElementById("submit").click();
+      });
+      
+    });
+
+    ref.on('child_changed', function(data) {
+      var id=data.key
+      var itemName = data.val().item_name;
+      var stock = data.val().stock;
+
+      $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+      $("option#"+id).replaceWith("<option id="+id+" value="+id+">"+itemName+"</option>");
+      $("#"+id+"").dblclick(function() {
+        document.getElementById("item_id").value = id;
+        document.getElementById("submit").click();
+      });
+
+    });
+
+    ref.on('child_removed', function(data) {
+      var id=data.key
+      $("tr#"+id).remove();
+    });
   },
 
   generateIDandDate: function(){
@@ -107,19 +141,26 @@ var Content = React.createClass({
     var date = document.getElementById("newDate").value;
     var description = document.getElementById("newDescription").value;
     var action = "Add new item.";
-    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
 
     firebase.database().ref('items/'+itemID).set({
       key: itemID,
       item_name: itemName,
       description: description,
-      stock: stock,
+      stock: Number(stock),
       price: price
     });
-    firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+    /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
       user_email: user,
       date: date,
-      action_performed: action
+      action_performed: action,
+      stock: Number(stock)
+    });*/
+    firebase.database().ref('items/'+itemID+"/item_history/").push().set({
+      user_email: user,
+      date: date,
+      action_performed: action,
+      stock: Number(stock)
     });
     alert("Item added");
     document.getElementById("newItem").value="";
@@ -130,171 +171,227 @@ var Content = React.createClass({
   },
 
   displayItemOnModal: function(){
-    var ref = firebase.database().ref('items');
-    ref.once('value', function(snapshot) {
-      snapshot.forEach(function(childSnapshot) {
-        console.log(childSnapshot.val().key);
-        //var childData = childSnapshot.val();
-
+    var itemVal = document.getElementById("item").value;
+    
+    if(itemVal == ""){
+      document.getElementById("ID").value = "";
+      document.getElementById("existingDescription").value = "";
+      document.getElementById("existingPrice").value = "";
+      document.getElementById("existingStock").value = "";
+    }else{
+      var itemId = $("#item").val();
+      var ref = firebase.database().ref('items/'+itemId);
+      ref.once('value', function(snapshot) {
+        document.getElementById("ID").value = itemId;
+        document.getElementById("existingDescription").value = snapshot.val().description;
+        document.getElementById("existingPrice").value = snapshot.val().price;
+        document.getElementById("existingStock").value = snapshot.val().stock;
       });
-    });
+    }
+  },
+
+  updateItem: function(){
+    var id = document.getElementById("ID").value;
+    var price = document.getElementById("existingPrice").value;
+    var curStock = document.getElementById("existingStock").value;
+    var addNumber = document.getElementById("additionalNumber").value;
+    var date = document.getElementById("existingDate").value;
+    var userEmail = firebase.auth().currentUser.email;
+    var action = "Add stock/s to item."
+    //var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+
+    if(id && price && curStock && addNumber && date){
+      var newStock = Number(curStock) + Number(addNumber);
+      firebase.database().ref('items/'+id).update({
+        price: price,
+        stock: newStock
+      })
+      /*firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+        user_email: user,
+        date: date,
+        action_performed: action,
+        stock: additionalStock
+      });*/
+      firebase.database().ref('items/'+id+"/item_history/").push().set({
+        user_email: userEmail,
+        date: date,
+        action_performed: action,
+        stock: addNumber
+      });
+      alert("Item stock added!");
+      $("#item").val("");
+      document.getElementById("ID").value = "";
+      document.getElementById("existingPrice").value = "";
+      document.getElementById("existingStock").value = "";
+      document.getElementById("additionalNumber").value = "";
+      $('#existingItemModal').modal('hide');
+      document.getElementById("additionalNumber").value = "";
+    }else{
+      alert("Missing input.");
+    }
   },
 
   render: function() {
+    /*$("#update").click(function(){
+      this.displayItemOnModal;
+    });*/
     return (
       <div>
+        <form id="itemIDForm" type="get" action="SpecificItem.html">
+          <input type="hidden" id="item_id" name="item_id"/>
+          <button type="submit" value="Send" name="submit" id="submit" style={{display: 'none'}}></button>
+        </form>
+        <br/><br/>
+        <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span className="pull-left">
+              <input type="text" id="inventorySearch" /*className="searchBox"*//>
+              <button id="inventoryButton"><img src="../bootstrap/icons/search.png" height="15px"/></button>
+            </span>
+            <span className="pull-right">
+              <a className="btn btn-primary" id="addItem" href="" data-toggle="modal" data-target="#addItemModal">ADD ITEM</a>&nbsp; 
+              <a className="btn btn-primary" id="addTransaction" href="Transaction.html">ADD TRANSACTION</a>
+            </span>
+          </div>
           <br/><br/>
-          <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-              <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <span className="pull-left">
-                      <input type="text" id="inventorySearch" /*className="searchBox"*//>
-                      <button id="inventoryButton"><img src="../bootstrap/icons/search.png" height="15px"/></button>
-                  </span>
-                  <span className="pull-right">
-                      <a className="btn btn-primary" id="addItem" href="" data-toggle="modal" data-target="#addItemModal">ADD ITEM</a>&nbsp;
-                      <button className="btn btn-primary" id="addTransaction">ADD TRANSACTION</button>
-                  </span>
-              </div>
-              <br/><br/>
-              <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <table className="table table-hover table-striped table-bordered /*adminTable*/">
-                      <thead>
-                          <tr>
-                              <th><center>NAME</center></th>
-                              <th><center>STOCK</center></th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td>sample</td>
-                              <td>sample</td>
-                          </tr>
-                      </tbody>
-                  </table>
-              </div>
-          </div>
+          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">  
+            <table className="table table-hover table-striped table-bordered /*adminTable*/">
+              <thead>
+                <tr>
+                  <th><center>NAME</center></th>
+                  <th><center>STOCK</center></th>
+                </tr>
+              </thead>
+              <tbody id="itemList">
+                
+              </tbody>
+            </table>
+          </div>      
+        </div>
 
-          <div className="example-modal">
-              <div className="modal fade bs-example-modal-lg" id="addItemModal">
-                  <div className="modal-dialog modal-sm">
-                      <div className="modal-content">
-                          <div className="modal-body">
-                              <a className="btn btn-primary" href="" data-toggle="modal" data-target="#newItemModal" onClick={this.generateIDandDate}>NEW ITEM</a>&nbsp;
-                              <a className="btn btn-primary pull-right" href="" data-toggle="modal" data-target="#existingItemModal" onClick={this.displayItemOnModal}>EXISTING ITEM</a>
-                          </div>
-                      </div>
+        <div className="example-modal">
+          <div className="modal fade bs-example-modal-lg" id="addItemModal">
+            <div className="modal-dialog modal-sm">
+              <div className="modal-content">
+                <div className="modal-body">
+                  <a className="btn btn-primary" href="" data-toggle="modal" data-target="#newItemModal" onClick={this.generateIDandDate}>NEW ITEM</a>&nbsp;
+                  <a className="btn btn-primary pull-right" href="" data-toggle="modal" data-target="#existingItemModal" onClick={this.generateIDandDate}>EXISTING ITEM</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="example-modal">
+          <div className="modal fade bs-example-modal-lg" id="newItemModal">
+            <div className="modal-dialog modal-md">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 className="modal-title">New Item</h4>
+                </div>
+                <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  
+                  <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <span>
+                      <label>ID</label>
+                      <input type="text" id="newId" readOnly className="form-control"/>
+                    </span>
+                    <span>
+                      <label>Item</label>
+                      <input type="text" id="newItem" className="form-control"/>
+                    </span>
+                    <span>
+                      <label>Number</label>
+                      <input type="number" id="newNumber" className="form-control"/>
+                    </span>
+                    <span>
+                      <label>Price</label>
+                      <input type="number" id="newPrice" className="form-control"/>
+                    </span>
+                    <span>
+                      <label>User</label>
+                      <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
+                    </span>
                   </div>
+                  <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <span>
+                      <label>Description</label>
+                      <textarea id="newDescription" className="form-control"></textarea>
+                    </span>
+                    <span>
+                      <label>Date</label>
+                      <input type="date" id="newDate" className="form-control"/>
+                    </span>
+                  </div>  
+                  
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
+                  <button type="button" className="btn btn-primary" onClick={this.addItem}>ADD</button>
+                </div>
               </div>
+            </div>
           </div>
+        </div>
 
-          <div className="example-modal">
-              <div className="modal fade bs-example-modal-lg" id="newItemModal">
-                  <div className="modal-dialog modal-md">
-                      <div className="modal-content">
-                          <div className="modal-header">
-                              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                              <h4 className="modal-title">New Item</h4>
-                          </div>
-                          <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div className="example-modal">
+          <div className="modal fade bs-example-modal-lg" id="existingItemModal">
+            <div className="modal-dialog modal-lg">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 className="modal-title">Existing Item</h4>
+                </div>
+                <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <input type="hidden" id="ID" readOnly className="form-control"/>
+                    <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                      <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        <label>Item</label>
+                        <select id="item" className="form-control" onChange={this.displayItemOnModal}>
+                          <option id="header" value="">- Choose an item -</option>
+                        </select>
+                      </span>
+                      <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        <label>Stock</label>
+                        <input type="text" id="existingStock" readOnly className="form-control"/>
+                      </span>
+                      <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        <label>Number</label>
+                        <input type="number" id="additionalNumber" className="form-control" min="1"/>
+                      </span>
+                      <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        <label>Description</label>
+                        <textarea id="existingDescription" readOnly className="form-control"></textarea>
+                      </span>
+                    </div>
 
-                              <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                  <span>
-                                      <label>ID</label>
-                                      <input type="text" id="newId" readOnly className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>Item</label>
-                                      <input type="text" id="newItem" className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>Number</label>
-                                      <input type="number" id="newNumber" className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>Price</label>
-                                      <input type="number" id="newPrice" className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>User</label>
-                                      <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
-                                  </span>
-                              </div>
-                              <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                  <span>
-                                      <label>Description</label>
-                                      <textarea id="newDescription" className="form-control"></textarea>
-                                  </span>
-                                  <span>
-                                      <label>Date</label>
-                                      <input type="date" id="newDate" className="form-control"/>
-                                  </span>
-                              </div>
-
-                          </div>
-                          <div className="modal-footer">
-                              <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                              <button type="button" className="btn btn-primary" onClick={this.addItem}>ADD</button>
-                          </div>
+                    <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                      <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <span>
+                          <label>Price</label>
+                          <input type="number" id="existingPrice" className="form-control"/>
+                        </span>
+                        <span>
+                          <label>User</label>
+                          <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
+                        </span>
                       </div>
-                  </div>
+                      <span className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <label>Date</label>
+                        <input type="date" id="existingDate" className="form-control"/>
+                      </span>  
+                    </div>  
+                  
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
+                  <button type="button" id="update" className="btn btn-primary" onClick={this.updateItem}>UPDATE</button>
+                </div>
               </div>
+            </div>
           </div>
-
-          <div className="example-modal">
-              <div className="modal fade bs-example-modal-lg" id="existingItemModal">
-                  <div className="modal-dialog modal-lg">
-                      <div className="modal-content">
-                          <div className="modal-header">
-                              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                              <h4 className="modal-title">Existing Item</h4>
-                          </div>
-                          <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                              <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                  <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                                      <label>Item</label>
-                                      <input type="text" id="existingItem" className="form-control"/>
-                                  </span>
-                                  <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                                      <label>Stock</label>
-                                      <input type="text" id="stock" readOnly className="form-control"/>
-                                  </span>
-                                  <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                                      <label>Number</label>
-                                      <input type="number" id="existingNumber" className="form-control"/>
-                                  </span>
-                                  <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                                      <label>Description</label>
-                                      <textarea id="existingDescription" readOnly className="form-control"></textarea>
-                                  </span>
-                              </div>
-
-                              <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                  <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                      <span>
-                                          <label>Price</label>
-                                          <input type="number" id="existingPrice" className="form-control"/>
-                                      </span>
-                                      <span>
-                                          <label>User</label>
-                                          <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
-                                      </span>
-                                  </div>
-                                  <span className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                      <label>Date</label>
-                                      <input type="date" id="existingDate" className="form-control"/>
-                                  </span>
-                              </div>
-
-                          </div>
-                          <div className="modal-footer">
-                              <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                              <button type="button" className="btn btn-primary">UPDATE</button>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
+        </div>
 
       </div>
     );

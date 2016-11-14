@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Specific Item</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="../dist/css/new/AdminLTE.css">
+    <link rel="stylesheet" href="../dist/css/skins/skin-blue.min.css">
+  </head>
+  <body class="hold-transition skin-blue sidebar-mini">
+    <div id="main">
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script src="https://cdn.firebase.com/libs/reactfire/0.6.0/reactfire.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/3.5.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.5.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.5.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.5.1/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.5.1/firebase.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
+
+    <script src="../plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <script src="../dist/js/app.min.js"></script>
+    <script src="../dist/js/new/modal.js"></script>
+
+    <script src="../firebaseConfig.js"></script>
+
+    <script language="javascript">
+        var itemID;
+        function processForm()
+        {
+            var parameters = location.search.substring(1).split("&");
+            var temp = parameters[0].split("=");
+            itemID = unescape(temp[1]);
+        }
+        processForm();
+    </script>
+    
+    <script type="text/babel" src="js/SpecificItem.jsx">
+
+
+    </script>
+  </body>
+</html>

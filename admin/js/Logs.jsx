@@ -38,7 +38,6 @@ var Header = React.createClass({
                       </div>
                   </div>
               </div>
-              </div>
           );
         }
       });

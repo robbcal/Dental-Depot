@@ -99,6 +99,9 @@ var Content = React.createClass({
       var userType = data.val().user_type;
 
       $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
+      $("#"+id+"").dblclick(function() {
+        alert(email);
+      });
     });
 
     ref.on('child_changed', function(data) {
@@ -113,6 +116,9 @@ var Content = React.createClass({
       var userType = data.val().user_type;
 
       $("tr#"+id).replaceWith("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
+      $("#"+id+"").dblclick(function() {
+        alert(email);
+      });
     });
 
     ref.on('child_removed', function(data) {
