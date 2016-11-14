@@ -228,6 +228,7 @@ var Content = React.createClass({
         var itemElement = {id: itemID, name: itemName, qty: qty, subtotal: subtotal};
         transactionItems.push(itemElement);
       }
+      //console.log(transactionItems);
       var transactionLength = transactionItems.length;
       firebase.database().ref("transactions/"+date+"/"+transactionID).set({
         total: total,
@@ -242,7 +243,8 @@ var Content = React.createClass({
         });
         firebase.database().ref('items/'+transactionItems[a].id).once('value', function(snapshot) {
           var stock = snapshot.val().stock;
-          var newQty = Number(stock) - Number(qty);
+          var newQty = Number(stock) - Number(transactionItems[a].qty);
+          //console.log(transactionItems[a].id+" : "+stock+" : "+newQty);
           firebase.database().ref("items/"+transactionItems[a].id).update({
             stock: newQty
           });
