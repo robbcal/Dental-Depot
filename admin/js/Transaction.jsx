@@ -217,6 +217,7 @@ var Content = React.createClass({
     var now = new Date();
     var transactionID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
     var userEmail = firebase.auth().currentUser.email;
+    var uid = firebase.auth().currentUser.uid;
 
     if(total != 0){
       for(var y = 1; y <= tableLength; y++){
@@ -247,6 +248,13 @@ var Content = React.createClass({
           //console.log(transactionItems[a].id+" : "+stock+" : "+newQty);
           firebase.database().ref("items/"+transactionItems[a].id).update({
             stock: newQty
+          });
+          firebase.database().ref("users/"+uid+"/activity").push().set({
+            action: "Transaction",
+            itemID: itemID,
+            itemName: transactionItems[a].name,
+            quantity: transactionItems[a].qty,
+            date: date
           });
         });
       }
