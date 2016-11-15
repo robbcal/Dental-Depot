@@ -77,97 +77,97 @@ var Header = React.createClass({
         render: function() {
           return (
               <div id="mainContent">
-                  <div className="nav-tabs-custom">
-                      <ul className="nav nav-tabs">
-                          <li><a href="#sales" data-toggle="tab">SALES</a></li>
-                          <li className="active"><a href="#transaction" data-toggle="tab">TRANSACTION</a></li>
-                          <li><a href="#activity" data-toggle="tab">ACTIVITY</a></li>
-                      </ul>
-                      <div className="tab-content">
-                          <div className="tab-pane" id="sales">
+                <div className="nav-tabs-custom">
+                  <ul className="nav nav-tabs">
+                    <li><a href="#sales" data-toggle="tab">SALES</a></li>
+                    <li className="active"><a href="#transaction" data-toggle="tab">TRANSACTION</a></li>
+                    <li><a href="#activity" data-toggle="tab">ACTIVITY</a></li>
+                  </ul>
+                  <div className="tab-content">
+                    <div className="tab-pane" id="sales">
 
-                          </div>
-                          <div className="active tab-pane" id="transaction">
-                              <div className="row">
-                                  <div className="col-sm-6 pull-right">
-                                      <div className="box-tools pull-right">
-                                          <div className="input-group input-group-sm" id="logsTransSearch">
-                                              <input type="text" name="table_search" className="form-control pull-right" placeholder="Search"/>
-                                              <div className="input-group-btn">
-                                                  <button type="submit" className="btn btn-default">
-                                                      <i className="fa fa-search"></i>
-                                                  </button>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
+                    </div>
+                    <div className="active tab-pane" id="transaction">
+                      <div className="row">
+                        <div className="col-sm-6 pull-right">
+                          <div className="box-tools pull-right">
+                            <div className="input-group input-group-sm" id="logsTransSearch">
+                              <input type="text" name="table_search" className="form-control pull-right" placeholder="Search"/>
+                              <div className="input-group-btn">
+                                <button type="submit" className="btn btn-default">
+                                  <i className="fa fa-search"></i>
+                                </button>
                               </div>
-                              <div className="row">
-                                  <div className="col-sm-12">
-                                      <div className="box-body">
-                                          <table id="example1" className="table table-bordered table-striped striped dataTable">
-                                              <thead>
-                                                  <tr>
-                                                      <th><center>TRANSACTION ID</center></th>
-                                                      <th><center>TOTAL</center></th>
-                                                      <th><center>DATE</center></th>
-                                                      <th><center>USER</center></th>
-                                                  </tr>
-                                              </thead>
-                                              <tbody>
-                                                  <tr>
-                                                      <td>Trident</td>
-                                                      <td>Win 95+</td>
-                                                      <td> 4</td>
-                                                      <td>X</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <td>Trident</td>
-                                                      <td>Win 95+</td>
-                                                      <td> 4</td>
-                                                      <td>X</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <td>Trident</td>
-                                                      <td>Win 95+</td>
-                                                      <td> 4</td>
-                                                      <td>X</td>
-                                                  </tr>
-                                              </tbody>
-                                          </table>
-                                      </div>
-                                  </div>
-                              </div>
-                              <div className="row" id="logsRowThree">
-                                  <div className="col-sm-5">
-                                      <div className="dataTables_info" id="example2_info" role="status" aria-live="polite">
-                                          Showing 1 to 10 of 57 entries
-                                      </div>
-                                  </div>
-                                  <div className="col-sm-7">
-                                      <div className="dataTables_paginate paging_simple_numbers pull-right" id="logsTransPagination">
-                                          <ul className="pagination">
-                                              <li className="paginate_button previous disabled">
-                                                  <a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0">Previous</a>
-                                              </li>
-                                              <li className="paginate_button active">
-                                                  <a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0">1</a>
-                                              </li>
-                                              <li className="paginate_button">
-                                                  <a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">2</a>
-                                              </li>
-                                              <li className="paginate_button next">
-                                                  <a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">Next</a>
-                                              </li>
-                                          </ul>
-                                      </div>
-                                  </div>
-                              </div>
+                            </div>
                           </div>
-                          <div className="tab-pane" id="activity">
-
-                          </div>
+                        </div>
                       </div>
+                      <div className="row">
+                        <div className="col-sm-12">
+                          <div className="box-body">
+                            <table id="example1" className="table table-bordered table-striped striped dataTable">
+                              <thead>
+                                <tr>
+                                  <th><center>TRANSACTION ID</center></th>
+                                  <th><center>TOTAL</center></th>
+                                  <th><center>DATE</center></th>
+                                  <th><center>USER</center></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>Trident</td>
+                                  <td>Win 95+</td>
+                                  <td> 4</td>
+                                  <td>X</td>
+                                </tr>
+                                <tr>
+                                  <td>Trident</td>
+                                  <td>Win 95+</td>
+                                  <td> 4</td>
+                                  <td>X</td>
+                                </tr>
+                                <tr>
+                                  <td>Trident</td>
+                                  <td>Win 95+</td>
+                                  <td> 4</td>
+                                  <td>X</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row" id="logsRowThree">
+                        <div className="col-sm-5">
+                          <div className="dataTables_info" id="example2_info" role="status" aria-live="polite">
+                            Showing 1 to 10 of 57 entries
+                          </div>
+                        </div>
+                        <div className="col-sm-7">
+                          <div className="dataTables_paginate paging_simple_numbers pull-right" id="logsTransPagination">
+                            <ul className="pagination">
+                              <li className="paginate_button previous disabled">
+                                <a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0">Previous</a>
+                              </li>
+                              <li className="paginate_button active">
+                                <a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0">1</a>
+                              </li>
+                              <li className="paginate_button">
+                                <a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">2</a>
+                              </li>
+                              <li className="paginate_button next">
+                                <a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">Next</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="tab-pane" id="activity">
+
+                    </div>
+                  </div>
                   </div>
 
               </div>

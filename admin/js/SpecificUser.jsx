@@ -50,14 +50,14 @@ var Body = React.createClass({
                 <li className="header">NAVIGATION</li>
                 <li className="active"><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
                 <li><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Users</span></a></li>
-                <li><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Logs</span></a></li>
+                <li><a href="SpecificUser.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Specific User</span></a></li>
                 <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
               </ul>
             </div>
           </div>
 
           <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-            <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+            <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1', paddingLeft: 80, paddingRight: 30, paddingTop: 50}}>
               <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
                 <Content/>
               </div>
@@ -184,55 +184,155 @@ var Content = React.createClass({
 
   render: function() {
       return (
-        <div id="userProfileContent">
-          <div className="row" id="userProfileButtons">
-            <div className="col-sm-6"></div>
-            <div className="col-sm-6">
-              <a className="btn btn-primary pull-right" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal"
-                onClick={this.showModal}>EDIT INFO
-              </a>
-            </div>
+        <div id="mainContent">
+
+          <div className="row" style={{paddingBottom: 10}}>
+            <a href="Inventory.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
           </div>
 
-          <div className="row col-xs-8 box" id="userProfileMainContent">
-            <div>
-              <h2><strong> {this.state.fullName} </strong></h2>
-              <h4> {this.state.address} </h4><br/><br/>
-              <div className="row">
-                <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                  <img src="../bootstrap/icons/age.png" height="45px"/>
+          <div className="nav-tabs-custom" style={{paddingLeft: 0}}>
+            <ul className="nav nav-tabs pull-right">
+              <li><a href="#activity" data-toggle="tab">ACTIVITY</a></li>
+              <li className="active"><a href="#userProfileMainContent" data-toggle="tab">PROFILE</a></li>
+            </ul>
+
+            <div className="tab-content" style={{width: 470, height: 400}}>
+              <div className="tab-pane" id="activity">
+                <div className="row">
+                  <div className="col-sm-6 pull-right">
+                    <div className="box-tools pull-right">
+                      <div className="input-group input-group-sm" id="logsTransSearch">
+                        <input type="text" name="table_search" className="form-control pull-right" placeholder="Search"/>
+                        <div className="input-group-btn">
+                          <button type="submit" className="btn btn-default">
+                            <i className="fa fa-search"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="col-sm-6">
-                  <h5 style={{color: 'gray'}}><strong> AGE </strong></h5>
-                  <h4><strong> {this.state.age} YRS OLD </strong></h4><br/>
+                <div className="row">
+                  <div className="col-sm-12">
+                    <div className="box-body">
+                      <table id="example1" className="table table-bordered table-striped striped dataTable">
+                        <thead>
+                          <tr>
+                            <th><center>TRANSACTION ID</center></th>
+                            <th><center>TOTAL</center></th>
+                            <th><center>DATE</center></th>
+                            <th><center>USER</center></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Trident</td>
+                            <td>Win 95+</td>
+                            <td> 4</td>
+                            <td>X</td>
+                          </tr>
+                          <tr>
+                            <td>Trident</td>
+                            <td>Win 95+</td>
+                            <td> 4</td>
+                            <td>X</td>
+                          </tr>
+                          <tr>
+                            <td>Trident</td>
+                            <td>Win 95+</td>
+                            <td> 4</td>
+                            <td>X</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
-                <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                  <img src="../bootstrap/icons/bday.png" height="45px"/>
-                </div>
-                <div className="col-sm-3">
-                  <h5 style={{color: 'gray'}}><strong> BIRTHDAY </strong></h5>
-                  <h4><strong> {this.state.birthdate} </strong></h4><br/>
+                <div className="row" id="logsRowThree">
+                  <div className="col-sm-5">
+                    <div className="dataTables_info" id="example2_info" role="status" aria-live="polite">
+                      Showing 1 to 10 of 57 entries
+                    </div>
+                  </div>
+                  <div className="col-sm-7">
+                    <div className="dataTables_paginate paging_simple_numbers pull-right" id="logsTransPagination">
+                      <ul className="pagination">
+                        <li className="paginate_button previous disabled">
+                          <a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0">Previous</a>
+                        </li>
+                        <li className="paginate_button active">
+                          <a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0">1</a>
+                        </li>
+                        <li className="paginate_button">
+                          <a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">2</a>
+                        </li>
+                        <li className="paginate_button next">
+                          <a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">Next</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <br/>
-              <div className="row">
-                <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                  <img src="../bootstrap/icons/message.png" height="45px"/>
+
+              <div className="active tab-pane" id="userProfileMainContent" style={{height: 440, marginLeft: 0, width: 600}}>
+                {/* <div className="row col-xs-8 box" style={{paddingLeft: 20}}>
+                <div> */}
+                <h2><strong> {this.state.fullName} </strong></h2>
+                <h4> {this.state.address} </h4><br/>
+                <div className="row">
+                  <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                    <img src="../bootstrap/icons/age.png" height="45px"/>
+                  </div>
+                  <div className="col-sm-6">
+                    <h5 style={{color: 'gray'}}><strong> AGE </strong></h5>
+                    <h4><strong> {this.state.age} YRS OLD </strong></h4><br/>
+                  </div>
+                  <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                    <img src="../bootstrap/icons/bday.png" height="45px"/>
+                  </div>
+                  <div className="col-sm-3">
+                    <h5 style={{color: 'gray'}}><strong> BIRTHDAY </strong></h5>
+                    <h4><strong> {this.state.birthdate} </strong></h4><br/>
+                  </div>
                 </div>
-                <div className="col-sm-6">
-                  <h5 style={{color: 'gray'}}><strong> EMAIL ADDRESS </strong></h5>
-                  <h4><strong> {this.state.email} </strong></h4><br/>
+                <br/>
+                <div className="row">
+                  <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                    <img src="../bootstrap/icons/message.png" height="45px"/>
+                  </div>
+                  <div className="col-sm-6">
+                    <h5 style={{color: 'gray'}}><strong> EMAIL ADDRESS </strong></h5>
+                    <h4><strong> {this.state.email} </strong></h4><br/>
+                  </div>
+                  <div className="col-sm-1" style={{ marginTop: '9px'}}>
+                    <img src="../bootstrap/icons/phone-book.png" height="45px"/>
+                  </div>
+                  <div className="col-sm-4">
+                    <h5 style={{color: 'gray'}}><strong> CONTACT NUMBER </strong></h5>
+                    <h4><strong> {this.state.contactNumber} </strong></h4><br/>
+                  </div>
+                  {/* </div>
+                  </div> */}
                 </div>
-                <div className="col-sm-1" style={{ marginTop: '9px'}}>
-                  <img src="../bootstrap/icons/phone-book.png" height="45px"/>
-                </div>
-                <div className="col-sm-4">
-                  <h5 style={{color: 'gray'}}><strong> CONTACT NUMBER </strong></h5>
-                  <h4><strong> {this.state.contactNumber} </strong></h4><br/>
+
+                <div className="row" id="userProfileButtons">
+                  <div className="col-sm-6"></div>
+                  <div className="col-sm-6" style={{paddingRight: 10, paddingTop: 10, paddingLeft: 10}}>
+                    <a className="btn btn-primary pull-right" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal" style={{width: 80}}
+                      onClick={this.showModal}>EDIT
+                    </a>
+                    <div className="col-sm-6">
+                      <a className="btn btn-primary pull-right" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal"
+                        onClick={this.showModal}>DELETE
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          {/* </div> */}
 
           {/*MODAL CONTENT*/}
 
@@ -350,8 +450,7 @@ var Content = React.createClass({
               </div>
             </div>
           </div>
-
-        </div>
+</div>
       );
     }
 });

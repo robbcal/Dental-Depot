@@ -43,28 +43,28 @@ var Body = React.createClass({
   render: function() {
     return (
         <div>
-            <div className="main-sidebar">
-                <div className="sidebar">
-                    <ul className="sidebar-menu">
-                        <br/>
-                        <li className="header">NAVIGATION</li>
-                        <li><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
-                        <li className="active"><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Users</span></a></li>
-                        <li><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Logs</span></a></li>
-                        <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
-                    </ul>
-                </div>
+          <div className="main-sidebar">
+            <div className="sidebar">
+              <ul className="sidebar-menu">
+                <br/>
+                <li className="header">NAVIGATION</li>
+                <li><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
+                <li className="active"><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Users</span></a></li>
+                <li><a href="SpecificUser.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Specific User</span></a></li>
+                <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
+              </ul>
             </div>
+          </div>
 
-            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                        <Content/>
-                    </div>
-                </div>
+          <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+            <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+              <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
+                <Content/>
+              </div>
             </div>
+          </div>
 
-            {/* LOGOUT MODAL CONTENT */}
+          {/* LOGOUT MODAL CONTENT */}
         </div>
     );
   }
@@ -308,8 +308,8 @@ var MainContent = React.createClass({
       if(this.state.type == "admin"){
         res = (
           <div>
-              <Header/>
-              <Body/>
+            <Header/>
+            <Body/>
           </div>
         );
       }else if(this.state.type == "user"){
