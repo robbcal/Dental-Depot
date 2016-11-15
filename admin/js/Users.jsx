@@ -14,26 +14,26 @@ var Header = React.createClass({
   render: function() {
     return (
         <div>
-            <div className="main-header">
-                <div className="logo">
-                    <span className="logo-lg" id="mainHeader">Dental Depot</span>
-                </div>
-                <div className="navbar navbar-static-top" role="navigation">
-                    <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-                        <span className="sr-only">Toggle navigation</span>
-                    </a>
-                    {/* comment */}
-                    <div className="navbar-custom-menu">
-                        <ul className="nav navbar-nav">
-                            <li className="dropdown user user-menu">
-                                <a href="#"><span onClick={this.logout}>
-                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
-                                </span></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+          <div className="main-header">
+            <div className="logo">
+              <span className="logo-lg" id="mainHeader">Dental Depot</span>
             </div>
+            <div className="navbar navbar-static-top" role="navigation">
+              <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span className="sr-only">Toggle navigation</span>
+              </a>
+              {/* comment */}
+              <div className="navbar-custom-menu">
+                <ul className="nav navbar-nav">
+                  <li className="dropdown user user-menu">
+                    <a href="#"><span onClick={this.logout}>
+                      <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
+                    </span></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
     );
   }
@@ -100,7 +100,8 @@ var Content = React.createClass({
 
       $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
       $("#"+id+"").dblclick(function() {
-        alert(email);
+        document.getElementById("user_id").value = id;
+        document.getElementById("submit").click();
       });
     });
 
@@ -181,6 +182,10 @@ var Content = React.createClass({
   render: function() {
     return (
       <div>
+        <form id="UserIDForm" type="get" action="SpecificUser.html">
+          <input type="hidden" id="user_id" name="user_id"/>
+          <button type="submit" value="Send" name="submit" id="submit" style={{display: 'none'}}></button>
+        </form>
           <br/><br/>
           <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">

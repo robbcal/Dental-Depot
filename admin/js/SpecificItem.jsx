@@ -14,26 +14,26 @@ var Header = React.createClass({
   render: function() {
     return (
         <div>
-            <div className="main-header">
-                <div className="logo">
-                    <span className="logo-lg" id="mainHeader">Dental Depot</span>
-                </div>
-                <div className="navbar navbar-static-top" role="navigation">
-                    <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-                        <span className="sr-only">Toggle navigation</span>
-                    </a>
-                    {/* comment */}
-                    <div className="navbar-custom-menu">
-                        <ul className="nav navbar-nav">
-                            <li className="dropdown user user-menu">
-                                <a href="#"><span onClick={this.logout}>
-                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
-                                </span></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+          <div className="main-header">
+            <div className="logo">
+              <span className="logo-lg" id="mainHeader">Dental Depot</span>
             </div>
+            <div className="navbar navbar-static-top" role="navigation">
+              <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span className="sr-only">Toggle navigation</span>
+              </a>
+              {/* comment */}
+              <div className="navbar-custom-menu">
+                <ul className="nav navbar-nav">
+                  <li className="dropdown user user-menu">
+                    <a href="#"><span onClick={this.logout}>
+                      <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
+                    </span></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
     );
   }
@@ -43,27 +43,28 @@ var Body = React.createClass({
   render: function() {
       return (
         <div>
-            <div className="main-sidebar">
-                <div className="sidebar">
-                    <ul className="sidebar-menu">
-                        <br/>
-                        <li className="header">NAVIGATION</li>
-                        <li className="active"><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
-                        <li><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Users</span></a></li>
-                        <li><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Logs</span></a></li>
-                        <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
-                    </ul>
-                </div>
+          <div className="main-sidebar">
+            <div className="sidebar">
+              <ul className="sidebar-menu">
+                <br/>
+                <li className="header">NAVIGATION</li>
+                <li className="active"><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
+                <li><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Users</span></a></li>
+                <li><a href="Logs.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Logs</span></a></li>
+                <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
+              </ul>
             </div>
+          </div>
 
-            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                        <Content/>
-                    </div>
-                </div>
+          <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+            <div className="content-wrapper" style={{height: '588px', backgroundColor: 'rgb(225, 225, 225)', minHeight: 612}}>
+              <div id="content" className="content" style={{backgroundColor: 'rgb(225, 225, 225)'}}>
+                
+                <Content/>
+              </div>
             </div>
-            {/* LOGOUT MODAL CONTENT */}
+          </div>
+          {/* LOGOUT MODAL CONTENT */}
         </div>
     );
   }
@@ -71,13 +72,13 @@ var Body = React.createClass({
 
 var Content = React.createClass({
   getInitialState: function() {
-      return { 
+      return {
         curUser: "null",
          itemId: itemID,
        itemName: "null",
-itemDescription: "null", 
-      itemPrice: "null", 
-      itemStock: "null", 
+itemDescription: "null",
+      itemPrice: "null",
+      itemStock: "null",
   latestHistory: "null"
       };
   },
@@ -95,15 +96,15 @@ itemDescription: "null",
     ref.on('value', function(snapshot) {
       self.setState({
          itemName: snapshot.val().item_name,
-  itemDescription: snapshot.val().description, 
-        itemPrice: snapshot.val().price, 
-        itemStock: snapshot.val().stock 
+  itemDescription: snapshot.val().description,
+        itemPrice: snapshot.val().price,
+        itemStock: snapshot.val().stock
       });
     });
     var refHistory = firebase.database().ref('items/'+itemID+'/item_history');
     refHistory.on('child_added', function(data) {
       self.setState({
-        latestHistory: data.val().date 
+        latestHistory: data.val().date
       })
     })
   },
@@ -126,7 +127,7 @@ itemDescription: "null",
     var uid = firebase.auth().currentUser.uid;
 
     if(additionalStock && date){
-      var newStock = Number(this.state.itemStock) + Number(additionalStock);  
+      var newStock = Number(this.state.itemStock) + Number(additionalStock);
       firebase.database().ref('items/'+itemID).update({
         stock: newStock
       })
@@ -159,10 +160,10 @@ itemDescription: "null",
     var action = "Delete stock/s from item."
     var uid = firebase.auth().currentUser.uid;
     var curStock = this.state.itemStock;
-    
+
     if(diminishedStock && date){
       if(diminishedStock <= curStock){
-        var newStock = Number(curStock) - Number(diminishedStock);  
+        var newStock = Number(curStock) - Number(diminishedStock);
         firebase.database().ref('items/'+itemID).update({
           stock: newStock
         })
@@ -243,7 +244,7 @@ itemDescription: "null",
   render: function() {
     return (
       <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        
+
         <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" style={{position: 'relative', top: '30px', left: '40px', width: '1000px'}}>
           <div className="row">
             <a href="Inventory.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
@@ -251,8 +252,8 @@ itemDescription: "null",
               <a className="btn btn-primary" id="addStockButton" href="" data-toggle="modal" data-target="#addStockModal" onClick={this.generateDate}>ADD STOCK</a>&nbsp;
               <a className="btn btn-primary" id="deleteStockButton" href="" data-toggle="modal" data-target="#deleteStockModal" onClick={this.generateDate}>DELETE STOCK</a>&nbsp;
               <a className="btn btn-primary" id="editItemButton" href="" data-toggle="modal" data-target="#editItemModal" onClick={this.generateDate}>EDIT</a>&nbsp;
-              <button className="btn btn-primary" id="deleteItemButton" href="" data-toggle="modal" data-target="#deleteItemModal">DELETE</button>          
-            </div>        
+              <button className="btn btn-primary" id="deleteItemButton" href="" data-toggle="modal" data-target="#deleteItemModal">DELETE</button>
+            </div>
           </div>
 
           <div className="row" style={{position: 'relative', top: '15px', height: '425px', backgroundColor:'white'}}>
@@ -273,7 +274,7 @@ itemDescription: "null",
                   <h4 className="modal-title">Add Stock</h4>
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  
+
                   <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                     <span>
                       <label>ID</label>
@@ -297,8 +298,8 @@ itemDescription: "null",
                       <label>Date</label>
                       <input type="date" id="addDate" className="form-control"/>
                     </span>
-                  </div>  
-                  
+                  </div>
+
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
@@ -318,7 +319,7 @@ itemDescription: "null",
                   <h4 className="modal-title">Delete Stock</h4>
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  
+
                   <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                     <span>
                       <label>ID</label>
@@ -342,8 +343,8 @@ itemDescription: "null",
                       <label>Date</label>
                       <input type="date" id="deleteDate" className="form-control"/>
                     </span>
-                  </div>  
-                  
+                  </div>
+
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
@@ -363,7 +364,7 @@ itemDescription: "null",
                   <h4 className="modal-title">Edit Item</h4>
                 </div>
                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  
+
                   <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                     <span>
                       <label>ID</label>
@@ -395,8 +396,8 @@ itemDescription: "null",
                       <label>Date</label>
                       <input type="date" id="editDate" className="form-control"/>
                     </span>
-                  </div>  
-                  
+                  </div>
+
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
