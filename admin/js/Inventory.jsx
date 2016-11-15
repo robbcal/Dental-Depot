@@ -11,6 +11,10 @@ var Header = React.createClass({
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
   },
 
+  showAddModal: function(){
+    $('#addConfirmation').appendTo("body").modal('show');
+  },
+
   render: function() {
     return (
         <div>
@@ -84,35 +88,37 @@ var Content = React.createClass({
         curUser: snapshot.val().firstname+" "+snapshot.val().lastname
       });
     });
-
-    var ref = firebase.database().ref('items');
+    var ref = firebase.database().ref('items').orderByChild("item_name");
     ref.on('child_added', function(data) {
-        var id=data.key
-        var itemName = data.val().item_name;
-        var stock = data.val().stock;
+      var id=data.key
+      var itemName = data.val().item_name;
+      var stock = data.val().stock;
 
-        $("#itemList").append("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
-        $("#"+id+"").dblclick(function() {
-           document.getElementById("item_id").value = id;
-           document.getElementById("submit").click();
-        });
+      $("#itemList").append("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+      $("#item").append("<option id="+id+" value="+id+">"+itemName+"</option>");
+      $("#"+id+"").dblclick(function() {
+        document.getElementById("item_id").value = id;
+        document.getElementById("submit").click();
+      });
     });
 
     ref.on('child_changed', function(data) {
-        var id=data.key
-        var itemName = data.val().item_name;
-        var stock = data.val().stock;
+      var id=data.key
+      var itemName = data.val().item_name;
+      var stock = data.val().stock;
 
-        $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
-        $("#"+id+"").dblclick(function() {
-            document.getElementById("item_id").value = id;
-            document.getElementById("submit").click();
-        });
+      $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+      $("option#"+id).replaceWith("<option id="+id+" value="+id+">"+itemName+"</option>");
+      $("#"+id+"").dblclick(function() {
+        document.getElementById("item_id").value = id;
+        document.getElementById("submit").click();
+      });
     });
 
     ref.on('child_removed', function(data) {
-        var id=data.key
-        $("tr#"+id).remove();
+      var id=data.key
+      $("tr#"+id).remove();
+      $("option#"+id).remove();
     });
   },
 
@@ -122,6 +128,11 @@ var Content = React.createClass({
     var ID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
     document.getElementById("newId").value = ID;
     document.getElementById("newDate").value = today;
+  },
+
+  generateDate: function(){
+    var now = new Date();
+    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
     document.getElementById("existingDate").value = today;
   },
 
@@ -134,37 +145,112 @@ var Content = React.createClass({
     var user = firebase.auth().currentUser.email;
     var date = document.getElementById("newDate").value;
     var description = document.getElementById("newDescription").value;
-    var action = "Add new item.";
-    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
+    var action = "Added Item.";
 
-    firebase.database().ref('items/'+itemID).set({
-      key: itemID,
-      item_name: itemName,
-      description: description,
-      stock: stock,
-      price: price
-    });
-    firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
-      user_email: user,
-      date: date,
-      action_performed: action,
-      stock: stock
-    });
-    alert("Item added");
-    document.getElementById("newItem").value="";
-    document.getElementById("newNumber").value="";
-    document.getElementById("newPrice").value="";
-    document.getElementById("newDescription").value="";
-    $('#newItemModal').modal('hide');
+    if(itemName && stock && price && date){
+        firebase.database().ref('items/'+itemID).set({
+            key: itemID,
+            item_name: itemName,
+            description: description,
+            stock: Number(stock),
+            price: price
+        });
+        firebase.database().ref("items/"+itemID+"/item_history/").push().set({
+          user_email: user,
+          date: date,
+          action_performed: action,
+          stock: Number(stock)
+        });
+        var uid = firebase.auth().currentUser.uid;
+        firebase.database().ref("users/"+uid+"/activity").push().set({
+          action: action,
+          itemID: itemID,
+          itemName: itemName,
+          quantity: stock,
+          date: date
+        });
+        document.getElementById("newItem").value="";
+        document.getElementById("newNumber").value="";
+        document.getElementById("newPrice").value="";
+        document.getElementById("newDescription").value="";
+        $('#addConfirmation').modal('hide');
+        $('#existingItemModal').modal('hide');
+        $('#informSuccessAdd').appendTo("body").modal('show');
+        setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
+    }else{
+        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        $('#errorModal').appendTo("body").modal('show');
+        $('#addConfirmation').modal('hide');
+    }
   },
 
   displayItemOnModal: function(){
-    var ref = firebase.database().ref('items');
-    ref.once('value', function(snapshot) {
-      snapshot.forEach(function(childSnapshot) {
-        console.log(childSnapshot.val().key);
+    var itemVal = document.getElementById("item").value;
+
+    if(itemVal == ""){
+      document.getElementById("ID").value = "";
+      document.getElementById("existingDescription").value = "";
+      document.getElementById("existingPrice").value = "";
+      document.getElementById("existingStock").value = "";
+    }else{
+      var itemId = $("#item").val();
+      var ref = firebase.database().ref('items/'+itemId);
+      ref.once('value', function(snapshot) {
+        document.getElementById("ID").value = itemId;
+        document.getElementById("existingDescription").value = snapshot.val().description;
+        document.getElementById("existingPrice").value = snapshot.val().price;
+        document.getElementById("existingStock").value = snapshot.val().stock;
       });
-    });
+    }
+  },
+
+  updateItem: function(){
+    var itemName = $("#item option:selected").text();
+    var id = document.getElementById("ID").value;
+    var price = document.getElementById("existingPrice").value;
+    var curStock = document.getElementById("existingStock").value;
+    var addNumber = document.getElementById("additionalNumber").value;
+    var date = document.getElementById("existingDate").value;
+    var description = document.getElementById("existingDescription").value;
+    var userEmail = firebase.auth().currentUser.email;
+    var action = "Restocked/Edited item."
+
+    if(id && price && curStock && addNumber && date){
+      var newStock = Number(curStock) + Number(addNumber);
+      firebase.database().ref('items/'+id).update({
+        price: price,
+        stock: newStock
+      });
+      firebase.database().ref("items/"+id+"/item_history/").push().set({
+        user_email: userEmail,
+        date: date,
+        action_performed: action,
+        stock: addNumber
+      });
+      var uid = firebase.auth().currentUser.uid;
+      firebase.database().ref("users/"+uid+"/activity").push().set({
+        action: action,
+        itemID: id,
+        itemName: itemName,
+        quantity: addNumber,
+        date: date
+      });
+      $("#item").val("");
+      document.getElementById("ID").value = "";
+      document.getElementById("existingPrice").value = "";
+      document.getElementById("existingStock").value = "";
+      document.getElementById("additionalNumber").value = "";
+      document.getElementById("additionalNumber").value = "";
+      document.getElementById("existingDescription").value = "";
+      $('#existingItemModal').modal('hide');
+      $('#addExistingConfirmation').modal('hide');
+      $('#informSuccessAddExisting').appendTo("body").modal('show');
+      setTimeout(function() { $("#informSuccessAddExisting").modal('hide'); }, 1000);
+    }else{
+        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        $('#errorModal').appendTo("body").modal('show');
+        $('#addExistingConfirmation').modal('hide');
+    }
   },
 
   render: function() {
@@ -195,20 +281,19 @@ var Content = React.createClass({
                       </button>
                       <ul className="dropdown-menu" role="menu">
                           <li><a data-toggle="modal" data-target="#newItemModal" onClick={this.generateIDandDate}>New Item</a></li>
-                          <li><a data-toggle="modal" data-target="#existingItemModal" onClick={this.displayItemOnModal}>Existing Item</a></li>
+                          <li><a data-toggle="modal" data-target="#existingItemModal" onClick={this.generateDate}>Existing Item</a></li>
                       </ul>
                   </div>
                   <div className="col-sm-2">
-                      <a className="btn btn-primary pull-right" id="addTransaction">ADD TRANSACTION</a>
+                      <a className="btn btn-primary pull-right" id="addTransaction" href="Transaction.html">ADD TRANSACTION</a>
                   </div>
               </div>
               <div className="box-body">
                   <table id="itemTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                       <thead>
                           <tr>
-                              {/* <th className="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM ID</th> */}
-                              <th className="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM NAME</th>
-                              <th className="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">IN STOCK</th>
+                              <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM NAME</th>
+                              <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">IN STOCK</th>
                           </tr>
                       </thead>
                       <tbody id="itemList">
@@ -217,108 +302,186 @@ var Content = React.createClass({
               </div>
           </div>
 
-          <div className="example-modal">
-              <div className="modal fade bs-example-modal-lg" id="newItemModal">
-                  <div className="modal-dialog modal-md">
-                      <div className="modal-content">
-                          <div className="modal-header">
-                              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                              <h4 className="modal-title">New Item</h4>
-                          </div>
-                          <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                              <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                  <span>
-                                      <label>ID</label>
-                                      <input type="text" id="newId" readOnly className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>Item</label>
-                                      <input type="text" id="newItem" className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>Number</label>
-                                      <input type="number" id="newNumber" className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>Price</label>
-                                      <input type="number" id="newPrice" className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>User</label>
-                                      <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
-                                  </span>
-                              </div>
-                              <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                  <span>
-                                      <label>Description</label>
-                                      <textarea id="newDescription" className="form-control"></textarea>
-                                  </span>
-                                  <span>
-                                      <label>Date</label>
-                                      <input type="date" id="newDate" className="form-control"/>
-                                  </span>
+          <div className="modal fade bs-example-modal-lg" id="newItemModal">
+              <div className="modal-dialog modal-md">
+                  <div className="modal-content">
+                      <div className="modal-header">
+                          <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 className="modal-title">Add New Item</h4>
+                      </div>
+                      <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item ID</label>
+                                  <input type="text" id="newId" readOnly className="form-control"/>
                               </div>
                           </div>
-                          <div className="modal-footer">
-                              <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                              <button type="button" className="btn btn-primary" onClick={this.addItem}>ADD</button>
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item Name</label>
+                                  <input type="text" id="newItem" className="form-control"/>
+                              </div>
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item Description</label>
+                                  <textarea id="newDescription" className="form-control"></textarea>
+                              </div>
                           </div>
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Quantity</label>
+                                  <input type="number" id="newNumber" className="form-control"/>
+                              </div>
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item Price</label>
+                                  <input type="number" id="newPrice" className="form-control"/>
+                              </div>
+                          </div>
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>User</label>
+                                  <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
+                              </div>
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Date</label>
+                                  <input type="date" id="newDate" className="form-control"/>
+                              </div>
+                          </div>
+                      </div>
+                      <div className="modal-footer">
+                          <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
+                          <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#addConfirmation"
+                              onClick={this.showAddModal}>ADD</button>
                       </div>
                   </div>
               </div>
           </div>
 
-          <div className="example-modal">
-              <div className="modal fade bs-example-modal-lg" id="existingItemModal">
-                  <div className="modal-dialog modal-lg">
-                      <div className="modal-content">
-                          <div className="modal-header">
-                              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                              <h4 className="modal-title">Existing Item</h4>
-                          </div>
-                          <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                              <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                  <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                                      <label>Item</label>
-                                      <input type="text" id="existingItem" className="form-control"/>
-                                  </span>
-                                  <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                                      <label>Stock</label>
-                                      <input type="text" id="stock" readOnly className="form-control"/>
-                                  </span>
-                                  <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                                      <label>Number</label>
-                                      <input type="number" id="existingNumber" className="form-control"/>
-                                  </span>
-                                  <span className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                                      <label>Description</label>
-                                      <textarea id="existingDescription" readOnly className="form-control"></textarea>
-                                  </span>
-                              </div>
+          <div className="modal fade bs-example-modal-lg" id="addConfirmation">
+              <div className="modal-dialog modal-sm">
+                  <div className="modal-content">
+                      <div className="modal-body">
+                          <center>
+                              <h5>Add new item to inventory?</h5>
+                              <button type="button" className="btn btn-primary" onClick={this.addItem} id="itemButtons">YES</button>
+                              <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmEditItemButtons">NO</button>
+                          </center>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
-                              <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                  <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                      <span>
-                                          <label>Price</label>
-                                          <input type="number" id="existingPrice" className="form-control"/>
-                                      </span>
-                                      <span>
-                                          <label>User</label>
-                                          <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
-                                      </span>
-                                  </div>
-                                  <span className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                      <label>Date</label>
-                                      <input type="date" id="existingDate" className="form-control"/>
-                                  </span>
-                              </div>
+          <div className="modal fade modal-success" id="informSuccessAdd">
+              <div className="modal-dialog modal-md">
+                  <div className="modal-content">
+                      <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <center>
+                              <h4><strong>Successfully Added New Item to Inventory.</strong></h4>
+                          </center>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
+          <div className="modal fade modal-danger" id="errorModal">
+              <div className="modal-dialog modal-sm">
+                  <div className="modal-content">
+                      <div className="modal-header">
+                          <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <center><h5 className="modal-title">ERROR</h5></center>
+                      </div>
+                      <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <center>
+                              <h5 id="errorMessage">Error</h5>
+                              <br/>
+                              <button type="button" className="btn btn-default btn-sm pull-right" data-dismiss="modal">OK</button>
+                          </center>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div className="modal fade bs-example-modal-lg" id="existingItemModal">
+              <div className="modal-dialog modal-md">
+                  <div className="modal-content">
+                      <div className="modal-header">
+                          <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 className="modal-title">Add Existing Item</h4>
+                      </div>
+                      <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item ID</label>
+                                  <input type="text" id="ID" readOnly className="form-control"/>
+                              </div>
                           </div>
-                          <div className="modal-footer">
-                              <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                              <button type="button" className="btn btn-primary">UPDATE</button>
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item Name</label>
+                                  <select id="item" className="form-control" onChange={this.displayItemOnModal}>
+                                      <option id="header" value="">- Choose an item -</option>
+                                  </select>
+                              </div>
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item Description</label>
+                                  <textarea id="existingDescription" readOnly className="form-control"></textarea>
+                              </div>
                           </div>
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item Stock</label>
+                                  <input type="text" id="existingStock" readOnly className="form-control"/>
+                              </div>
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Quantity to Add</label>
+                                  <input type="number" id="additionalNumber" className="form-control" min="1"/>
+                              </div>
+                          </div>
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Price</label>
+                                  <input type="number" id="existingPrice" className="form-control" step=".01"/>
+                              </div>
+                          </div>
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>User</label>
+                                  <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
+                              </div>
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Date</label>
+                                  <input type="date" id="existingDate" className="form-control"/>
+                              </div>
+                          </div>
+                      </div>
+                      <div className="modal-footer">
+                          <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
+                          <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#addExistingConfirmation">ADD</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div className="modal fade bs-example-modal-lg" id="addExistingConfirmation">
+              <div className="modal-dialog modal-sm">
+                  <div className="modal-content">
+                      <div className="modal-body">
+                          <center>
+                              <h5>Add item stock to inventory?</h5>
+                              <button type="button" className="btn btn-primary" onClick={this.updateItem} id="itemButtons">YES</button>
+                              <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmEditItemButtons">NO</button>
+                          </center>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div className="modal fade modal-success" id="informSuccessAddExisting">
+              <div className="modal-dialog modal-md">
+                  <div className="modal-content">
+                      <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <center>
+                              <h4><strong>Successfully Added to Item Stock.</strong></h4>
+                          </center>
                       </div>
                   </div>
               </div>

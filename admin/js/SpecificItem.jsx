@@ -11,6 +11,19 @@ var Header = React.createClass({
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
   },
 
+  showConfirmationModal: function(){
+    $('#editConfirmation').appendTo("body").modal('show');
+  },
+
+  showDeleteModal: function(){
+    $('#deleteConfirmation').appendTo("body").modal('show');
+  },
+
+  showAddModal: function(){
+    $('#addConfirmation').appendTo("body").modal('show');
+  },
+
+
   render: function() {
     return (
         <div>
@@ -100,7 +113,7 @@ itemDescription: "null",
       });
     });
     var refHistory = firebase.database().ref('items/'+itemID+'/item_history');
-    refHistory.once('child_added', function(data) {
+    refHistory.on('child_added', function(data) {
       self.setState({
         latestHistory: data.val().date
       })
@@ -115,76 +128,100 @@ itemDescription: "null",
     document.getElementById("editDate").value = today;
   },
 
-  addStock: function(){
+  restockItem: function(){
     var now = new Date();
-    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
     var additionalStock = document.getElementById("addNumber").value;
     var date = document.getElementById("addDate").value;
     var user = firebase.auth().currentUser.email;
-    var action = "Add stock/s to item."
+    var action = "Restocked item."
     var uid = firebase.auth().currentUser.uid;
 
     if(additionalStock && date){
-      var newStock = parseInt(this.state.itemStock) + parseInt(additionalStock);
+      var newStock = Number(this.state.itemStock) + Number(additionalStock);
       firebase.database().ref('items/'+itemID).update({
         stock: newStock
       })
-
-      firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+      firebase.database().ref('items/'+itemID+"/item_history/").push().set({
         user_email: user,
         date: date,
         action_performed: action,
         stock: additionalStock
       });
-      alert("Item stock added!");
+      firebase.database().ref("users/"+uid+"/activity").push().set({
+        action: action,
+        itemID: itemID,
+        itemName: this.state.itemName,
+        quantity: additionalStock,
+        date: date
+      });
+      $('#addConfirmation').modal('hide');
       $('#addStockModal').modal('hide');
+      $('#informSuccessAdd').appendTo("body").modal('show');
+      setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
       document.getElementById("addNumber").value = "";
     }else{
-      alert("Input number!");
+        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        $('#errorModal').appendTo("body").modal('show');
+        $('#addConfirmation').modal('hide');
     }
   },
 
-  deleteStock: function(){
+  releaseStock: function(){
     var now = new Date();
-    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
     var diminishedStock = document.getElementById("deleteNumber").value;
     var date = document.getElementById("deleteDate").value;
     var user = firebase.auth().currentUser.email;
-    var action = "Delete stock/s from item."
+    var action = "Released item."
     var uid = firebase.auth().currentUser.uid;
     var curStock = this.state.itemStock;
+
     if(diminishedStock && date){
       if(diminishedStock <= curStock){
-        var newStock = parseInt(curStock) - parseInt(diminishedStock);
+        var newStock = Number(curStock) - Number(diminishedStock);
         firebase.database().ref('items/'+itemID).update({
           stock: newStock
         })
-        firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+
+        firebase.database().ref('items/'+itemID+"/item_history/").push().set({
           user_email: user,
           date: date,
           action_performed: action,
           stock: diminishedStock
         });
-        alert("Item stock added!");
+
+        firebase.database().ref("users/"+uid+"/activity").push().set({
+          action: action,
+          itemID: itemID,
+          itemName: this.state.itemName,
+          quantity: diminishedStock,
+          date: date
+        });
+        $('#deleteConfirmation').modal('hide');
         $('#deleteStockModal').modal('hide');
-        document.getElementById("addNumber").value = "";
+        $('#informSuccessDelete').appendTo("body").modal('show');
+        setTimeout(function() { $("#informSuccessDelete").modal('hide'); }, 1000);
+        document.getElementById("deleteNumber").value = "";
       }else{
-        alert("Di ka ka-delete. Bogo ka ug math!");
+          document.getElementById("errorMessage").innerHTML= "Unable to delete.";
+          $('#errorModal').appendTo("body").modal('show');
+          $('#deleteConfirmation').modal('hide');
       }
     }else{
-      alert("Input number!");
+        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        $('#errorModal').appendTo("body").modal('show');
+        $('#deleteConfirmation').modal('hide');
     }
   },
 
   editItem: function(){
     var now = new Date();
-    var itemHistoryID = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes()+"-"+now.getSeconds()+"-"+now.getMilliseconds();
     var user = firebase.auth().currentUser.email;
-    var action = "Edit item."
+    var action = "Edited item."
     var date = document.getElementById("editDate").value;
     var itemName = document.getElementById("editItem").value;
     var itemPrice = document.getElementById("editPrice").value;
     var itemDescription = document.getElementById("editDescription").value;
+    var uid = firebase.auth().currentUser.uid;
 
     if(date && itemName && itemPrice && itemDescription){
       firebase.database().ref('items/'+itemID).update({
@@ -192,21 +229,48 @@ itemDescription: "null",
       description: itemDescription,
             price: itemPrice
       })
-      firebase.database().ref('items/'+itemID+"/item_history/"+itemHistoryID).set({
+
+      firebase.database().ref('items/'+itemID+"/item_history/").push().set({
         user_email: user,
         date: date,
         action_performed: action
       });
-      alert("Item edited!");
+
+      firebase.database().ref("users/"+uid+"/activity").push().set({
+        action: action,
+        itemID: itemID,
+        itemName: this.state.itemName,
+        quantity: "n/a",
+        date: date
+      });
+      $('#editConfirmation').modal('hide');
       $('#editItemModal').modal('hide');
+      $('#informSuccess').appendTo("body").modal('show');
+      setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
     }else{
-      alert("Missing input.");
+        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        $('#errorModal').appendTo("body").modal('show');
+        $('#editConfirmation').modal('hide');
     }
   },
 
   deleteItem: function(){
+    var now = new Date();
+    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var uid = firebase.auth().currentUser.uid;
+    var action = "Deleted item."
+
+    firebase.database().ref("users/"+uid+"/activity").push().set({
+      action: action,
+      itemID: itemID,
+      itemName: this.state.itemName,
+      quantity: "n/a",
+      date: today
+    });
+    $('#deleteItemModal').modal('hide');
+    $('#informSuccessItemDelete').appendTo("body").modal('show');
+    setTimeout(function() { $("#informSuccessItemDelete").modal('hide'); }, 3000);
     firebase.database().ref('items/'+itemID).remove();
-    alert("Item deleted.");
     window.location.replace("Inventory.html");
   },
 
@@ -255,11 +319,11 @@ itemDescription: "null",
                                     <span className="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <ul className="dropdown-menu" role="menu">
-                                    <li><a data-toggle="modal" data-target="#addStockModal" onClick={this.generateIDandDate}>Add</a></li>
+                                    <li><a data-toggle="modal" data-target="#addStockModal" onClick={this.generateDate}>Add</a></li>
                                     <li><a data-toggle="modal" data-target="#deleteStockModal" onClick={this.generateDate}>Delete</a></li>
                                 </ul>
                             </div>
-                            <a className="btn btn-primary" id="specificItemButtons" data-toggle="modal" data-target="#editItemModal">EDIT</a>
+                            <a className="btn btn-primary" id="specificItemButtons" data-toggle="modal" data-target="#editItemModal" onClick={this.generateDate}>EDIT</a>
                             <a className="btn btn-danger" id="specificItemButtons" data-toggle="modal" data-target="#deleteItemModal">DELETE</a>
                         </center>
                     </div>
@@ -279,7 +343,7 @@ itemDescription: "null",
                         <strong><i className="fa fa-money margin-r-5"></i> Item Price</strong>
                         <h3 className="text-muted" id="itemInfoContent">{this.state.itemPrice}</h3>
                         <hr/>
-                        <strong><i className="fa fa-calendar margin-r-5"></i> Date Last Updated</strong>
+                        <strong><i className="fa fa-calendar margin-r-5"></i> Date Stock Updated</strong>
                         <h3 className="text-muted" id="itemInfoContent">{this.state.latestHistory}</h3>
                         <hr/>
                     </div>
@@ -292,39 +356,40 @@ itemDescription: "null",
                         <div className="modal-content">
                             <div className="modal-header">
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 className="modal-title">Add Item</h4>
+                                <h4 className="modal-title">Add Stock: {this.state.itemName}</h4>
                             </div>
                             <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                    <span>
-                                        <label>ID</label>
+                                <div className="row">
+                                    <div className="col-sm-6" id="addStockModalComponents">
+                                        <label>Item ID</label>
                                         <input type="text" readOnly className="form-control" value={this.state.itemId}/>
-                                    </span>
-                                    <span>
-                                        <label>Item</label>
-                                        <input type="text" readOnly className="form-control" value={this.state.itemName}/>
-                                    </span>
-                                    <span>
-                                        <label>Number</label>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6" id="addStockModalComponents">
+                                        <label>Current Item Stock</label>
+                                        <input type="number" readOnly className="form-control" value={this.state.itemStock}/>
+                                    </div>
+                                    <div className="col-sm-6" id="addStockModalComponents">
+                                        <label>Quantity to Add</label>
                                         <input type="number" id="addNumber" className="form-control"/>
-                                    </span>
-                                    <span>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6" id="addStockModalComponents">
                                         <label>User</label>
                                         <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
-                                    </span>
-                                </div>
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                    <span>
+                                    </div>
+                                    <div className="col-sm-6" id="addStockModalComponents">
                                         <label>Date</label>
                                         <input type="date" id="addDate" className="form-control"/>
-                                    </span>
+                                    </div>
                                 </div>
-
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                                <button type="button" className="btn btn-primary" onClick={this.addStock}>ADD</button>
+                                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#addConfirmation"
+                                    onClick={this.showAddModal}>ADD</button>
                             </div>
                         </div>
                     </div>
@@ -335,39 +400,40 @@ itemDescription: "null",
                         <div className="modal-content">
                             <div className="modal-header">
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 className="modal-title">Add Item</h4>
+                                <h4 className="modal-title">Delete Stock: {this.state.itemName}</h4>
                             </div>
                             <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                    <span>
-                                        <label>ID</label>
+                                <div className="row">
+                                    <div className="col-sm-6" id="delStockModalComponents">
+                                        <label>Item ID</label>
                                         <input type="text" readOnly className="form-control" value={this.state.itemId}/>
-                                    </span>
-                                    <span>
-                                        <label>Item</label>
-                                        <input type="text" readOnly className="form-control" value={this.state.itemName}/>
-                                    </span>
-                                    <span>
-                                        <label>Number</label>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6" id="delStockModalComponents">
+                                        <label>Current Item Stock</label>
+                                        <input type="number" readOnly className="form-control" value={this.state.itemStock}/>
+                                    </div>
+                                    <div className="col-sm-6" id="delStockModalComponents">
+                                        <label>Quantity to Delete</label>
                                         <input type="number" id="deleteNumber" className="form-control"/>
-                                    </span>
-                                    <span>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6" id="delStockModalComponents">
                                         <label>User</label>
                                         <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
-                                    </span>
-                                </div>
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                    <span>
+                                    </div>
+                                    <div className="col-sm-6" id="delStockModalComponents">
                                         <label>Date</label>
                                         <input type="date" id="deleteDate" className="form-control"/>
-                                    </span>
+                                    </div>
                                 </div>
-
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                                <button type="button" className="btn btn-primary" onClick={this.deleteStock}>DELETE</button>
+                                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#deleteConfirmation"
+                                    onClick={this.showDeleteModal}>DELETE</button>
                             </div>
                         </div>
                     </div>
@@ -378,66 +444,178 @@ itemDescription: "null",
                         <div className="modal-content">
                             <div className="modal-header">
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 className="modal-title">Edit Item</h4>
+                                <h4 className="modal-title">Edit Item Details</h4>
                             </div>
                             <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                    <span>
-                                        <label>ID</label>
+                                <div className="row">
+                                    <div className="col-sm-6" id="editItemModalComponents">
+                                        <label>Item ID</label>
                                         <input type="text" readOnly className="form-control" value={this.state.itemId}/>
-                                    </span>
-                                    <span>
-                                        <label>Item</label>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6" id="editItemModalComponents">
+                                        <label>Item Name</label>
                                         <input type="text" id="editItem" className="form-control" onChange={this.onItemName} value={this.state.itemName}/>
-                                    </span>
-                                    <span>
-                                        <label>Stock</label>
+                                    </div>
+                                    <div className="col-sm-6" id="editItemModalComponents">
+                                        <label>Item Description</label>
+                                        <textarea id="editDescription" className="form-control" onChange={this.onItemDescription} value={this.state.itemDescription}></textarea>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6" id="editItemModalComponents">
+                                        <label>Item in Stock</label>
                                         <input type="number" readOnly className="form-control" value={this.state.itemStock}/>
-                                    </span>
-                                    <span>
-                                        <label>Price</label>
+                                    </div>
+                                    <div className="col-sm-6" id="editItemModalComponents">
+                                        <label>Item Price</label>
                                         <input type="number" id="editPrice" className="form-control" onChange={this.onItemPrice} value={this.state.itemPrice}/>
-                                    </span>
-                                    <span>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6" id="editItemModalComponents">
                                         <label>User</label>
                                         <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
-                                    </span>
-                                </div>
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                    <span>
-                                        <label>Description</label>
-                                        <textarea id="editDescription" className="form-control" onChange={this.onItemDescription} value={this.state.itemDescription}></textarea>
-                                    </span>
-                                    <span>
+                                    </div>
+                                    <div className="col-sm-6" id="editItemModalComponents">
                                         <label>Date</label>
                                         <input type="date" id="editDate" className="form-control"/>
-                                    </span>
+                                    </div>
                                 </div>
-
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                                <button type="button" className="btn btn-primary" onClick={this.editItem}>ADD</button>
+                                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editConfirmation"
+                                    onClick={this.showConfirmationModal}>EDIT</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="modal fade bs-example-modal-lg" id="deleteItemModal">
-                <div className="modal-dialog modal-md">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 className="modal-title">Delete Item</h4>
+                <div className="modal fade modal-danger" id="errorModal">
+                    <div className="modal-dialog modal-sm">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <center><h5 className="modal-title">ERROR</h5></center>
+                            </div>
+                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <center>
+                                    <h5 id="errorMessage">Error</h5>
+                                    <br/>
+                                    <button type="button" className="btn btn-default btn-sm pull-right" data-dismiss="modal">OK</button>
+                                </center>
+                            </div>
                         </div>
-                        <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <h4><strong>Are you sure you want to delete this item?</strong></h4>
+                    </div>
+                </div>
+
+                <div className="modal fade bs-example-modal-lg" id="editConfirmation">
+                    <div className="modal-dialog modal-sm">
+                        <div className="modal-content">
+                            <div className="modal-body">
+                                <center>
+                                    <h5>Are you sure you want to edit this item?</h5>
+                                    <button type="button" className="btn btn-primary" onClick={this.editItem} id="confirmEditItemButtons">YES</button>
+                                    <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmEditItemButtons">NO</button>
+                                </center>
+                            </div>
                         </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-default pull-left" data-dismiss="modal">NO</button>
-                            <button type="button" className="btn btn-primary" onClick={this.deleteItem}>YES</button>
+                    </div>
+                </div>
+
+                <div className="modal fade bs-example-modal-lg" id="addConfirmation">
+                    <div className="modal-dialog modal-sm">
+                        <div className="modal-content">
+                            <div className="modal-body">
+                                <center>
+                                    <h5>Add item stock to inventory?</h5>
+                                    <button type="button" className="btn btn-primary" onClick={this.restockItem} id="confirmEditItemButtons">YES</button>
+                                    <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmEditItemButtons">NO</button>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade bs-example-modal-lg" id="deleteConfirmation">
+                    <div className="modal-dialog modal-sm">
+                        <div className="modal-content">
+                            <div className="modal-body">
+                                <center>
+                                    <h5>Delete item stock from inventory?</h5>
+                                    <button type="button" className="btn btn-primary" onClick={this.releaseStock} id="confirmEditItemButtons">YES</button>
+                                    <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmEditItemButtons">NO</button>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade modal-success" id="informSuccess">
+                    <div className="modal-dialog modal-md">
+                        <div className="modal-content">
+                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <center>
+                                    <h4><strong>Successfully Edited Item.</strong></h4>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade modal-success" id="informSuccessDelete">
+                    <div className="modal-dialog modal-md">
+                        <div className="modal-content">
+                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <center>
+                                    <h4><strong>Successfully Deleted from Item Stock.</strong></h4>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade modal-success" id="informSuccessAdd">
+                    <div className="modal-dialog modal-md">
+                        <div className="modal-content">
+                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <center>
+                                    <h4><strong>Successfully Added to Item Stock.</strong></h4>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade modal-success" id="informSuccessItemDelete">
+                    <div className="modal-dialog modal-md">
+                        <div className="modal-content">
+                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <center>
+                                    <h4><strong>Successfully Deleted Item from Inventory.</strong></h4>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade modal-danger" id="deleteItemModal">
+                    <div className="modal-dialog modal-sm">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <center><h5 className="modal-title">DELETE ITEM</h5></center>
+                            </div>
+                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <center>
+                                    <h5 id="errorMessage">Are you sure you want to delete this item from the Inventory?</h5>
+                                    <br/>
+                                    <button type="button" className="btn btn-outline" onClick={this.deleteItem} id="deleteItemButtons">YES</button>
+                                    <button type="button" className="btn btn-outline" data-dismiss="modal" id="deleteItemButtons">NO</button>
+                                </center>
+                            </div>
                         </div>
                     </div>
                 </div>

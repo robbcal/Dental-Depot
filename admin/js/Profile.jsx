@@ -56,11 +56,11 @@ var Body = React.createClass({
                         <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
                         <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
                         <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
-                        <li className="active"><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                        <li className="active"><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                     </ul>
                 </div>
             </div>
-
+            
             <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
                 <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
                     <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
@@ -252,7 +252,7 @@ var Content = React.createClass({
               </div>
 
               <div className="example-modal">
-                  <div className="modal modal-danger" id="errorModal">
+                  <div className="modal fade modal-danger" id="errorModal">
                       <div className="modal-dialog modal-sm">
                           <div className="modal-content">
                               <div className="modal-header">
@@ -272,7 +272,7 @@ var Content = React.createClass({
               </div>
 
               <div className="example-modal">
-                  <div className="modal modal-success" id="informSuccess">
+                  <div className="modal fade modal-success" id="informSuccess">
                       <div className="modal-dialog modal-md">
                           <div className="modal-content">
                               <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">

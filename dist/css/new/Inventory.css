@@ -20,3 +20,13 @@
     padding-right: 20px;
     padding-bottom: 10px;
 }
+
+#modalComponents{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+
+#itemButtons{
+    margin: 10px;
+}
