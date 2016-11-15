@@ -118,6 +118,34 @@ var Content = React.createClass({
       $("tr#"+id).remove();
       $("option#"+id).remove();
     });
+    
+    $('#existingItemModal').on('hidden.bs.modal', function () {
+      $("#item option:eq(0)").attr("selected", "selected");
+      document.getElementById("ID").value = "";
+      document.getElementById("existingDescription").value = "";
+      document.getElementById("existingPrice").value = "";
+      document.getElementById("existingStock").value = "";
+      document.getElementById("additionalNumber").value = "";
+    });
+
+    $('#newItemModal').on('hidden.bs.modal', function () {
+      document.getElementById("newItem").value="";
+      document.getElementById("newNumber").value="";
+      document.getElementById("newPrice").value="";
+      document.getElementById("newDescription").value="";
+    });
+
+    $('#inventorySearch').keyup(function() {
+      var $rows = $('#itemList tr');
+      var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
+        reg = RegExp(val, 'i'),
+        text;
+
+      $rows.show().filter(function() {
+        text = $(this).text().replace(/\s+/g, ' ');
+        return !reg.test(text);
+      }).hide();
+    });
   },
 
   generateIDandDate: function(){
@@ -243,7 +271,7 @@ var Content = React.createClass({
         <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span className="pull-left">
-              <input type="text" id="inventorySearch" /*className="searchBox"*//>
+              <input type="text" id="inventorySearch"/>
               <button id="inventoryButton"><img src="../bootstrap/icons/search.png" height="15px"/></button>
             </span>
             <span className="pull-right">
@@ -253,7 +281,7 @@ var Content = React.createClass({
           </div>
           <br/><br/>
           <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">  
-            <table className="table table-hover table-striped table-bordered /*adminTable*/">
+            <table className="table table-hover table-striped table-bordered" id="itemsTable">
               <thead>
                 <tr>
                   <th><center>NAME</center></th>

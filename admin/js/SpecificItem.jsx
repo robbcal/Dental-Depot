@@ -82,7 +82,7 @@ itemDescription: "null",
       };
   },
 
-  componentWillMount: function(){
+  componentDidMount: function(){
     const self = this;
     var uid = firebase.auth().currentUser.uid;
     var refUser = firebase.database().ref('users/'+uid);
@@ -106,6 +106,23 @@ itemDescription: "null",
         latestHistory: data.val().date 
       })
     })
+
+    $('#restockItemModal').on('hidden.bs.modal', function () {
+      document.getElementById("addNumber").value="";
+    });
+
+    $('#releaseStockModal').on('hidden.bs.modal', function () {
+      document.getElementById("deleteNumber").value="";
+    });
+
+    $('#editItemModal').on('hidden.bs.modal', function () {
+      ref.on('value', function(snapshot) {
+        document.getElementById("editItem").value = snapshot.val().item_name;
+        document.getElementById("editDescription").value = snapshot.val().description; 
+        document.getElementById("editPrice").value = snapshot.val().price;
+      });
+    });
+
   },
 
   generateDate: function(){
