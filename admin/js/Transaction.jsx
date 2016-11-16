@@ -209,6 +209,7 @@ var Content = React.createClass({
   },
 
   createTransaction: function(){
+    var name
     var date = document.getElementById("date").value;
     var release = document.getElementById("release").value;
     var total = document.getElementById("total").value;
@@ -229,15 +230,18 @@ var Content = React.createClass({
         var itemElement = {id: itemID, name: itemName, qty: qty, subtotal: subtotal};
         transactionItems.push(itemElement);
       }
-      //console.log(transactionItems);
       var transactionLength = transactionItems.length;
-      firebase.database().ref("transactions/"+date+"/"+transactionID).set({
-        total: total,
-        user_email: userEmail,
-        release_method: release
-      });
+      firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+        var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+        firebase.database().ref("transactions/"+transactionID).set({
+          total: total,
+          user: userName,
+          release_method: release
+        });
+      });  
+        
       for(var a = 0; a < transactionLength; a++){
-        firebase.database().ref("transactions/"+date+"/"+transactionID+"/items_purchased/"+transactionItems[a].id).set({
+        firebase.database().ref("transactions/"+transactionID+"/items_purchased/"+transactionItems[a].id).set({
           item_name: transactionItems[a].name,
           item_quantity: transactionItems[a].qty,
           item_subtotal: transactionItems[a].subtotal
@@ -245,16 +249,24 @@ var Content = React.createClass({
         firebase.database().ref('items/'+transactionItems[a].id).once('value', function(snapshot) {
           var stock = snapshot.val().stock;
           var newQty = Number(stock) - Number(transactionItems[a].qty);
-          //console.log(transactionItems[a].id+" : "+stock+" : "+newQty);
           firebase.database().ref("items/"+transactionItems[a].id).update({
             stock: newQty
           });
           firebase.database().ref("users/"+uid+"/activity").push().set({
-            action: "Transaction",
+            action: "Purchased item.",
             itemID: itemID,
             itemName: transactionItems[a].name,
             quantity: transactionItems[a].qty,
             date: date
+          });
+          firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+            var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+            firebase.database().ref("items/"+transactionItems[a].id+"/item_history/").push().set({
+              user: userName,
+              date: date,
+              action_performed: "Purchased item.",
+              stock: transactionItems[a].qty
+            });
           });
         });
       }

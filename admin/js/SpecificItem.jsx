@@ -137,7 +137,6 @@ itemDescription: "null",
     var now = new Date();
     var additionalStock = document.getElementById("addNumber").value;
     var date = document.getElementById("addDate").value;
-    var user = firebase.auth().currentUser.email;
     var action = "Restocked item."
     var uid = firebase.auth().currentUser.uid;
 
@@ -146,14 +145,15 @@ itemDescription: "null",
       firebase.database().ref('items/'+itemID).update({
         stock: newStock
       })
-      
-      firebase.database().ref('items/'+itemID+"/item_history/").push().set({
-        user_email: user,
-        date: date,
-        action_performed: action,
-        stock: additionalStock
-      });
-
+      firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+        var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+        firebase.database().ref('items/'+itemID+"/item_history/").push().set({
+          user: userName,
+          date: date,
+          action_performed: action,
+          stock: additionalStock
+        });
+      });   
       firebase.database().ref("users/"+uid+"/activity").push().set({
         action: action,
         itemID: itemID,
@@ -174,7 +174,6 @@ itemDescription: "null",
     var now = new Date();
     var diminishedStock = document.getElementById("deleteNumber").value;
     var date = document.getElementById("deleteDate").value;
-    var user = firebase.auth().currentUser.email;
     var action = "Released item."
     var uid = firebase.auth().currentUser.uid;
     var curStock = this.state.itemStock;
@@ -185,14 +184,15 @@ itemDescription: "null",
         firebase.database().ref('items/'+itemID).update({
           stock: newStock
         })
-        
-        firebase.database().ref('items/'+itemID+"/item_history/").push().set({
-          user_email: user,
-          date: date,
-          action_performed: action,
-          stock: diminishedStock
-        });
-
+        firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+          var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+          firebase.database().ref('items/'+itemID+"/item_history/").push().set({
+            user: userName,
+            date: date,
+            action_performed: action,
+            stock: diminishedStock
+          });
+        });  
         firebase.database().ref("users/"+uid+"/activity").push().set({
           action: action,
           itemID: itemID,
@@ -214,7 +214,6 @@ itemDescription: "null",
 
   editItem: function(){
     var now = new Date();
-    var user = firebase.auth().currentUser.email;
     var action = "Edited item."
     var date = document.getElementById("editDate").value;
     var itemName = document.getElementById("editItem").value;
@@ -228,13 +227,15 @@ itemDescription: "null",
       description: itemDescription,
             price: itemPrice
       })
-  
-      firebase.database().ref('items/'+itemID+"/item_history/").push().set({
-        user_email: user,
-        date: date,
-        action_performed: action
+      firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+        var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+        firebase.database().ref('items/'+itemID+"/item_history/").push().set({
+          user: userName,
+          date: date,
+          action_performed: action,
+          stock: "n/a"
+        });
       });
-
       firebase.database().ref("users/"+uid+"/activity").push().set({
         action: action,
         itemID: itemID,

@@ -135,17 +135,6 @@ var Content = React.createClass({
       document.getElementById("newDescription").value="";
     });
 
-    /*$('#inventorySearch').keyup(function() {
-      var $rows = $('#itemList tr');
-      var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
-        reg = RegExp(val, 'i'),
-        text;
-
-      $rows.show().filter(function() {
-        text = $(this).text().replace(/\s+/g, ' ');
-        return !reg.test(text);
-      }).hide();
-    });*/
     $(document).ready(function () {
       (function ($) {
           $('#inventorySearch').keyup(function () {
@@ -164,6 +153,12 @@ var Content = React.createClass({
     });
   },
 
+  showTable: function(){
+    if($('#inventorySearch').val == null){
+      $('#itemList tr').show();
+    }
+  },
+
   generateIDandDate: function(){
     var now = new Date();
     var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
@@ -179,7 +174,7 @@ var Content = React.createClass({
     var itemName = document.getElementById("newItem").value;
     var stock = document.getElementById("newNumber").value;
     var price = document.getElementById("newPrice").value;
-    var user = firebase.auth().currentUser.email;
+    var uid = firebase.auth().currentUser.uid;
     var date = document.getElementById("newDate").value;
     var description = document.getElementById("newDescription").value;
     var action = "Added item.";
@@ -191,13 +186,15 @@ var Content = React.createClass({
       stock: Number(stock),
       price: price
     });
-    firebase.database().ref("items/"+itemID+"/item_history/").push().set({
-      user_email: user,
-      date: date,
-      action_performed: action,
-      stock: Number(stock)
+    firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+      var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+      firebase.database().ref("items/"+itemID+"/item_history/").push().set({
+        user: userName,
+        date: date,
+        action_performed: action,
+        stock: Number(stock)
+      });
     });
-    var uid = firebase.auth().currentUser.uid;
     firebase.database().ref("users/"+uid+"/activity").push().set({
       action: action,
       itemID: itemID,
@@ -240,8 +237,8 @@ var Content = React.createClass({
     var curStock = document.getElementById("existingStock").value;
     var addNumber = document.getElementById("additionalNumber").value;
     var date = document.getElementById("existingDate").value;
-    var userEmail = firebase.auth().currentUser.email;
-    var action = "Restocked/Edited item."
+    var uid = firebase.auth().currentUser.uid;
+    var action = "Restocked item."
 
     if(id && price && curStock && addNumber && date){
       var newStock = Number(curStock) + Number(addNumber);
@@ -249,13 +246,15 @@ var Content = React.createClass({
         price: price,
         stock: newStock
       });
-      firebase.database().ref("items/"+id+"/item_history/").push().set({
-        user_email: userEmail,
-        date: date,
-        action_performed: action,
-        stock: addNumber
+      firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+        var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+        firebase.database().ref("items/"+id+"/item_history/").push().set({
+          user: userName,
+          date: date,
+          action_performed: action,
+          stock: addNumber
+        });
       });
-      var uid = firebase.auth().currentUser.uid;
       firebase.database().ref("users/"+uid+"/activity").push().set({
         action: action,
         itemID: id,
@@ -287,7 +286,7 @@ var Content = React.createClass({
         <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span className="pull-left">
-              <input type="text" id="inventorySearch"/>
+              <input type="text" id="inventorySearch" onChange={this.showTable}/>
               <button id="inventoryButton"><img src="../bootstrap/icons/search.png" height="15px"/></button>
             </span>
             <span className="pull-right">
@@ -415,7 +414,7 @@ var Content = React.createClass({
                       <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <span>
                           <label>Price</label>
-                          <input type="number" id="existingPrice" className="form-control" step=".01"/>
+                          <input type="number" id="existingPrice" readOnly className="form-control" step=".01"/>
                         </span>
                         <span>
                           <label>User</label>

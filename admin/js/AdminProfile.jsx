@@ -89,7 +89,7 @@ var Content = React.createClass({
       };
   },
 
-  componentWillMount: function(){
+  componentDidMount: function(){
     const self = this;
     var uid = firebase.auth().currentUser.uid;
     var ref = firebase.database().ref('users/'+uid);
@@ -106,6 +106,19 @@ var Content = React.createClass({
         password: snapshot.val().password
       });
     });
+
+    $('#editInfoModal').on('hidden.bs.modal', function () {
+      ref.on('value', function(snapshot) {
+        document.getElementById("firstName").value = snapshot.val().firstname;
+        document.getElementById("lastName").value = snapshot.val().lastname; 
+        document.getElementById("email").value = snapshot.val().user_email;
+        document.getElementById("contactNumber").value = snapshot.val().contact_no;
+        document.getElementById("address").value = snapshot.val().address;
+        document.getElementById("birthdate").value = snapshot.val().birthday;
+        document.getElementById("password").value = snapshot.val().password;
+      });
+    });
+
   },
 
   showModal: function(){
