@@ -17,27 +17,27 @@ var Header = React.createClass({
 
   render: function() {
     return (
-        <div>
-            <div className="main-header">
-                <div className="logo">
+        <div className="wrapper">
+            <header className="main-header">
+                <a href="Inventory.html" className="logo">
                     <span className="logo-mini"><b>DD</b></span>
                     <span className="logo-lg" id="mainHeader">Dental Depot</span>
-                </div>
-                <div className="navbar navbar-static-top" role="navigation">
+                </a>
+                <nav className="navbar navbar-static-top">
                     <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span className="sr-only">Toggle navigation</span>
                     </a>
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
-                            <li className="dropdown user user-menu">
+                            <li>
                                 <a href="#"><span onClick={this.logout}>
-                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
+                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
                                 </span></a>
                             </li>
                         </ul>
                     </div>
-                </div>
-            </div>
+                </nav>
+            </header>
         </div>
     );
   }
@@ -46,28 +46,23 @@ var Header = React.createClass({
 var Body = React.createClass({
   render: function() {
       return (
-        <div>
-            <div className="main-sidebar">
-                <div className="sidebar">
-                    <ul className="sidebar-menu">
-                        <br/>
-                        <li className="header">NAVIGATION</li>
-                        <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
-                        <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
-                        <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
-                        <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                        <Content/>
-                    </div>
-                </div>
-            </div>
-        </div>
+          <div>
+              <aside className="main-sidebar">
+                  <section className="sidebar">
+                      <ul className="sidebar-menu">
+                          <br/>
+                          <li className="header">NAVIGATION</li>
+                          <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                          <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
+                          <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
+                          <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                      </ul>
+                  </section>
+              </aside>
+              <div className="content-wrapper">
+                  <section id="content" className="content"><Content/></section>
+              </div>
+          </div>
     );
   }
 });
@@ -91,11 +86,12 @@ var Content = React.createClass({
     var ref = firebase.database().ref('items').orderByChild("item_name");
     ref.on('child_added', function(data) {
       var id=data.key
+      var itemid = id;
       var itemName = data.val().item_name;
       var stock = data.val().stock;
 
-      $("#itemList").append("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
-      $("#item").append("<option id="+id+" value="+id+">"+itemName+"</option>");
+      $("#itemList").append("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+stock+"</center></td></tr>");
+      $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();
@@ -107,8 +103,8 @@ var Content = React.createClass({
       var itemName = data.val().item_name;
       var stock = data.val().stock;
 
-      $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemName+"</td><td>"+stock+"</td></tr>");
-      $("option#"+id).replaceWith("<option id="+id+" value="+id+">"+itemName+"</option>");
+      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemName+"</center></td><td><center>"+stock+"</center></td></tr>");
+      $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();
@@ -120,6 +116,45 @@ var Content = React.createClass({
       $("tr#"+id).remove();
       $("option#"+id).remove();
     });
+
+    $('#existingItemModal').on('hidden.bs.modal', function () {
+        $("#item option:eq(0)").attr("selected", "selected");
+        document.getElementById("ID").value = "";
+        document.getElementById("existingDescription").value = "";
+        document.getElementById("existingPrice").value = "";
+        document.getElementById("existingStock").value = "";
+        document.getElementById("additionalNumber").value = "";
+      });
+
+      $('#newItemModal').on('hidden.bs.modal', function () {
+        document.getElementById("newItem").value="";
+        document.getElementById("newNumber").value="";
+        document.getElementById("newPrice").value="";
+        document.getElementById("newDescription").value="";
+      });
+
+      $(document).ready(function () {
+        (function ($) {
+            $('#inventorySearch').keyup(function () {
+              var rex = new RegExp($(this).val(), 'i');
+              $('#itemList tr').hide();
+              $('#itemList tr').filter(function () {
+                  return rex.test($(this).text());
+              }).show();
+              $('#no-data').hide();
+              if($('#itemList tr:visible').length == 0)
+              {
+                $('#no-data').show();
+              }
+            })
+        }(jQuery));
+      });
+  },
+
+  showTable: function(){
+    if($('#inventorySearch').val == null){
+      $('#itemList tr').show();
+    }
   },
 
   generateIDandDate: function(){
@@ -136,52 +171,77 @@ var Content = React.createClass({
     document.getElementById("existingDate").value = today;
   },
 
+  checkNewItem: function(){
+      var itemName = document.getElementById("newItem").value;
+      var stock = document.getElementById("newNumber").value;
+      var price = document.getElementById("newPrice").value;
+      var date = document.getElementById("newDate").value;
+
+      if(itemName != "" && stock != "" && price != "" && date != ""){
+          $('#addConfirmation').appendTo("body").modal('show');
+      }else{
+          document.getElementById("errorMessage").innerHTML= "Missing input.";
+          $('#errorModal').appendTo("body").modal('show');
+      }
+  },
+
+  checkExistingItem: function(){
+      var id = document.getElementById("ID").value;
+      var price = document.getElementById("existingPrice").value;
+      var curStock = document.getElementById("existingStock").value;
+      var addNumber = document.getElementById("additionalNumber").value;
+      var date = document.getElementById("existingDate").value;
+
+      if(id != "" && price != "" && curStock != "" && addNumber != "" && date != ""){
+          $('#addExistingConfirmation').appendTo("body").modal('show');
+      }else{
+          document.getElementById("errorMessage").innerHTML= "Missing input.";
+          $('#errorModal').appendTo("body").modal('show');
+      }
+  },
+
   addItem: function(){
     var now = new Date();
     var itemID = document.getElementById("newId").value;
     var itemName = document.getElementById("newItem").value;
     var stock = document.getElementById("newNumber").value;
     var price = document.getElementById("newPrice").value;
-    var user = firebase.auth().currentUser.email;
+    var uid = firebase.auth().currentUser.uid;
     var date = document.getElementById("newDate").value;
     var description = document.getElementById("newDescription").value;
-    var action = "Added Item.";
+    var action = "Added item.";
 
-    if(itemName && stock && price && date){
-        firebase.database().ref('items/'+itemID).set({
-            key: itemID,
-            item_name: itemName,
-            description: description,
-            stock: Number(stock),
-            price: price
-        });
-        firebase.database().ref("items/"+itemID+"/item_history/").push().set({
-          user_email: user,
-          date: date,
-          action_performed: action,
-          stock: Number(stock)
-        });
-        var uid = firebase.auth().currentUser.uid;
-        firebase.database().ref("users/"+uid+"/activity").push().set({
-          action: action,
-          itemID: itemID,
-          itemName: itemName,
-          quantity: stock,
-          date: date
-        });
-        document.getElementById("newItem").value="";
-        document.getElementById("newNumber").value="";
-        document.getElementById("newPrice").value="";
-        document.getElementById("newDescription").value="";
-        $('#addConfirmation').modal('hide');
-        $('#existingItemModal').modal('hide');
-        $('#informSuccessAdd').appendTo("body").modal('show');
-        setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
-    }else{
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
-        $('#errorModal').appendTo("body").modal('show');
-        $('#addConfirmation').modal('hide');
-    }
+    firebase.database().ref('items/'+itemID).set({
+      key: itemID,
+      item_name: itemName,
+      description: description,
+      stock: Number(stock),
+      price: price
+    });
+    firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+      var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+      firebase.database().ref("items/"+itemID+"/item_history/").push().set({
+        user: userName,
+        date: date,
+        action_performed: action,
+        stock: Number(stock)
+      });
+    });
+    firebase.database().ref("users/"+uid+"/activity").push().set({
+      action: action,
+      itemID: itemID,
+      itemName: itemName,
+      quantity: stock,
+      date: date
+    });
+    document.getElementById("newItem").value="";
+    document.getElementById("newNumber").value="";
+    document.getElementById("newPrice").value="";
+    document.getElementById("newDescription").value="";
+    $('#addConfirmation').modal('hide');
+    $('#newItemModal').modal('hide');
+    $('#informSuccessAdd').appendTo("body").modal('show');
+    setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
   },
 
   displayItemOnModal: function(){
@@ -211,9 +271,8 @@ var Content = React.createClass({
     var curStock = document.getElementById("existingStock").value;
     var addNumber = document.getElementById("additionalNumber").value;
     var date = document.getElementById("existingDate").value;
-    var description = document.getElementById("existingDescription").value;
-    var userEmail = firebase.auth().currentUser.email;
-    var action = "Restocked/Edited item."
+    var uid = firebase.auth().currentUser.uid;
+    var action = "Restocked item."
 
     if(id && price && curStock && addNumber && date){
       var newStock = Number(curStock) + Number(addNumber);
@@ -221,13 +280,15 @@ var Content = React.createClass({
         price: price,
         stock: newStock
       });
-      firebase.database().ref("items/"+id+"/item_history/").push().set({
-        user_email: userEmail,
-        date: date,
-        action_performed: action,
-        stock: addNumber
+      firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+        var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+        firebase.database().ref("items/"+id+"/item_history/").push().set({
+          user: userName,
+          date: date,
+          action_performed: action,
+          stock: addNumber
+        });
       });
-      var uid = firebase.auth().currentUser.uid;
       firebase.database().ref("users/"+uid+"/activity").push().set({
         action: action,
         itemID: id,
@@ -263,10 +324,10 @@ var Content = React.createClass({
           <div className="box">
               <div className="box-header" id="headerContent">
                   <div className="col-sm-4">
-                      <div className="input-group input-group-sm">
-                          <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search"/>
+                      <div className="input-group input-group-md">
+                          <input type="text" name="tableSearch" className="form-control pull-right" id="inventorySearch" placeholder="Search" onChange={this.showTable}/>
                           <div className="input-group-btn">
-                              <button type="submit" className="btn btn-default">
+                              <button type="submit" className="btn btn-default" id="inventoryButton">
                                   <i className="fa fa-search"></i>
                               </button>
                           </div>
@@ -288,15 +349,19 @@ var Content = React.createClass({
                       <a className="btn btn-primary pull-right" id="addTransaction" href="Transaction.html">ADD TRANSACTION</a>
                   </div>
               </div>
-              <div className="box-body">
+              <div className="box-body table-responsive" id="inventoryMainTable">
                   <table id="itemTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                       <thead>
                           <tr>
+                              <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM ID</th>
                               <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM NAME</th>
                               <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">IN STOCK</th>
                           </tr>
                       </thead>
                       <tbody id="itemList">
+                          <tr id="no-data" style={{display:'none'}}>
+                              <h5>No Results Found.</h5>
+                          </tr>
                       </tbody>
                   </table>
               </div>
@@ -349,8 +414,7 @@ var Content = React.createClass({
                       </div>
                       <div className="modal-footer">
                           <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                          <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#addConfirmation"
-                              onClick={this.showAddModal}>ADD</button>
+                          <button type="button" className="btn btn-primary" onClick={this.checkNewItem}>ADD</button>
                       </div>
                   </div>
               </div>
@@ -438,8 +502,8 @@ var Content = React.createClass({
                           </div>
                           <div className="row">
                               <div className="col-sm-6" id="modalComponents">
-                                  <label>Price</label>
-                                  <input type="number" id="existingPrice" className="form-control" step=".01"/>
+                                  <label>Item Price</label>
+                                  <input type="number" id="existingPrice" readOnly className="form-control" step=".01"/>
                               </div>
                           </div>
                           <div className="row">
@@ -455,7 +519,7 @@ var Content = React.createClass({
                       </div>
                       <div className="modal-footer">
                           <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                          <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#addExistingConfirmation">ADD</button>
+                          <button type="button" className="btn btn-primary" onClick={this.checkExistingItem}>ADD</button>
                       </div>
                   </div>
               </div>

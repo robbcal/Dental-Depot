@@ -40,6 +40,15 @@
   vertical-align: middle;
 }
 
+.content-wrapper{
+    min-height: 1036px;
+    background-color: #e1e1e1;
+}
+
+.content{
+    background-color: #e1e1e1;
+}
+
 /*LAMDAG ADDITIONS*/
 
 html,

@@ -1,10 +1,5 @@
 #logsTransSearch{
-    padding-right: 10px;
-    width: 250px;
-}
-
-#logsRowThree{
-    padding: 10px;
+    padding-right: 25px;
 }
 
 #logsTransPagination{
@@ -13,4 +8,9 @@
 
 #mainContent{
     margin: 20px;
+}
+
+#tabContent{
+    height: 480px;
+    overflow-x: hidden;
 }

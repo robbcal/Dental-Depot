@@ -1,54 +1,54 @@
 var Header = React.createClass({
-        logout: function(){
-          firebase.auth().signOut().then(function() {
-            window.location.replace("http://127.0.0.1:8080/");
-          }, function(error) {
-            console.log(error);
-          });
-        },
-
-        componentDidUpdate: function(){
-          $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
-        },
-
-        showConfirmLogout: function(){
-          $('#confirmModal').appendTo("body").modal("show");
-        },
-
-        render: function() {
-          return (
-              <div>
-                  <div className="main-header">
-                      <div className="logo">
-                          <span className="logo-mini"><b>DD</b></span>
-                          <span className="logo-lg" id="mainHeader">Dental Depot</span>
-                      </div>
-                      <div className="navbar navbar-static-top" role="navigation">
-                          <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-                              <span className="sr-only">Toggle navigation</span>
-                          </a>
-                          <div className="navbar-custom-menu">
-                              <ul className="nav navbar-nav">
-                                  <li className="dropdown user user-menu">
-                                      <a href="#"><span onClick={this.logout}>
-                                          <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
-                                      </span></a>
-                                  </li>
-                              </ul>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          );
-        }
+    logout: function(){
+      firebase.auth().signOut().then(function() {
+        window.location.replace("http://127.0.0.1:8080/");
+      }, function(error) {
+        console.log(error);
       });
+    },
 
-      var Body = React.createClass({
+    componentDidUpdate: function(){
+      $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+    },
+
+    showConfirmLogout: function(){
+      $('#confirmModal').appendTo("body").modal("show");
+    },
+
+    render: function() {
+      return (
+          <div className="wrapper">
+              <header className="main-header">
+                  <a href="Inventory.html" className="logo">
+                      <span className="logo-mini"><b>DD</b></span>
+                      <span className="logo-lg" id="mainHeader">Dental Depot</span>
+                  </a>
+                  <nav className="navbar navbar-static-top">
+                      <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                          <span className="sr-only">Toggle navigation</span>
+                      </a>
+                      <div className="navbar-custom-menu">
+                          <ul className="nav navbar-nav">
+                              <li>
+                                  <a href="#"><span onClick={this.logout}>
+                                      <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
+                                  </span></a>
+                              </li>
+                          </ul>
+                      </div>
+                  </nav>
+              </header>
+          </div>
+      );
+    }
+  });
+
+    var Body = React.createClass({
         render: function() {
           return (
               <div>
-                  <div className="main-sidebar">
-                      <div className="sidebar">
+                  <aside className="main-sidebar">
+                      <section className="sidebar">
                           <ul className="sidebar-menu">
                               <br/>
                               <li className="header">NAVIGATION</li>
@@ -57,42 +57,96 @@ var Header = React.createClass({
                               <li className="active"><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
                               <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                           </ul>
-                      </div>
+                      </section>
+                  </aside>
+                  <div className="content-wrapper">
+                      <section id="content" className="content"><Content/></section>
                   </div>
-
-                  <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                      <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                          <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                              <Content/>
-                          </div>
-                      </div>
-                  </div>
-
               </div>
           );
         }
-      });
+    });
 
-      var Content = React.createClass({
+    var Content = React.createClass({
+        getInitialState: function() {
+            return {
+              curUser: "null"
+            };
+        },
+
+        componentDidMount: function(){
+            const self = this;
+            var uid = firebase.auth().currentUser.uid;
+            var ref = firebase.database().ref('users/'+uid);
+            ref.on('value', function(snapshot) {
+              self.setState({
+                curUser: snapshot.val().firstname+" "+snapshot.val().lastname
+              });
+            });
+
+            var ref = firebase.database().ref('transactions');
+            ref.on('child_added', function(data) {
+                var id = data.key;
+                var transId = data.key;
+                var total = data.val().total;
+                var date = data.val().date;
+                var user = data.val().user;
+                $("#transactionList").append("<tr id="+id+"><td><center>"+transId+"</center></td><td><center>"+total+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
+                $("#"+id+"").dblclick(function() {
+                    document.getElementById("transID").value = id;
+                    document.getElementById("submit").click();
+                });
+            });
+
+            $(document).ready(function () {
+                  (function ($) {
+                      $('#logsSearch').keyup(function () {
+                        var rex = new RegExp($(this).val(), 'i');
+                        $('#transactionList tr').hide();
+                        $('#transactionList tr').filter(function () {
+                            return rex.test($(this).text());
+                        }).show();
+                        $('#no-data').hide();
+                        if($('#transactionList tr:visible').length == 0)
+                        {
+                          $('#no-data').show();
+                        }
+                      })
+                  }(jQuery));
+                });
+            },
+
+            showTable: function(){
+              if($('#logsSearch').val == null){
+                $('#transactionList tr').show();
+            }
+        },
+
         render: function() {
           return (
               <div id="mainContent">
+                  <form id="itemIDForm" type="get" action="SpecificTransaction.html">
+                      <input type="hidden" id="transID" name="transID"/>
+                      <button type="submit" value="Send" name="submit" id="submit" style={{display: 'none'}}></button>
+                  </form>
                   <div className="nav-tabs-custom">
                       <ul className="nav nav-tabs">
-                          <li><a href="#sales" data-toggle="tab">SALES</a></li>
-                          <li className="active"><a href="#transaction" data-toggle="tab">TRANSACTION</a></li>
+                          <li className="active"><a href="#sales" data-toggle="tab">SALES</a></li>
+                          <li><a href="#transaction" data-toggle="tab">TRANSACTION</a></li>
                           <li><a href="#activity" data-toggle="tab">ACTIVITY</a></li>
                       </ul>
-                      <div className="tab-content">
-                          <div className="tab-pane" id="sales">
+                      <div className="tab-content table-responsive" id="tabContent">
+                          <div className="active tab-pane" id="sales">
 
                           </div>
-                          <div className="active tab-pane" id="transaction">
+
+                          <div className="tab-pane" id="transaction">
                               <div className="row">
-                                  <div className="col-sm-6 pull-right">
+                                  <div className="col-sm-8"></div>
+                                  <div className="col-sm-4 pull-right">
                                       <div className="box-tools pull-right">
-                                          <div className="input-group input-group-sm" id="logsTransSearch">
-                                              <input type="text" name="table_search" className="form-control pull-right" placeholder="Search"/>
+                                          <div className="input-group input-group-md" id="logsTransSearch">
+                                              <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="logsSearch"/>
                                               <div className="input-group-btn">
                                                   <button type="submit" className="btn btn-default">
                                                       <i className="fa fa-search"></i>
@@ -102,10 +156,11 @@ var Header = React.createClass({
                                       </div>
                                   </div>
                               </div>
-                              <div className="row">
+                              <div className="table-responsive">
                                   <div className="col-sm-12">
+                                      <br/>
                                       <div className="box-body">
-                                          <table id="example1" className="table table-bordered table-striped striped dataTable">
+                                          <table id="example1" className="table table-bordered table-hover dataTable">
                                               <thead>
                                                   <tr>
                                                       <th><center>TRANSACTION ID</center></th>
@@ -114,58 +169,67 @@ var Header = React.createClass({
                                                       <th><center>USER</center></th>
                                                   </tr>
                                               </thead>
-                                              <tbody>
-                                                  <tr>
-                                                      <td>Trident</td>
-                                                      <td>Win 95+</td>
-                                                      <td> 4</td>
-                                                      <td>X</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <td>Trident</td>
-                                                      <td>Win 95+</td>
-                                                      <td> 4</td>
-                                                      <td>X</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <td>Trident</td>
-                                                      <td>Win 95+</td>
-                                                      <td> 4</td>
-                                                      <td>X</td>
+                                              <tbody id="transactionList">
+                                                  <tr id="no-data" style={{display:'none'}}>
+                                                      <h5>No Results Found.</h5>
                                                   </tr>
                                               </tbody>
                                           </table>
                                       </div>
                                   </div>
                               </div>
-                              <div className="row" id="logsRowThree">
-                                  <div className="col-sm-5">
-                                      <div className="dataTables_info" id="example2_info" role="status" aria-live="polite">
-                                          Showing 1 to 10 of 57 entries
+                          </div>
+
+                          <div className="tab-pane" id="activity">
+                              <div className="row">
+                                  <div className="col-sm-8"></div>
+                                  <div className="col-sm-4 pull-right">
+                                      <div className="box-tools pull-right">
+                                          <div className="input-group input-group-md" id="logsTransSearch">
+                                              <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="logsSearch"/>
+                                              <div className="input-group-btn">
+                                                  <button type="submit" className="btn btn-default">
+                                                      <i className="fa fa-search"></i>
+                                                  </button>
+                                              </div>
+                                          </div>
                                       </div>
                                   </div>
-                                  <div className="col-sm-7">
-                                      <div className="dataTables_paginate paging_simple_numbers pull-right" id="logsTransPagination">
-                                          <ul className="pagination">
-                                              <li className="paginate_button previous disabled">
-                                                  <a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0">Previous</a>
-                                              </li>
-                                              <li className="paginate_button active">
-                                                  <a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0">1</a>
-                                              </li>
-                                              <li className="paginate_button">
-                                                  <a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">2</a>
-                                              </li>
-                                              <li className="paginate_button next">
-                                                  <a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">Next</a>
-                                              </li>
-                                          </ul>
+                              </div>
+                              <div className="table-responsive">
+                                  <div className="col-sm-12">
+                                      <br/>
+                                      <div className="box-body">
+                                          <table id="example1" className="table table-bordered table-hover dataTable">
+                                              <thead>
+                                                  <tr>
+                                                      <th><center>ITEM</center></th>
+                                                      <th><center>ACTION</center></th>
+                                                      <th><center>DATE</center></th>
+                                                      <th><center>USER</center></th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody id="activityList">
+
+                                              </tbody>
+                                          </table>
                                       </div>
                                   </div>
                               </div>
                           </div>
-                          <div className="tab-pane" id="activity">
+                      </div>
+                  </div>
 
+                  {/* TRANSACTION MODAL */}
+                  <div className="modal fade bs-example-modal-lg" id="addConfirmation">
+                      <div className="modal-dialog modal-sm">
+                          <div className="modal-content">
+                              <div className="modal-body">
+                                  <center>
+                                      <label>Trans ID</label>
+                                      <input type="text" id="transac" readOnly className="form-control"/>
+                                  </center>
+                              </div>
                           </div>
                       </div>
                   </div>
@@ -173,57 +237,57 @@ var Header = React.createClass({
               </div>
           );
         }
-      });
+    });
 
-      var MainContent = React.createClass({
-        getInitialState: function() {
-            return { signedIn: false, type: 0 };
-        },
+  var MainContent = React.createClass({
+    getInitialState: function() {
+        return { signedIn: false, type: 0 };
+    },
 
-        componentDidMount: function(){
-          const self = this;
-          firebase.auth().onAuthStateChanged(function(user) {
-              if (user) {
-                var uid = firebase.auth().currentUser.uid;
-                firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
-                  self.setState({ signedIn: true, type: snapshot.val().user_type });
-                  $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
-                });
-              } else {
-                self.setState({ signedIn: false });
-                window.location.replace("http://127.0.0.1:8080/");
-              }
-            }, function(error) {
-              console.log(error);
-          });
-        },
-
-        render: function() {
-          var res;
-          if(this.state.signedIn == true){
-            if(this.state.type == "admin"){
-              res = (
-                <div>
-                    <Header/>
-                    <Body/>
-                </div>
-              );
-            }else if(this.state.type == "user"){
-              window.location.replace("../user/Items.html");
-            }
-          }else{
-            res = (
-              <div>
-              </div>
-            );
+    componentDidMount: function(){
+      const self = this;
+      firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            var uid = firebase.auth().currentUser.uid;
+            firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
+              self.setState({ signedIn: true, type: snapshot.val().user_type });
+              $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+            });
+          } else {
+            self.setState({ signedIn: false });
+            window.location.replace("http://127.0.0.1:8080/");
           }
-          return(
-            res
-          );
-        }
+        }, function(error) {
+          console.log(error);
       });
+    },
 
-      ReactDOM.render(
-        <MainContent/>,
-        document.getElementById('main')
+    render: function() {
+      var res;
+      if(this.state.signedIn == true){
+        if(this.state.type == "admin"){
+          res = (
+            <div>
+                <Header/>
+                <Body/>
+            </div>
+          );
+        }else if(this.state.type == "user"){
+          window.location.replace("../user/Items.html");
+        }
+      }else{
+        res = (
+          <div>
+          </div>
+        );
+      }
+      return(
+        res
       );
+    }
+  });
+
+  ReactDOM.render(
+    <MainContent/>,
+    document.getElementById('main')
+  );

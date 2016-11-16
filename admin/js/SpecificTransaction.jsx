@@ -61,9 +61,9 @@ var Body = React.createClass({
                     <ul className="sidebar-menu">
                         <br/>
                         <li className="header">NAVIGATION</li>
-                        <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                        <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
                         <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
-                        <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
+                        <li className="active"><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
                         <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                     </ul>
                 </section>
@@ -113,43 +113,6 @@ itemDescription: "null",
         latestHistory: data.val().date
       })
     })
-  },
-
-  checkAddModal: function(){
-      var additionalStock = document.getElementById("addNumber").value;
-      var date = document.getElementById("addDate").value;
-
-      if(additionalStock != "" && date != ""){
-          $('#addConfirmation').appendTo("body").modal('show');
-      }else{
-          document.getElementById("errorMessage").innerHTML= "Missing input.";
-          $('#errorModal').appendTo("body").modal('show');
-      }
-  },
-
-  checkDeleteModal: function(){
-      var diminishedStock = document.getElementById("deleteNumber").value;
-      var date = document.getElementById("deleteDate").value;
-
-      if(diminishedStock != "" && date != ""){
-          $('#deleteConfirmation').appendTo("body").modal('show');
-      }else{
-          document.getElementById("errorMessage").innerHTML= "Missing input.";
-          $('#errorModal').appendTo("body").modal('show');
-      }
-  },
-
-  checkEditModal: function(){
-      var date = document.getElementById("editDate").value;
-      var itemName = document.getElementById("editItem").value;
-      var itemPrice = document.getElementById("editPrice").value;
-
-      if(date != "" && itemName != "" && itemPrice != ""){
-          $('#editConfirmation').appendTo("body").modal('show');
-      }else{
-          document.getElementById("errorMessage").innerHTML= "Missing input.";
-          $('#errorModal').appendTo("body").modal('show');
-      }
   },
 
   generateDate: function(){
@@ -255,7 +218,7 @@ itemDescription: "null",
     var itemDescription = document.getElementById("editDescription").value;
     var uid = firebase.auth().currentUser.uid;
 
-    if(date && itemName && itemPrice){
+    if(date && itemName && itemPrice && itemDescription){
       firebase.database().ref('items/'+itemID).update({
         item_name: itemName,
       description: itemDescription,
@@ -332,7 +295,7 @@ itemDescription: "null",
     return (
         <div id="mainContent">
             <div className="col-sm-4 pull-left">
-                <a href="Inventory.html"><img src="../bootstrap/icons/left-arrow.png" id="backButton"/></a>
+                <a href="Logs.html"><img src="../bootstrap/icons/left-arrow.png" id="backButton"/></a>
             </div>
             <br/><br/>
             <div className="col-md-4">
@@ -420,7 +383,8 @@ itemDescription: "null",
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                                <button type="button" className="btn btn-primary" onClick={this.checkAddModal}>ADD</button>
+                                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#addConfirmation"
+                                    onClick={this.showAddModal}>ADD</button>
                             </div>
                         </div>
                     </div>
@@ -463,7 +427,8 @@ itemDescription: "null",
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                                <button type="button" className="btn btn-primary" onClick={this.checkDeleteModal}>DELETE</button>
+                                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#deleteConfirmation"
+                                    onClick={this.showDeleteModal}>DELETE</button>
                             </div>
                         </div>
                     </div>
@@ -516,7 +481,8 @@ itemDescription: "null",
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                                <button type="button" className="btn btn-primary" onClick={this.checkEditModal}>EDIT</button>
+                                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editConfirmation"
+                                    onClick={this.showConfirmationModal}>EDIT</button>
                             </div>
                         </div>
                     </div>

@@ -13,27 +13,27 @@ var Header = React.createClass({
 
   render: function() {
     return (
-        <div>
-            <div className="main-header">
-                <div className="logo">
+        <div className="wrapper">
+            <header className="main-header">
+                <a href="Inventory.html" className="logo">
                     <span className="logo-mini"><b>DD</b></span>
                     <span className="logo-lg" id="mainHeader">Dental Depot</span>
-                </div>
-                <div className="navbar navbar-static-top" role="navigation">
+                </a>
+                <nav className="navbar navbar-static-top">
                     <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span className="sr-only">Toggle navigation</span>
                     </a>
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
-                            <li className="dropdown user user-menu">
+                            <li>
                                 <a href="#"><span onClick={this.logout}>
-                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
+                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
                                 </span></a>
                             </li>
                         </ul>
                     </div>
-                </div>
-            </div>
+                </nav>
+            </header>
         </div>
     );
   }
@@ -43,8 +43,8 @@ var Body = React.createClass({
   render: function() {
     return (
         <div>
-            <div className="main-sidebar">
-                <div className="sidebar">
+            <aside className="main-sidebar">
+                <section className="sidebar">
                     <ul className="sidebar-menu">
                         <br/>
                         <li className="header">NAVIGATION</li>
@@ -53,15 +53,10 @@ var Body = React.createClass({
                         <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
                         <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                     </ul>
-                </div>
-            </div>
-
-            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                        <Content/>
-                    </div>
-                </div>
+                </section>
+            </aside>
+            <div className="content-wrapper">
+                <section id="content" className="content"><Content/></section>
             </div>
         </div>
     );

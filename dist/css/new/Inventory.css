@@ -3,7 +3,7 @@
 }
 
 #headerContent{
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .box-body{
@@ -12,7 +12,7 @@
 }
 
 #userTable{
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 #editInfoModalComponents{
@@ -29,4 +29,8 @@
 
 #itemButtons{
     margin: 10px;
+}
+
+#inventoryMainTable{
+    height: 440px;
 }

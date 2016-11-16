@@ -18,28 +18,28 @@ var Header = React.createClass({
 
   render: function() {
     return (
-      <div>
-          <div className="main-header">
-              <div className="logo">
-                  <span className="logo-mini"><b>DD</b></span>
-                  <span className="logo-lg" id="mainHeader">Dental Depot</span>
-              </div>
-              <div className="navbar navbar-static-top" role="navigation">
-                  <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-                      <span className="sr-only">Toggle navigation</span>
-                  </a>
-                  <div className="navbar-custom-menu">
-                      <ul className="nav navbar-nav">
-                          <li className="dropdown user user-menu">
-                              <a href="#"><span onClick={this.logout}>
-                                  <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
-                              </span></a>
-                          </li>
-                      </ul>
-                  </div>
-              </div>
-          </div>
-      </div>
+        <div className="wrapper">
+            <header className="main-header">
+                <a href="Inventory.html" className="logo">
+                    <span className="logo-mini"><b>DD</b></span>
+                    <span className="logo-lg" id="mainHeader">Dental Depot</span>
+                </a>
+                <nav className="navbar navbar-static-top">
+                    <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <span className="sr-only">Toggle navigation</span>
+                    </a>
+                    <div className="navbar-custom-menu">
+                        <ul className="nav navbar-nav">
+                            <li>
+                                <a href="#"><span onClick={this.logout}>
+                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
+                                </span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+        </div>
     );
   }
 });
@@ -48,8 +48,8 @@ var Body = React.createClass({
   render: function() {
     return (
         <div>
-            <div className="main-sidebar">
-                <div className="sidebar">
+            <aside className="main-sidebar">
+                <section className="sidebar">
                     <ul className="sidebar-menu">
                         <br/>
                         <li className="header">NAVIGATION</li>
@@ -58,15 +58,10 @@ var Body = React.createClass({
                         <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
                         <li className="active"><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                     </ul>
-                </div>
-            </div>
-            
-            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                        <Content/>
-                    </div>
-                </div>
+                </section>
+            </aside>
+            <div className="content-wrapper">
+                <section id="content" className="content"><Content/></section>
             </div>
         </div>
     );
@@ -107,6 +102,24 @@ var Content = React.createClass({
         userType: snapshot.val().user_type
       });
     });
+  },
+
+  checkProfile: function(){
+      var firstname = document.getElementById("firstName").value;
+      var lastname = document.getElementById("lastName").value;
+      var address = document.getElementById("address").value;
+      var contactnumber = document.getElementById("contactNumber").value;
+      var email = document.getElementById("email").value;
+      var age = document.getElementById("age").value;
+      var birthdate = document.getElementById("birthdate").value;
+      var password = document.getElementById("password").value;
+
+      if(firstname != "" && lastname != "" && address != "" && contactnumber != "" && email != "" && age != "" && birthdate != "" && password != ""){
+          $('#editConfirmation').appendTo("body").modal('show');
+      }else{
+          document.getElementById("errorMessage").innerHTML= "Missing input.";
+          $('#errorModal').appendTo("body").modal('show');
+      }
   },
 
   showModal: function(){
@@ -197,14 +210,14 @@ var Content = React.createClass({
                   <div className="box box-primary" id="basicInfo">
                       <div className="box-body box-profile">
                           <center>
-                              <img class="profile-user-img img-responsive img-circle" src="../bootstrap/icons/tooth.png" alt="User profile picture" id="imgUser"/>
+                              <img className="profile-user-img img-responsive img-circle" src="../bootstrap/icons/tooth.png" alt="User profile picture" id="imgUser"/>
                           </center>
                           <h3 className="profile-username text-center">{this.state.fullName}</h3>
 
                           <p className="text-muted text-center">{this.state.userType}</p>
                           <br/>
-                          <a className="btn btn-primary pull-right btn-block" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal"
-                              onClick={this.showModal}>EDIT INFO
+                          <a className="btn btn-primary pull-right btn-block" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal">
+                              EDIT INFO
                           </a>
                       </div>
                   </div>
@@ -341,8 +354,7 @@ var Content = React.createClass({
                               </div>
                               <div className="modal-footer">
                                   <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                                  <button type="button" className="btn btn-primary" id="editConfirmBtn" data-toggle="modal" data-target="#editConfirmation"
-                                      onClick={this.showConfirmationModal}>SAVE</button>
+                                  <button type="button" className="btn btn-primary" id="editConfirmBtn" onClick={this.checkProfile}>SAVE</button>
                               </div>
                           </div>
                       </div>
