@@ -73,7 +73,8 @@ var Body = React.createClass({
 var Content = React.createClass({
   getInitialState: function() {
       return {
-        curUser: "null"
+        curUser: "null",
+        itemNameList: []
       };
   },
 
@@ -179,35 +180,58 @@ var Content = React.createClass({
     var description = document.getElementById("newDescription").value;
     var action = "Added item.";
 
-    firebase.database().ref('items/'+itemID).set({
-      key: itemID,
-      item_name: itemName,
-      description: description,
-      stock: Number(stock),
-      price: price
-    });
-    firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
-      var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
-      firebase.database().ref("items/"+itemID+"/item_history/").push().set({
-        user: userName,
-        date: date,
-        action_performed: action,
-        stock: Number(stock)
+    if(itemName && stock && price && description){
+      firebase.database().ref('items').once('value', function(snapshot) {
+        var iList = [];
+        var found = false;
+        snapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val().item_name;
+          var itemList = {name: item};
+          iList.push(itemList);
+        });
+        for(var x = 0; x < iList.length; x++){
+          if(iList[x].name == itemName){
+            found = true;
+            break;
+          }
+        }
+        if(found == false){
+          firebase.database().ref('items/'+itemID).set({
+            key: itemID,
+            item_name: itemName,
+            description: description,
+            stock: Number(stock),
+            price: price
+          });
+          firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+            var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+            firebase.database().ref("items/"+itemID+"/item_history/").push().set({
+              user: userName,
+              date: date,
+              action_performed: action,
+              stock: Number(stock)
+            });
+          });
+          firebase.database().ref("users/"+uid+"/activity").push().set({
+            action: action,
+            itemID: itemID,
+            itemName: itemName,
+            quantity: stock,
+            date: date
+          });
+          alert(action);
+          document.getElementById("newItem").value="";
+          document.getElementById("newNumber").value="";
+          document.getElementById("newPrice").value="";
+          document.getElementById("newDescription").value="";
+          $('#newItemModal').modal('hide');
+        }else{
+          alert("Duplicate item.");
+        }
       });
-    });
-    firebase.database().ref("users/"+uid+"/activity").push().set({
-      action: action,
-      itemID: itemID,
-      itemName: itemName,
-      quantity: stock,
-      date: date
-    });
-    alert(action);
-    document.getElementById("newItem").value="";
-    document.getElementById("newNumber").value="";
-    document.getElementById("newPrice").value="";
-    document.getElementById("newDescription").value="";
-    $('#newItemModal').modal('hide');
+    }else{
+      alert("Missing input.");
+    }  
   },
 
   displayItemOnModal: function(){
@@ -451,11 +475,20 @@ var MainContent = React.createClass({
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        var uid = firebase.auth().currentUser.uid;
-        firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
-          self.setState({ signedIn: true, type: snapshot.val().user_type });
-          $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
-        });
+        if (user.emailVerified) {
+          var uid = firebase.auth().currentUser.uid;
+          firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
+            self.setState({ signedIn: true, type: snapshot.val().user_type });
+            $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+          });
+        }else {
+          alert("Email is not verified");
+          firebase.auth().signOut().then(function() {
+            window.location.replace("http://127.0.0.1:8080/");
+          }, function(error) {
+            console.log(error);
+          });
+        }  
       } else {
         self.setState({ signedIn: false });
         window.location.replace("http://127.0.0.1:8080/");
