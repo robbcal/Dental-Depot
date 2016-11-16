@@ -135,7 +135,7 @@ var Content = React.createClass({
       document.getElementById("newDescription").value="";
     });
 
-    $('#inventorySearch').keyup(function() {
+    /*$('#inventorySearch').keyup(function() {
       var $rows = $('#itemList tr');
       var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
         reg = RegExp(val, 'i'),
@@ -145,6 +145,22 @@ var Content = React.createClass({
         text = $(this).text().replace(/\s+/g, ' ');
         return !reg.test(text);
       }).hide();
+    });*/
+    $(document).ready(function () {
+      (function ($) {
+          $('#inventorySearch').keyup(function () {
+            var rex = new RegExp($(this).val(), 'i');
+            $('#itemList tr').hide();
+            $('#itemList tr').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+            $('#no-data').hide();
+            if($('#itemList tr:visible').length == 0)
+            {
+              $('#no-data').show();
+            }
+          })
+      }(jQuery));
     });
   },
 
@@ -289,7 +305,10 @@ var Content = React.createClass({
                 </tr>
               </thead>
               <tbody id="itemList">
-                
+                <tr id="no-data" style={{display:'none'}}>
+                  <td>Result not found</td>
+                  <td>Result not found</td>
+              </tr>
               </tbody>
             </table>
           </div>      
