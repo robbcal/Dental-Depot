@@ -57,11 +57,11 @@ var Body = React.createClass({
           </div>
 
           <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-            <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1', paddingLeft: 80, paddingRight: 30, paddingTop: 50}}>
+            <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1', paddingLeft: 80, paddingRight: 30, paddingTop: 10}}>
               <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
                 <Content/>
               </div>
-                </div>
+            </div>
           </div>
 
           {/* LOGOUT MODAL CONTENT */}
@@ -186,12 +186,10 @@ var Content = React.createClass({
       return (
         <div id="mainContent">
 
-          <div className="row" style={{paddingBottom: 10}}>
-            <a href="Inventory.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px"/></a>
-          </div>
-
           <div className="nav-tabs-custom" style={{paddingLeft: 0}}>
+
             <ul className="nav nav-tabs pull-right">
+              <a href="Inventory.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px" style={{paddingLeft:  15, paddingTop: 10, width: 40, height: 35}}/></a>
               <li><a href="#activity" data-toggle="tab">ACTIVITY</a></li>
               <li className="active"><a href="#userProfileMainContent" data-toggle="tab">PROFILE</a></li>
             </ul>
@@ -275,12 +273,12 @@ var Content = React.createClass({
                 </div>
               </div>
 
-              <div className="active tab-pane" id="userProfileMainContent" style={{height: 440, marginLeft: 0, width: 600}}>
+              <div className="active tab-pane" id="userProfileMainContent" style={{height: 444, marginLeft: 0, width: 900}}>
                 {/* <div className="row col-xs-8 box" style={{paddingLeft: 20}}>
                 <div> */}
-                <h2><strong> {this.state.fullName} </strong></h2>
-                <h4> {this.state.address} </h4><br/>
-                <div className="row">
+                <h2><strong style={{paddingLeft: 50}}> {this.state.fullName} </strong></h2>
+                <h4 style={{paddingLeft: 50}}> {this.state.address} </h4><br/>
+                <div className="row" style={{paddingLeft: 50}}>
                   <div className="col-sm-1" style={{ marginTop: '9px'}}>
                     <img src="../bootstrap/icons/age.png" height="45px"/>
                   </div>
@@ -297,7 +295,7 @@ var Content = React.createClass({
                   </div>
                 </div>
                 <br/>
-                <div className="row">
+                <div className="row" style={{paddingLeft: 50}}>
                   <div className="col-sm-1" style={{ marginTop: '9px'}}>
                     <img src="../bootstrap/icons/message.png" height="45px"/>
                   </div>
@@ -318,7 +316,7 @@ var Content = React.createClass({
 
                 <div className="row" id="userProfileButtons">
                   <div className="col-sm-6"></div>
-                  <div className="col-sm-6" style={{paddingRight: 10, paddingTop: 10, paddingLeft: 10}}>
+                  <div className="col-sm-6 pull-right" style={{paddingRight: 0, paddingTop: 20, paddingLeft: 270}}>
                     <a className="btn btn-primary pull-right" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal" style={{width: 80}}
                       onClick={this.showModal}>EDIT
                     </a>
