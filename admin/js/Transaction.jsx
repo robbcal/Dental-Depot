@@ -236,7 +236,8 @@ var Content = React.createClass({
         firebase.database().ref("transactions/"+transactionID).set({
           total: total,
           user: userName,
-          release_method: release
+          release_method: release,
+          date: date
         });
       });  
         
