@@ -225,7 +225,7 @@ var Content = React.createClass({
 
           <div className="nav-tabs-custom" style={{paddingLeft: 0, width: 920}}>
             <ul className="nav nav-tabs pull-right" style={{width: 920}}>
-              <a href="Inventory.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px" style={{paddingLeft:  15, paddingTop: 10, width: 40, height: 35}}/></a>
+              <a href="Users.html" className="pull-left"><img src="../bootstrap/icons/left-arrow.png" height="25px" style={{paddingLeft:  15, paddingTop: 10, width: 40, height: 35}}/></a>
               <li><a href="#activity" data-toggle="tab">ACTIVITY</a></li>
               <li className="active"><a href="#userProfileMainContent" data-toggle="tab">PROFILE</a></li>
             </ul>
@@ -258,7 +258,7 @@ var Content = React.createClass({
                             <th><center>ACTION</center></th>
                             <th><center>ITEM/PERSON</center></th>
                             <th><center>DATE</center></th>
-                            
+
                           </tr>
                         </thead>
                         <tbody id="activityList">
