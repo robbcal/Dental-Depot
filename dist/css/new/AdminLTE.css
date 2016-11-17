@@ -12,16 +12,11 @@
  */
 
 /*LAMDAG ADDITIONS*/
-#sidebarMainTabs{
-    margin-left: 10px;
-}
 #sidebarProfileTab{
     margin-left: 4px;
 }
 #sidebarImage{
     height: 15px;
-    margin-left: 10px;
-    margin-top: -2px;
 }
 #mainHeader{
     margin-left: -15px;
@@ -45,8 +40,13 @@
   vertical-align: middle;
 }
 
-#confirmProfileEdit{
-    margin: 10px;
+.content-wrapper{
+    min-height: 1036px;
+    background-color: #e1e1e1;
+}
+
+.content{
+    background-color: #e1e1e1;
 }
 
 /*LAMDAG ADDITIONS*/

@@ -8,9 +8,9 @@ var Content = React.createClass({
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           var type = snapshot.val().user_type
           if(type == "admin"){
-            window.location.replace("admin/AdminProfile.html");
+            window.location.replace("admin/Inventory.html");
           }else if(type == "user"){
-            window.location.replace("user/Profile.html");
+            window.location.replace("user/Items.html");
           }
         });
       }).catch(function(error) {
@@ -18,14 +18,12 @@ var Content = React.createClass({
         var errorMessage = error.message;
         document.getElementById("errorAlert").innerHTML= errorMessage;
         $('#errorBox').show();
-        // $('#errorModal').appendTo("body").modal('show');
         document.getElementById("email").value = "";
         document.getElementById("password").value = "";
       });
     }else{
       document.getElementById("errorAlert").innerHTML= "Input required data";
       $('#errorBox').show();
-    //   $('#errorModal').appendTo("body").modal('show');
     }
   },
 
@@ -78,27 +76,6 @@ var Content = React.createClass({
                 </div>
             </div>
         </div>
-
-        {/* <div className="example-modal">
-            <div className="modal fade bs-example-modal-lg" id="errorModal">
-            <div className="modal-dialog modal-sm">
-            <div className="modal-content">
-            <div className="modal-header">
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            <h5 className="modal-title">Error</h5>
-            </div>
-            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h5><strong id="errorMessage">Error</strong></h5>
-            </div>
-            <div className="modal-footer">
-            <button type="button" className="btn btn-default pull-right" data-dismiss="modal">OK</button>
-            </div>
-            </div>
-            </div>
-            </div>
-        </div> */}
     </div>
     );
   }
@@ -140,9 +117,9 @@ var Main = React.createClass({
         </div>
       );
       if(this.state.type == "admin"){
-        window.location.replace("admin/AdminProfile.html");
+        window.location.replace("admin/Inventory.html");
       }else if(this.state.type == "user"){
-        window.location.replace("user/Profile.html");
+        window.location.replace("user/Items.html");
       }
     }
     return(
