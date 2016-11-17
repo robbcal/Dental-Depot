@@ -412,6 +412,10 @@ var Content = React.createClass({
                               <label>Date</label>
                               <input type="date" id="date" className="form-control"/>
                           </div>
+                          <div className="col-sm-6" id="boxbodyContent">
+                              <label>Customer</label>
+                              <input type="text" id="customer" className="form-control"/>
+                          </div>
                       </div>
                       <div className="row">
                           <div className="col-sm-6" id="boxbodyContent"></div>

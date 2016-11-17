@@ -92,6 +92,10 @@ var Content = React.createClass({
       var userType = data.val().user_type;
 
       $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
+      $("#"+id+"").dblclick(function() {
+        document.getElementById("user_id").value = id;
+        document.getElementById("submit").click();
+      });
     });
 
     ref.on('child_changed', function(data) {
@@ -106,6 +110,9 @@ var Content = React.createClass({
       var userType = data.val().user_type;
 
       $("tr#"+id).replaceWith("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
+      $("#"+id+"").dblclick(function() {
+        alert(email);
+      });
     });
 
     ref.on('child_removed', function(data) {
@@ -113,6 +120,28 @@ var Content = React.createClass({
       $("tr#"+id).remove();
     });
 
+    $(document).ready(function () {
+          (function ($) {
+              $('#tableSearch').keyup(function () {
+                var rex = new RegExp($(this).val(), 'i');
+                $('#userList tr').hide();
+                $('#userList tr').filter(function () {
+                    return rex.test($(this).text());
+                }).show();
+                $('#no-data').hide();
+                if($('#userList tr:visible').length == 0)
+                {
+                  $('#no-data').show();
+                }
+              })
+          }(jQuery));
+        });
+    },
+
+    showTable: function(){
+      if($('#tableSearch').val == null){
+        $('#userList tr').show();
+    }
   },
 
   addUser: function(){
@@ -168,18 +197,19 @@ var Content = React.createClass({
     }
   },
 
-  viewSpecificUser: function(){
-    alert("hilo");
-  },
 
   render: function() {
     return (
       <div id="mainContent">
+          <form id="UserIDForm" type="get" action="SpecificUser.html">
+              <input type="hidden" id="user_id" name="user_id"/>
+              <button type="submit" value="Send" name="submit" id="submit" style={{display: 'none'}}></button>
+          </form>
           <div className="box">
               <div className="box-header" id="headerContent">
                   <div className="col-sm-4">
-                      <div className="input-group input-group-sm">
-                          <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search"/>
+                      <div className="input-group input-group-md">
+                          <input type="text" name="tableSearch" id="tableSearch" className="form-control pull-right" placeholder="Search"/>
                           <div className="input-group-btn">
                               <button type="submit" className="btn btn-default">
                                   <i className="fa fa-search"></i>
@@ -195,7 +225,7 @@ var Content = React.createClass({
                   </div>
               </div>
               <div className="box-body">
-                  <table id="userTable" className="table table-bordered table-hover dataTable">
+                  <table id="user_table" className="table table-bordered table-hover dataTable">
                       <thead>
                           <tr>
                               <th><center>USERNAME</center></th>
@@ -204,6 +234,12 @@ var Content = React.createClass({
                           </tr>
                       </thead>
                       <tbody id="userList">
+                          <tr id="no-data" style={{display:'none'}}>
+                              <td><center>No Results Found.</center></td>
+                              <td><center>No Results Found.</center></td>
+                              <td><center>No Results Found.</center></td>
+                              <td><center>No Results Found.</center></td>
+                          </tr>
                       </tbody>
                   </table>
               </div>
@@ -294,35 +330,31 @@ var Content = React.createClass({
               </div>
           </div>
 
-          <div className="example-modal">
-              <div className="modal modal-danger" id="errorModal">
-                  <div className="modal-dialog modal-sm">
-                      <div className="modal-content">
-                          <div className="modal-header">
-                              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                              <center><h5 className="modal-title">ERROR</h5></center>
-                          </div>
-                          <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                              <center>
-                                  <h5 id="errorMessage">Error</h5>
-                                  <br/>
-                                  <button type="button" className="btn btn-default btn-sm pull-right" data-dismiss="modal">OK</button>
-                              </center>
-                          </div>
+          <div className="modal fade modal-danger" id="errorModal">
+              <div className="modal-dialog modal-sm">
+                  <div className="modal-content">
+                      <div className="modal-header">
+                          <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <center><h5 className="modal-title">ERROR</h5></center>
+                      </div>
+                      <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <center>
+                              <h5 id="errorMessage">Error</h5>
+                              <br/>
+                              <button type="button" className="btn btn-default btn-sm pull-right" data-dismiss="modal">OK</button>
+                          </center>
                       </div>
                   </div>
               </div>
           </div>
 
-          <div className="example-modal">
-              <div className="modal modal-success" id="informSuccess">
-                  <div className="modal-dialog modal-md">
-                      <div className="modal-content">
-                          <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                              <center>
-                                  <h4><strong>Successfully Added User.</strong></h4>
-                              </center>
-                          </div>
+          <div className="modal fade modal-success" id="informSuccess">
+              <div className="modal-dialog modal-md">
+                  <div className="modal-content">
+                      <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <center>
+                              <h4><strong>Successfully Added User.</strong></h4>
+                          </center>
                       </div>
                   </div>
               </div>

@@ -85,7 +85,7 @@ var Content = React.createClass({
     });
     var ref = firebase.database().ref('items').orderByChild("item_name");
     ref.on('child_added', function(data) {
-      var id=data.key
+      var id = data.key;
       var itemid = id;
       var itemName = data.val().item_name;
       var stock = data.val().stock;
@@ -99,11 +99,12 @@ var Content = React.createClass({
     });
 
     ref.on('child_changed', function(data) {
-      var id=data.key
+      var id = data.key;
+      var itemid = id;
       var itemName = data.val().item_name;
       var stock = data.val().stock;
 
-      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemName+"</center></td><td><center>"+stock+"</center></td></tr>");
+      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+stock+"</center></td></tr>");
       $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
@@ -353,14 +354,17 @@ var Content = React.createClass({
                   <table id="itemTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                       <thead>
                           <tr>
-                              <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM ID</th>
-                              <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM NAME</th>
-                              <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">IN STOCK</th>
+                              <th><center>ITEM ID</center></th>
+                              <th><center>ITEM NAME</center></th>
+                              <th><center>IN STOCK</center></th>
                           </tr>
                       </thead>
                       <tbody id="itemList">
                           <tr id="no-data" style={{display:'none'}}>
-                              <h5>No Results Found.</h5>
+                              <td><center>No Results Found.</center></td>
+                              <td><center>No Results Found.</center></td>
+                              <td><center>No Results Found.</center></td>
+                              <td><center>No Results Found.</center></td>
                           </tr>
                       </tbody>
                   </table>
