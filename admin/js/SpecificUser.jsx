@@ -129,6 +129,12 @@ var Content = React.createClass({
     $('#editConfirmation').appendTo("body").modal('show');
   },
 
+  showTable: function(){
+    if($('#activitySearch').val == null){
+      $('#itemList tr').show();
+    }
+  },
+
   onFirstName: function(e) {
     this.setState({firstname: e.target.value});
   },
@@ -205,14 +211,6 @@ var Content = React.createClass({
     var uid = firebase.auth().currentUser.uid;
     var action = "Deleted user."
 
-    // firebase.database().ref("users/"+uid+"/activity").push().set({
-    //   action: action,
-    //   itemID: itemID,
-    //   // itemName: this.state.userName,
-    //   quantity: "n/a",
-    //   date: today
-    // });
-
     firebase.database().ref('users/'+userID).remove();
     alert(action);
     window.location.replace("Users.html");
@@ -235,40 +233,35 @@ var Content = React.createClass({
               <div className="tab-pane" id="activity">
                 <div className="row">
                   <div className="col-sm-8"></div>
-                  <div className="col-sm-4 pull-right">
-                    <div className="box-tools pull-right">
-                      <div className="input-group input-group-md" id="logsTransSearch">
-                        <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="logsSearch"/>
-                        <div className="input-group-btn">
-                          <button type="submit" className="btn btn-default">
-                            <i className="fa fa-search"></i>
-                          </button>
-                        </div>
+                  <div className="col-sm-4">
+                    <div className="input-group input-group-md">
+                      <input type="text" name="tableSearch" className="form-control pull-right" id="activitySearch" placeholder="Search" onChange={this.showTable}/>
+                      <div className="input-group-btn">
+                        <button type="submit" className="btn btn-default" id="activityButton">
+                          <i className="fa fa-search"></i>
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="table-responsive">
-                  <div className="col-sm-12">
-                    <br/>
-                    <div className="box-body">
-                      <table id="example1" className="table table-bordered table-hover dataTable">
-                        <thead>
-                          <tr>
-                            <th><center>ACTION</center></th>
-                            <th><center>ITEM/PERSON</center></th>
-                            <th><center>DATE</center></th>
-
-                          </tr>
-                        </thead>
-                        <tbody id="activityList">
-
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
+                <div className="box-body table-responsive" id="activityMainTable">
+                <table id="activityTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                  <thead>
+                    <tr>
+                      <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ACTION</th>
+                      <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM/</th>
+                      <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">STOCK</th>
+                      <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">DATE</th>
+                    </tr>
+                  </thead>
+                  <tbody id="activityList">
+                    <tr id="no-data" style={{display:'none'}}>
+                      <h5>No Results Found.</h5>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
+            </div>
 
               <div className="active tab-pane" id="userProfileMainContent" style={{height: 360, marginLeft: 0, width: 890}}>
                 <h2><strong style={{paddingLeft: 50}}> {this.state.fullName} </strong></h2>
@@ -319,12 +312,10 @@ var Content = React.createClass({
                   </div>
                 </div>
               </div>
-
             </div>
+
           </div>
-
-
-          {/*MODAL CONTENT*/}
+          {/* </div> */}
 
           <div className="example-modal">
             <div className="modal fade bs-example-modal-lg" id="editConfirmation">
@@ -458,7 +449,7 @@ var Content = React.createClass({
               </div>
             </div>
           </div>
-</div>
+        </div>
       );
     }
 });
