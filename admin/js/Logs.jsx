@@ -92,7 +92,7 @@ var Header = React.createClass({
                 var date = data.val().date;
                 var user = data.val().user;
                 var release = data.val().release_method;
-                $("#transactionList").append("<tr id="+id+"><td><center>"+transId+"</center></td><td><center>"+total+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
+                $("#transactionList").append("<tr id="+id+"><td>"+transId+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
                 $("#"+id+"").dblclick(function() {
                     document.getElementById("transID").value = id;
                     $('#transactionModal').modal('show');
@@ -108,7 +108,7 @@ var Header = React.createClass({
                         var itemQuantity = data.val().item_quantity;
                         var subtotal = data.val().item_subtotal;
 
-                        $("#transactionTableBody").append("<tr id="+id+"><td><center>"+itemName+"</center></td><td><center>"+itemQuantity+"</center></td><td><center>"+subtotal+"</center></td></tr>");
+                        $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+subtotal+"</td></tr>");
                     });
                 });
             });
