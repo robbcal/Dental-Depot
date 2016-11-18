@@ -104,7 +104,7 @@ itemDescription: "null",
          itemName: snapshot.val().item_name,
   itemDescription: snapshot.val().description,
         itemPrice: snapshot.val().price,
-        itemStock: snapshot.val().stock
+        itemStock: snapshot.val().quantity
       });
     });
     var refHistory = firebase.database().ref('items/'+itemID+'/item_history');
@@ -171,13 +171,13 @@ itemDescription: "null",
     if(additionalStock && date){
       var newStock = Number(this.state.itemStock) + Number(additionalStock);
       firebase.database().ref('items/'+itemID).update({
-        stock: newStock
+        quantity: newStock
       })
       firebase.database().ref('items/'+itemID+"/item_history/").push().set({
         user_email: user,
         date: date,
         action_performed: action,
-        stock: additionalStock
+        quantity: additionalStock
       });
       firebase.database().ref("users/"+uid+"/activity").push().set({
         action: action,
@@ -211,14 +211,14 @@ itemDescription: "null",
       if(diminishedStock <= curStock){
         var newStock = Number(curStock) - Number(diminishedStock);
         firebase.database().ref('items/'+itemID).update({
-          stock: newStock
+          quantity: newStock
         })
 
         firebase.database().ref('items/'+itemID+"/item_history/").push().set({
           user_email: user,
           date: date,
           action_performed: action,
-          stock: diminishedStock
+          quantity: diminishedStock
         });
 
         firebase.database().ref("users/"+uid+"/activity").push().set({

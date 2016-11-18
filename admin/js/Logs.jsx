@@ -269,9 +269,9 @@ var Header = React.createClass({
                                           <table className="table table-bordered table-striped dataTable" id="transactionTable">
                                               <thead>
                                                   <tr>
-                                                      <th>ITEM NAME</th>
-                                                      <th>QUANTITY</th>
-                                                      <th>PRICE</th>
+                                                      <th><center>ITEM NAME</center></th>
+                                                      <th><center>QUANTITY</center></th>
+                                                      <th><center>PRICE</center></th>
                                                   </tr>
                                               </thead>
                                               <tbody id="transactionTableBody">

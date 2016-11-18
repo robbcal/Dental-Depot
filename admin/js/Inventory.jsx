@@ -88,7 +88,7 @@ var Content = React.createClass({
       var id = data.key;
       var itemid = id;
       var itemName = data.val().item_name;
-      var stock = data.val().stock;
+      var stock = data.val().quantity;
 
       $("#itemList").append("<tr id="+id+"><td>"+itemid+"</td><td>"+itemName+"</td><td>"+stock+"</td></tr>");
       $("#item").append("<option id="+id+" value="+id+">"+itemName+"</option>");
@@ -102,7 +102,7 @@ var Content = React.createClass({
       var id = data.key;
       var itemid = id;
       var itemName = data.val().item_name;
-      var stock = data.val().stock;
+      var stock = data.val().quantity;
 
       $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemid+"</td><td>"+itemName+"</td><td>"+stock+"</td></tr>");
       $("option#"+id).replaceWith("<option id="+id+" value="+id+">"+itemName+"</option>");
@@ -216,7 +216,7 @@ var Content = React.createClass({
       key: itemID,
       item_name: itemName,
       description: description,
-      stock: Number(stock),
+      quantity: Number(stock),
       price: price
     });
     firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
@@ -225,7 +225,7 @@ var Content = React.createClass({
         user: userName,
         date: date,
         action_performed: action,
-        stock: Number(stock)
+        quantity: Number(stock)
       });
     });
     firebase.database().ref("users/"+uid+"/activity").push().set({
@@ -260,7 +260,7 @@ var Content = React.createClass({
         document.getElementById("ID").value = itemId;
         document.getElementById("existingDescription").value = snapshot.val().description;
         document.getElementById("existingPrice").value = snapshot.val().price;
-        document.getElementById("existingStock").value = snapshot.val().stock;
+        document.getElementById("existingStock").value = snapshot.val().quantity;
       });
     }
   },
@@ -279,7 +279,7 @@ var Content = React.createClass({
       var newStock = Number(curStock) + Number(addNumber);
       firebase.database().ref('items/'+id).update({
         price: price,
-        stock: newStock
+        quantity: newStock
       });
       firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
         var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
@@ -287,7 +287,7 @@ var Content = React.createClass({
           user: userName,
           date: date,
           action_performed: action,
-          stock: addNumber
+          quantity: addNumber
         });
       });
       firebase.database().ref("users/"+uid+"/activity").push().set({
