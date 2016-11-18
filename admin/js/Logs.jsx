@@ -113,33 +113,19 @@ var Header = React.createClass({
                 });
             });
 
-            var ref = firebase.database().ref('transactions').orderByChild("date");
-            ref.on('child_added', function(data) {
-                var id = data.key;
-                var transId = id;
-                var total = data.val().total;
-                var date = data.val().date;
-                var user = data.val().user;
-                var release = data.val().release_method;
-                $("#transactionList").append("<tr id="+id+"><td>"+transId+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
-                $("#"+id+"").dblclick(function() {
-                    document.getElementById("transID").value = id;
-                    $('#transactionModal').modal('show');
-                    document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
-                    document.getElementById("transTotal").innerHTML = "Total: "+total;
-                    document.getElementById("transDate").innerHTML = "Date: "+date;
-                    document.getElementById("transRelease").innerHTML = "Release Method: "+release;
-                    document.getElementById("transUser").innerHTML = user;
-
-                    var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
-                    ref.on('child_added', function(data) {
-                        var itemName = data.val().item_name;
-                        var itemQuantity = data.val().item_quantity;
-                        var subtotal = data.val().item_subtotal;
-
-                        $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+subtotal+"</td></tr>");
-                    });
-                });
+            var ref = firebase.database().ref('users');
+            ref.once('value', function(snapshot) {
+                snapshot.forEach(function(childSnapshot){
+                    var childKey = childSnapshot.key
+                    firebase.database().ref('users/'+childKey+'/activity').on('child_added', function(data){
+                        var action = data.val().action_performed;
+                        var object = data.val().object_changed;
+                        var quantity = data.val().quantity;
+                        var date = data.val().date;
+                        var name = document.getElementById("currentUser").innerHTML;
+                        $("#activityList").append("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+name+"</td></tr>");
+                    })
+                })
             });
 
             $(document).ready(function () {
@@ -207,7 +193,7 @@ var Header = React.createClass({
                                   <div className="col-sm-4 pull-right">
                                       <div className="box-tools pull-right">
                                           <div className="input-group input-group-md" id="logsTransSearch">
-                                              <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="logsSearch"/>
+                                              <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="logsSearch" onChange={this.showTable}/>
                                               <div className="input-group-btn">
                                                   <button type="submit" className="btn btn-default">
                                                       <i className="fa fa-search"></i>
@@ -250,7 +236,7 @@ var Header = React.createClass({
                                   <div className="col-sm-4 pull-right">
                                       <div className="box-tools pull-right">
                                           <div className="input-group input-group-md" id="logsTransSearch">
-                                              <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="logsSearch"/>
+                                              <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="activitySearch" onChange={this.showActivityTable}/>
                                               <div className="input-group-btn">
                                                   <button type="submit" className="btn btn-default">
                                                       <i className="fa fa-search"></i>
@@ -264,6 +250,7 @@ var Header = React.createClass({
                                   <div className="col-sm-12">
                                       <br/>
                                       <div className="box-body">
+                                          <label id="currentUser" style={{display:'none'}}>{this.state.curUser}</label>
                                           <table id="example1" className="table table-bordered table-hover dataTable">
                                               <thead>
                                                   <tr>
