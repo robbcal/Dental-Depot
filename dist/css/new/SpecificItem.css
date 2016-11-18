@@ -36,3 +36,20 @@
 #specificItemButtons{
     margin: 5px;
 }
+<<<<<<< HEAD
+=======
+
+#deleteItemButtons, #confirmEditItemButtons{
+    margin: 10px;
+}
+
+#editItemModalComponents, #addStockModalComponents, #delStockModalComponents{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+
+#specificItemLeftContent{
+    max-height: 300px;
+}
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7

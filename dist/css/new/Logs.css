@@ -1,4 +1,5 @@
 #logsTransSearch{
+<<<<<<< HEAD
     padding-right: 10px;
     width: 250px;
 }
@@ -13,4 +14,26 @@
 
 #mainContent{
     margin: 20px;
+=======
+    padding-right: 25px;
+}
+
+#mainContent{
+    margin: 20px;
+}
+
+#tabContent{
+    height: 480px;
+    overflow-x: hidden;
+}
+
+#transModal{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+
+#deleteTransButtons{
+    margin: 10px;
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
 }

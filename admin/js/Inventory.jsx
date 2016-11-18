@@ -85,13 +85,22 @@ var Content = React.createClass({
     });
     var ref = firebase.database().ref('items').orderByChild("item_name");
     ref.on('child_added', function(data) {
+<<<<<<< HEAD
       var id=data.key
+=======
+      var id = data.key;
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
       var itemid = id;
       var itemName = data.val().item_name;
       var stock = data.val().stock;
 
+<<<<<<< HEAD
       $("#itemList").append("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+stock+"</center></td></tr>");
       $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
+=======
+      $("#itemList").append("<tr id="+id+"><td>"+itemid+"</td><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+      $("#item").append("<option id="+id+" value="+id+">"+itemName+"</option>");
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();
@@ -99,12 +108,22 @@ var Content = React.createClass({
     });
 
     ref.on('child_changed', function(data) {
+<<<<<<< HEAD
       var id=data.key
       var itemName = data.val().item_name;
       var stock = data.val().stock;
 
       $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemName+"</center></td><td><center>"+stock+"</center></td></tr>");
       $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
+=======
+      var id = data.key;
+      var itemid = id;
+      var itemName = data.val().item_name;
+      var stock = data.val().stock;
+
+      $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemid+"</td><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+      $("option#"+id).replaceWith("<option id="+id+" value="+id+">"+itemName+"</option>");
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();
@@ -317,6 +336,7 @@ var Content = React.createClass({
   render: function() {
     return (
       <div id="mainContent">
+<<<<<<< HEAD
         <form id="itemIDForm" type="get" action="SpecificItem.html">
           <input type="hidden" id="item_id" name="item_id"/>
           <button type="submit" value="Send" name="submit" id="submit" style={{display: 'none'}}></button>
@@ -420,6 +440,114 @@ var Content = React.createClass({
               </div>
           </div>
 
+=======
+          <form id="itemIDForm" type="get" action="SpecificItem.html">
+              <input type="hidden" id="item_id" name="item_id"/>
+              <button type="submit" value="Send" name="submit" id="submit" style={{display: 'none'}}></button>
+          </form>
+          <div className="box">
+              <div className="box-header" id="headerContent">
+                  <div className="col-sm-4">
+                      <div className="input-group input-group-md">
+                          <input type="text" name="tableSearch" className="form-control pull-right" id="inventorySearch" placeholder="Search" onChange={this.showTable}/>
+                          <div className="input-group-btn">
+                              <button type="submit" className="btn btn-default" id="inventoryButton">
+                                  <i className="fa fa-search"></i>
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="col-sm-4"></div>
+                  <div className="btn-group col-sm-2">
+                      <button className="btn btn-primary">ADD ITEM</button>
+                      <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                          <span className="caret"></span>
+                          <span className="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <ul className="dropdown-menu" role="menu">
+                          <li><a data-toggle="modal" data-target="#newItemModal" onClick={this.generateIDandDate}>New Item</a></li>
+                          <li><a data-toggle="modal" data-target="#existingItemModal" onClick={this.generateDate}>Existing Item</a></li>
+                      </ul>
+                  </div>
+                  <div className="col-sm-2">
+                      <a className="btn btn-primary pull-right" id="addTransaction" href="Transaction.html">ADD TRANSACTION</a>
+                  </div>
+              </div>
+              <div className="box-body table-responsive" id="inventoryMainTable">
+                  <table id="itemTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                      <thead>
+                          <tr>
+                              <th><center>ITEM ID</center></th>
+                              <th><center>ITEM NAME</center></th>
+                              <th><center>IN STOCK</center></th>
+                          </tr>
+                      </thead>
+                      <tbody id="itemList">
+                          <tr id="no-data" style={{display:'none'}}>
+                              <td><center>No Results Found.</center></td>
+                              <td><center>No Results Found.</center></td>
+                              <td><center>No Results Found.</center></td>
+                              <td><center>No Results Found.</center></td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+
+          <div className="modal fade bs-example-modal-lg" id="newItemModal">
+              <div className="modal-dialog modal-md">
+                  <div className="modal-content">
+                      <div className="modal-header">
+                          <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 className="modal-title">Add New Item</h4>
+                      </div>
+                      <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item ID</label>
+                                  <input type="text" id="newId" readOnly className="form-control"/>
+                              </div>
+                          </div>
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item Name</label>
+                                  <input type="text" id="newItem" className="form-control"/>
+                              </div>
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item Description</label>
+                                  <textarea id="newDescription" className="form-control"></textarea>
+                              </div>
+                          </div>
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Quantity</label>
+                                  <input type="number" id="newNumber" className="form-control"/>
+                              </div>
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Item Price</label>
+                                  <input type="number" id="newPrice" className="form-control"/>
+                              </div>
+                          </div>
+                          <div className="row">
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>User</label>
+                                  <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
+                              </div>
+                              <div className="col-sm-6" id="modalComponents">
+                                  <label>Date</label>
+                                  <input type="date" id="newDate" className="form-control"/>
+                              </div>
+                          </div>
+                      </div>
+                      <div className="modal-footer">
+                          <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
+                          <button type="button" className="btn btn-primary" onClick={this.checkNewItem}>ADD</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
           <div className="modal fade bs-example-modal-lg" id="addConfirmation">
               <div className="modal-dialog modal-sm">
                   <div className="modal-content">

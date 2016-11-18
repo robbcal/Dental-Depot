@@ -19,6 +19,7 @@ var Header = React.createClass({
   render: function() {
     return (
         <div className="wrapper">
+<<<<<<< HEAD
           <header className="main-header">
             <a href="Inventory.html" className="logo">
               <span className="logo-mini"><b>DD</b></span>
@@ -32,6 +33,21 @@ var Header = React.createClass({
                 <ul className="nav navbar-nav">
                   <li>
                     <a href="#"><span onClick={this.logout}>
+=======
+            <header className="main-header">
+                <a href="Inventory.html" className="logo">
+                    <span className="logo-mini"><b>DD</b></span>
+                    <span className="logo-lg" id="mainHeader">Dental Depot</span>
+                </a>
+                <nav className="navbar navbar-static-top">
+                    <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <span className="sr-only">Toggle navigation</span>
+                    </a>
+                    <div className="navbar-custom-menu">
+                        <ul className="nav navbar-nav">
+                            <li>
+                                <a href="#"><span onClick={this.logout}>
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
                                     <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
                                 </span></a>
                             </li>
@@ -48,6 +64,7 @@ var Body = React.createClass({
   render: function() {
     return (
         <div>
+<<<<<<< HEAD
           <aside className="main-sidebar">
             <section className="sidebar">
               <ul className="sidebar-menu">
@@ -62,6 +79,22 @@ var Body = React.createClass({
           </aside>
           <div className="content-wrapper">
             <section id="content" className="content" style={{backgroundColor: "rgb(236, 240, 245)", width: 930, marginLeft: 60}}><Content/></section>
+=======
+            <aside className="main-sidebar">
+                <section className="sidebar">
+                    <ul className="sidebar-menu">
+                        <br/>
+                        <li className="header">NAVIGATION</li>
+                        <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                        <li className="active"><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
+                        <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
+                        <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                    </ul>
+                </section>
+            </aside>
+            <div className="content-wrapper">
+                <section id="content" className="content"><Content/></section>
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
             </div>
         </div>
     );
@@ -80,7 +113,12 @@ var Content = React.createClass({
        birthdate: "null",
            email: "null",
    contactNumber: "null",
+<<<<<<< HEAD
         password: "null"
+=======
+        password: "null",
+        userType: "null"
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
       };
   },
 
@@ -98,6 +136,7 @@ var Content = React.createClass({
        birthdate: snapshot.val().birthday,
            email: snapshot.val().user_email,
    contactNumber: snapshot.val().contact_no,
+<<<<<<< HEAD
         password: snapshot.val().password
       });
     });
@@ -118,6 +157,37 @@ var Content = React.createClass({
           })
       }(jQuery));
     });
+=======
+        password: snapshot.val().password,
+        userType: snapshot.val().user_type
+      });
+    });
+  },
+
+  componentDidMount: function(){
+      $(document).ready(function () {
+            (function ($) {
+                $('#activitySearch').keyup(function () {
+                  var rex = new RegExp($(this).val(), 'i');
+                  $('#activityList tr').hide();
+                  $('#activityList tr').filter(function () {
+                      return rex.test($(this).text());
+                  }).show();
+                  $('#no-data').hide();
+                  if($('#activityList tr:visible').length == 0)
+                  {
+                    $('#no-data').show();
+                  }
+                })
+            }(jQuery));
+          });
+      },
+
+      showTable: function(){
+        if($('#activitySearch').val == null){
+          $('#activityList tr').show();
+      }
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
   },
 
   checkProfile: function(){
@@ -177,6 +247,31 @@ var Content = React.createClass({
     this.setState({password: e.target.value});
   },
 
+<<<<<<< HEAD
+=======
+  onUserType: function(e) {
+    this.setState({userType: e.target.value});
+  },
+
+  checkProfile: function(){
+      var firstname = document.getElementById("firstName").value;
+      var lastname = document.getElementById("lastName").value;
+      var address = document.getElementById("address").value;
+      var contactnumber = document.getElementById("contactNumber").value;
+      var email = document.getElementById("email").value;
+      var age = document.getElementById("age").value;
+      var birthdate = document.getElementById("birthdate").value;
+      var password = document.getElementById("password").value;
+
+      if(firstname != "" && lastname != "" && address != "" && contactnumber != "" && email != "" && age != "" && birthdate != "" && password != ""){
+          $('#editConfirmation').appendTo("body").modal('show');
+      }else{
+          document.getElementById("errorMessage").innerHTML= "Missing input.";
+          $('#errorModal').appendTo("body").modal('show');
+      }
+  },
+
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
   editUser: function(){
     var uid = firebase.auth().currentUser.uid;
     var firstname = document.getElementById("firstName").value;
@@ -229,12 +324,16 @@ var Content = React.createClass({
     var action = "Deleted user."
 
     firebase.database().ref('users/'+userID).remove();
+<<<<<<< HEAD
     alert(action);
+=======
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
     window.location.replace("Users.html");
   },
 
 
   render: function() {
+<<<<<<< HEAD
       return (
         <div id="mainContent">
 
@@ -466,6 +565,242 @@ var Content = React.createClass({
               </div>
             </div>
           </div>
+=======
+    return (
+        <div id="mainContent">
+            <input type="hidden" id="transID" name="transID"/>
+            <div className="nav-tabs-custom">
+                <ul className="nav nav-tabs pull-right">
+                    <li className="pull-left header"><a href="Users.html"><img src="../bootstrap/icons/left-arrow.png" id="backButton"/></a></li>
+                    <li><a href="#activity" data-toggle="tab">ACTIVITY</a></li>
+                    <li className="active"><a href="#profile" data-toggle="tab">PROFILE</a></li>
+                </ul>
+                <div className="tab-content table-responsive" id="tabContent">
+                    <div className="active tab-pane" id="profile">
+                        <div className="row" id="userProfileContent">
+                            <div className="col-md-4">
+                                <div className="box box-primary" id="basicInfo">
+                                    <div className="box-body box-profile">
+                                        <center>
+                                            <img className="profile-user-img img-responsive img-circle" src="../bootstrap/icons/tooth.png" alt="User profile picture" id="imgUser"/>
+                                        </center>
+                                        <h3 className="profile-username text-center">{this.state.fullName}</h3>
+
+                                        <p className="text-muted text-center">{this.state.userType}</p>
+                                        <br/>
+                                        <div className="row" id="buttonRow"><center>
+                                            <button className="btn btn-primary" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal">EDIT</button>
+                                            <button className="btn btn-danger" id="deleteUserButton" data-toggle="modal" data-target="#deleteUserModal">DELETE</button>
+                                        </center></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="col-md-8">
+                                <div id="basicInfo">
+                                    <strong><i className="fa fa-envelope-o margin-r-5"></i> Email Address</strong>
+                                    <h5 className="text-muted" id="profileContents">{this.state.email}</h5>
+                                    <hr/>
+                                    <strong><i className="fa fa-birthday-cake margin-r-5"></i> Birthday</strong>
+                                    <h5 className="text-muted" id="profileContents">{this.state.birthdate}</h5>
+                                    <hr/>
+                                    <strong><i className="fa fa-calendar margin-r-5"></i> Age</strong>
+                                    <h5 className="text-muted" id="profileContents">{this.state.age} years old</h5>
+                                    <hr/>
+                                    <strong><i className="fa fa-map-marker margin-r-5"></i> Address</strong>
+                                    <h5 className="text-muted" id="profileContents">{this.state.address}</h5>
+                                    <hr/>
+                                    <strong><i className="fa  fa-mobile-phone margin-r-5"></i> Contact Number</strong>
+                                    <h5 className="text-muted" id="profileContents">{this.state.contactNumber}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="tab-pane" id="activity">
+                        <div className="row">
+                            <div className="col-sm-8"></div>
+                            <div className="col-sm-4 pull-right">
+                                <div className="box-tools pull-right">
+                                    <div className="input-group input-group-md" id="searchField">
+                                        <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="activitySearch"/>
+                                        <div className="input-group-btn">
+                                            <button type="submit" className="btn btn-default">
+                                                <i className="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="table-responsive">
+                            <div className="col-sm-12">
+                                <br/>
+                                <div className="box-body">
+                                    <table id="example1" className="table table-bordered table-striped dataTable">
+                                        <thead>
+                                            <tr>
+                                                <th><center>ITEM</center></th>
+                                                <th><center>ACTION</center></th>
+                                                <th><center>DATE</center></th>
+                                                <th><center>USER</center></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="activityList">
+                                            <tr id="no-data" style={{display:'none'}}>
+                                                <td><center>No Results Found.</center></td>
+                                                <td><center>No Results Found.</center></td>
+                                                <td><center>No Results Found.</center></td>
+                                                <td><center>No Results Found.</center></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* MODAL COMPONENTS */}
+                    <div className="modal fade bs-example-modal-lg" id="editInfoModal">
+                        <div className="modal-dialog modal-md">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 className="modal-title">Edit Info</h4>
+                                </div>
+                                <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div className="row">
+                                        <div className="col-sm-6" id="editInfoModalComponents">
+                                            <label>First Name</label>
+                                            <input type="text" id="firstName" className="form-control" onChange={this.onFirstName} value={this.state.firstname}/>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-sm-6" id="editInfoModalComponents">
+                                            <label>Last Name</label>
+                                            <input type="text" id="lastName" className="form-control" onChange={this.onLastName} value={this.state.lastname}/>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-sm-6" id="editInfoModalComponents">
+                                            <label>Email</label>
+                                            <input type="email" id="email" className="form-control" onChange={this.onEmail} value={this.state.email}/>
+                                        </div>
+                                        <div className="col-sm-6" id="editInfoModalComponents">
+                                            <label>Contact Number</label>
+                                            <input type="text" id="contactNumber" className="form-control" onChange={this.onContactNumber} value={this.state.contactNumber}/>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div id="editInfoModalComponents">
+                                            <label>Address</label>
+                                            <input type="text" id="address" className="form-control" onChange={this.onAddress} value={this.state.address}/>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-sm-8" id="editInfoModalComponents">
+                                            <label>Birthdate</label>
+                                            <input type="date" id="birthdate" className="form-control" onChange={this.onBirthdate} value={this.state.birthdate}/>
+                                        </div>
+                                        <div className="col-sm-4" id="editInfoModalComponents">
+                                            <label>Age</label>
+                                            <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age} disabled/>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-sm-6" id="editInfoModalComponents">
+                                            <label>Password</label>
+                                            <input type="password" id="password" className="form-control" onChange={this.onPassword} value={this.state.password}/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
+                                    <button type="button" className="btn btn-primary" id="editConfirmBtn" onClick={this.checkProfile}>SAVE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal fade bs-example-modal-lg" id="editConfirmation">
+                        <div className="modal-dialog modal-sm">
+                            <div className="modal-content">
+                                <div className="modal-body">
+                                    <center>
+                                        <h5>Are you sure you want to edit this profile?</h5>
+                                        <button type="button" className="btn btn-primary" onClick={this.editUser} id="confirmProfileEdit">YES</button>
+                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmProfileEdit">NO</button>
+                                    </center>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal fade modal-danger" id="errorModal">
+                        <div className="modal-dialog modal-sm">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <center><h5 className="modal-title">ERROR</h5></center>
+                                </div>
+                                <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <center>
+                                        <h5 id="errorMessage">Error</h5>
+                                        <br/>
+                                        <button type="button" className="btn btn-default btn-sm pull-right" data-dismiss="modal">OK</button>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal fade modal-success" id="informSuccess">
+                        <div className="modal-dialog modal-md">
+                            <div className="modal-content">
+                                <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <center>
+                                        <h4><strong>Successfully Updated Profile.</strong></h4>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal fade modal-danger" id="deleteUserModal">
+                        <div className="modal-dialog modal-sm">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <center><h5 className="modal-title">DELETE USER</h5></center>
+                                </div>
+                                <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <center>
+                                        <h5 id="errorMessage">Are you sure you want to delete this user?</h5>
+                                        <br/>
+                                        <button type="button" className="btn btn-outline" id="deleteButtons" onClick={this.deleteUser}>YES</button>
+                                        <button type="button" className="btn btn-outline" id="deleteButtons" data-dismiss="modal">NO</button>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal fade modal-success" id="informSuccessDelete">
+                        <div className="modal-dialog modal-md">
+                            <div className="modal-content">
+                                <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <center>
+                                        <h4><strong>Successfully Deleted User.</strong></h4>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
         </div>
       );
     }

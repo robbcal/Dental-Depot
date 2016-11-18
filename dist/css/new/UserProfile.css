@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #userProfileContent{
     padding: 50px;
     margin-top: -10px;
@@ -7,8 +8,33 @@
     margin-top: 30px;
     margin-left: 0px;
 }
+=======
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
 #editInfoModalComponents{
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 10px;
 }
+<<<<<<< HEAD
+=======
+
+#userProfileContent{
+    margin-top: 40px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+}
+
+#imgUser{
+    height: 100px;
+    width: 100px;
+}
+
+#profileContents{
+    margin-left: 20px;
+}
+
+#confirmProfileEdit{
+    margin: 10px;
+}
+>>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
