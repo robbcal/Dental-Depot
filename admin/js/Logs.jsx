@@ -113,6 +113,21 @@ var Header = React.createClass({
                 });
             });
 
+            var ref = firebase.database().ref('users');
+            ref.once('value', function(snapshot) {
+                snapshot.forEach(function(childSnapshot){
+                    var childKey = childSnapshot.key
+                    firebase.database().ref('users/'+childKey+'/activity').on('child_added', function(data){
+                        var action = data.val().action_performed;
+                        var object = data.val().object_changed;
+                        var quantity = data.val().quantity;
+                        var date = data.val().date;
+                        var name = document.getElementById("currentUser").innerHTML;
+                        $("#activityList").append("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+name+"</td></tr>");
+                    })
+                })
+            });
+
             $(document).ready(function () {
                   (function ($) {
                       $('#logsSearch').keyup(function () {
@@ -178,7 +193,7 @@ var Header = React.createClass({
                                   <div className="col-sm-4 pull-right">
                                       <div className="box-tools pull-right">
                                           <div className="input-group input-group-md" id="logsTransSearch">
-                                              <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="logsSearch"/>
+                                              <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="logsSearch" onChange={this.showTable}/>
                                               <div className="input-group-btn">
                                                   <button type="submit" className="btn btn-default">
                                                       <i className="fa fa-search"></i>
@@ -221,7 +236,7 @@ var Header = React.createClass({
                                   <div className="col-sm-4 pull-right">
                                       <div className="box-tools pull-right">
                                           <div className="input-group input-group-md" id="logsTransSearch">
-                                              <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="logsSearch"/>
+                                              <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="activitySearch" onChange={this.showActivityTable}/>
                                               <div className="input-group-btn">
                                                   <button type="submit" className="btn btn-default">
                                                       <i className="fa fa-search"></i>
@@ -235,17 +250,25 @@ var Header = React.createClass({
                                   <div className="col-sm-12">
                                       <br/>
                                       <div className="box-body">
+                                          <label id="currentUser" style={{display:'none'}}>{this.state.curUser}</label>
                                           <table id="example1" className="table table-bordered table-hover dataTable">
                                               <thead>
                                                   <tr>
-                                                      <th><center>ITEM</center></th>
                                                       <th><center>ACTION</center></th>
+                                                      <th><center>OBJECT</center></th>
+                                                      <th><center>QUANTITY</center></th>
                                                       <th><center>DATE</center></th>
                                                       <th><center>USER</center></th>
                                                   </tr>
                                               </thead>
                                               <tbody id="activityList">
-
+                                                  <tr id="no-data" style={{display:'none'}}>
+                                                      <td><center>No Results Found.</center></td>
+                                                      <td><center>No Results Found.</center></td>
+                                                      <td><center>No Results Found.</center></td>
+                                                      <td><center>No Results Found.</center></td>
+                                                      <td><center>No Results Found.</center></td>
+                                                  </tr>
                                               </tbody>
                                           </table>
                                       </div>
@@ -269,9 +292,9 @@ var Header = React.createClass({
                                           <table className="table table-bordered table-striped dataTable" id="transactionTable">
                                               <thead>
                                                   <tr>
-                                                      <th>ITEM NAME</th>
-                                                      <th>QUANTITY</th>
-                                                      <th>PRICE</th>
+                                                      <th><center>ITEM NAME</center></th>
+                                                      <th><center>QUANTITY</center></th>
+                                                      <th><center>PRICE</center></th>
                                                   </tr>
                                               </thead>
                                               <tbody id="transactionTableBody">

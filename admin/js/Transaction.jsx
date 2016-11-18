@@ -153,7 +153,7 @@ var Content = React.createClass({
       ref.on('child_added', function(data) {
         var id=data.key
         var itemName = data.val().item_name;
-        var itemStock = data.val().stock;
+        var itemStock = data.val().quantity;
 
         $("#item").append("<option id="+id+" value="+id+"|"+itemStock+">"+itemName+"</option>");
       });
@@ -161,7 +161,7 @@ var Content = React.createClass({
       ref.on('child_changed', function(data) {
         var id=data.key
         var itemName = data.val().item_name;
-        var itemStock = data.val().stock;
+        var itemStock = data.val().quantity;
 
         $("option#"+id).replaceWith("<option id="+id+" value="+id+"|"+itemStock+">"+itemName+"</option>");
       });
@@ -337,7 +337,7 @@ var Content = React.createClass({
                 user: userName,
                 date: date,
                 action_performed: "Purchased item.",
-                stock: transactionItems[a].qty
+                quantity: transactionItems[a].qty
               });
             });
           });
