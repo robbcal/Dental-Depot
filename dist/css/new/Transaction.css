@@ -1,0 +1,34 @@
+#mainContent{
+    padding: 20px;
+}
+
+#transBody{
+    margin-top: 40px;
+}
+
+
+#transWindow{
+    height: 479px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+#userInTrans{
+    color: #b2b4b7;
+}
+
+#boxbodyContent{
+    margin-top: 10px;
+}
+
+.callout{
+    margin-bottom: -20px;
+}
+
+#transTable{
+    height: 395px;
+}
+
+#itemButtons{
+    margin: 10px;
+}
