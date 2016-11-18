@@ -266,7 +266,7 @@ var Content = React.createClass({
           $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+">"+newSubtotal.toFixed(2)+"</td>");
         }
       }else{
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        document.getElementById("errorMessage").innerHTML= "Missing input";
         $('#errorModal').appendTo("body").modal('show');
       }
     },
@@ -276,7 +276,7 @@ var Content = React.createClass({
         if(total != 0){
             $('#addConfirmation').appendTo("body").modal('show');
         }else{
-            document.getElementById("errorMessage").innerHTML= "No items added.";
+            document.getElementById("errorMessage").innerHTML= "No items added";
             $('#errorModal').appendTo("body").modal('show');
         }
     },
@@ -347,6 +347,7 @@ var Content = React.createClass({
         document.getElementById("number").value = "";
         document.getElementById("ID").value = "";
         document.getElementById("price").value = "";
+        document.getElementById("customer").value = "";
         $("#item option:eq(0)").attr("selected", "selected");
         $("#transactionTable tbody tr").remove();
         $('#addConfirmation').modal('hide');
@@ -354,7 +355,7 @@ var Content = React.createClass({
         setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
       }else{
           $('#addConfirmation').modal('hide');
-          document.getElementById("errorMessage").innerHTML= "No items added.";
+          document.getElementById("errorMessage").innerHTML= "No items added";
           $('#errorModal').appendTo("body").modal('show');
       }
     },
@@ -412,10 +413,6 @@ var Content = React.createClass({
                               <label>Date</label>
                               <input type="date" id="date" className="form-control"/>
                           </div>
-                          <div className="col-sm-6" id="boxbodyContent">
-                              <label>Customer</label>
-                              <input type="text" id="customer" className="form-control"/>
-                          </div>
                       </div>
                       <div className="row">
                           <div className="col-sm-6" id="boxbodyContent"></div>
@@ -456,6 +453,9 @@ var Content = React.createClass({
                                   </tbody>
                               </table>
                           </div>
+                      </div>
+                      <div className="col-sm-8" id="boxbodyContent">
+                          <input type="text" id="customer" placeholder="Customer" className="form-control pull-left"/>
                       </div>
                       <button className="btn btn-primary btn-block" id="createTransactionButton" onClick={this.checkTransaction}>CREATE TRANSACTION</button>
                   </div>
