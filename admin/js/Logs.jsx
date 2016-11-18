@@ -113,6 +113,35 @@ var Header = React.createClass({
                 });
             });
 
+            var ref = firebase.database().ref('transactions').orderByChild("date");
+            ref.on('child_added', function(data) {
+                var id = data.key;
+                var transId = id;
+                var total = data.val().total;
+                var date = data.val().date;
+                var user = data.val().user;
+                var release = data.val().release_method;
+                $("#transactionList").append("<tr id="+id+"><td>"+transId+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                    document.getElementById("transID").value = id;
+                    $('#transactionModal').modal('show');
+                    document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
+                    document.getElementById("transTotal").innerHTML = "Total: "+total;
+                    document.getElementById("transDate").innerHTML = "Date: "+date;
+                    document.getElementById("transRelease").innerHTML = "Release Method: "+release;
+                    document.getElementById("transUser").innerHTML = user;
+
+                    var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
+                    ref.on('child_added', function(data) {
+                        var itemName = data.val().item_name;
+                        var itemQuantity = data.val().item_quantity;
+                        var subtotal = data.val().item_subtotal;
+
+                        $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+subtotal+"</td></tr>");
+                    });
+                });
+            });
+
             $(document).ready(function () {
                   (function ($) {
                       $('#logsSearch').keyup(function () {
@@ -238,14 +267,21 @@ var Header = React.createClass({
                                           <table id="example1" className="table table-bordered table-hover dataTable">
                                               <thead>
                                                   <tr>
-                                                      <th><center>ITEM</center></th>
                                                       <th><center>ACTION</center></th>
+                                                      <th><center>OBJECT</center></th>
+                                                      <th><center>QUANTITY</center></th>
                                                       <th><center>DATE</center></th>
                                                       <th><center>USER</center></th>
                                                   </tr>
                                               </thead>
                                               <tbody id="activityList">
-
+                                                  <tr id="no-data" style={{display:'none'}}>
+                                                      <td><center>No Results Found.</center></td>
+                                                      <td><center>No Results Found.</center></td>
+                                                      <td><center>No Results Found.</center></td>
+                                                      <td><center>No Results Found.</center></td>
+                                                      <td><center>No Results Found.</center></td>
+                                                  </tr>
                                               </tbody>
                                           </table>
                                       </div>
