@@ -87,14 +87,20 @@ var Header = React.createClass({
             return { signedIn: false, type: 0 };
         },
 
-        componentWillMount: function(){
+        componentDidMount: function(){
           const self = this;
           firebase.auth().onAuthStateChanged(function(user) {
               if (user) {
                 var uid = firebase.auth().currentUser.uid;
                 firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
                   self.setState({ signedIn: true, type: snapshot.val().user_type });
+                  $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
                 });
+                /*if(self.state.type == 0){
+                  firebase.auth().signOut().then(function() {
+                    window.location.replace("http://127.0.0.1:8080/");
+                  });
+                }*/
               } else {
                 self.setState({ signedIn: false });
                 window.location.replace("http://127.0.0.1:8080/");

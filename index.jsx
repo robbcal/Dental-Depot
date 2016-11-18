@@ -86,13 +86,14 @@ var Main = React.createClass({
     return { signedIn: false, type: 0, res : null};
   },
 
-  componentWillMount: function(){
+  componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
+          $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
       } else {
         self.setState({ signedIn: false });

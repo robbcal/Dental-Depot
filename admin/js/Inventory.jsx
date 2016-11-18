@@ -88,9 +88,9 @@ var Content = React.createClass({
       var id = data.key;
       var itemid = id;
       var itemName = data.val().item_name;
-      var stock = data.val().stock;
+      var quantity = data.val().quantity;
 
-      $("#itemList").append("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+stock+"</center></td></tr>");
+      $("#itemList").append("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
       $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
@@ -102,9 +102,9 @@ var Content = React.createClass({
       var id = data.key;
       var itemid = id;
       var itemName = data.val().item_name;
-      var stock = data.val().stock;
+      var quantity = data.val().quantity;
 
-      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+stock+"</center></td></tr>");
+      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
       $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
@@ -194,10 +194,10 @@ var Content = React.createClass({
       var date = document.getElementById("existingDate").value;
 
       if(id != "" && price != "" && curStock != "" && addNumber != "" && date != ""){
-          $('#addExistingConfirmation').appendTo("body").modal('show');
+        $('#addExistingConfirmation').appendTo("body").modal('show');
       }else{
-          document.getElementById("errorMessage").innerHTML= "Missing input.";
-          $('#errorModal').appendTo("body").modal('show');
+        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        $('#errorModal').appendTo("body").modal('show');
       }
   },
 
@@ -205,44 +205,64 @@ var Content = React.createClass({
     var now = new Date();
     var itemID = document.getElementById("newId").value;
     var itemName = document.getElementById("newItem").value;
-    var stock = document.getElementById("newNumber").value;
+    var qty = document.getElementById("newNumber").value;
     var price = document.getElementById("newPrice").value;
     var uid = firebase.auth().currentUser.uid;
     var date = document.getElementById("newDate").value;
     var description = document.getElementById("newDescription").value;
     var action = "Added item.";
 
-    firebase.database().ref('items/'+itemID).set({
-      key: itemID,
-      item_name: itemName,
-      description: description,
-      stock: Number(stock),
-      price: price
-    });
-    firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
-      var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
-      firebase.database().ref("items/"+itemID+"/item_history/").push().set({
-        user: userName,
-        date: date,
-        action_performed: action,
-        stock: Number(stock)
+    firebase.database().ref('items').once('value', function(snapshot) {
+      var iList = [];
+      var found = false;
+      snapshot.forEach(function(childSnapshot) {
+        var item = childSnapshot.val().item_name;
+        var itemList = {name: item};
+        iList.push(itemList);
       });
-    });
-    firebase.database().ref("users/"+uid+"/activity").push().set({
-      action: action,
-      itemID: itemID,
-      itemName: itemName,
-      quantity: stock,
-      date: date
-    });
-    document.getElementById("newItem").value="";
-    document.getElementById("newNumber").value="";
-    document.getElementById("newPrice").value="";
-    document.getElementById("newDescription").value="";
-    $('#addConfirmation').modal('hide');
-    $('#newItemModal').modal('hide');
-    $('#informSuccessAdd').appendTo("body").modal('show');
-    setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
+      for(var x = 0; x < iList.length; x++){
+        if(iList[x].name == itemName){
+          found = true;
+          break;
+        }
+      }
+      if(found == false){
+        firebase.database().ref('items/'+itemID).set({
+          key: itemID,
+          item_name: itemName,
+          description: description,
+          quantity: Number(qty),
+          price: price
+        });
+        firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+          var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+          firebase.database().ref("items/"+itemID+"/item_history/").push().set({
+            user: userName,
+            date: date,
+            action_performed: action,
+            quantity: Number(qty)
+          });
+        });
+        firebase.database().ref("users/"+uid+"/activity").push().set({
+          action_performed: action,
+          object_changed: itemName,
+          quantity: qty,
+          date: date
+        });
+        document.getElementById("newItem").value="";
+        document.getElementById("newNumber").value="";
+        document.getElementById("newPrice").value="";
+        document.getElementById("newDescription").value="";
+        $('#addConfirmation').modal('hide');
+        $('#newItemModal').modal('hide');
+        $('#informSuccessAdd').appendTo("body").modal('show');
+        setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
+      }else{
+        document.getElementById("errorMessage").innerHTML= "Duplicate item.";
+        $('#errorModal').appendTo("body").modal('show');
+        $('#addConfirmation').modal('hide');
+      }
+    });  
   },
 
   displayItemOnModal: function(){
@@ -260,7 +280,7 @@ var Content = React.createClass({
         document.getElementById("ID").value = itemId;
         document.getElementById("existingDescription").value = snapshot.val().description;
         document.getElementById("existingPrice").value = snapshot.val().price;
-        document.getElementById("existingStock").value = snapshot.val().stock;
+        document.getElementById("existingStock").value = snapshot.val().quantity;
       });
     }
   },
@@ -279,7 +299,7 @@ var Content = React.createClass({
       var newStock = Number(curStock) + Number(addNumber);
       firebase.database().ref('items/'+id).update({
         price: price,
-        stock: newStock
+        quantity: newStock
       });
       firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
         var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
@@ -287,13 +307,12 @@ var Content = React.createClass({
           user: userName,
           date: date,
           action_performed: action,
-          stock: addNumber
+          quantity: addNumber
         });
       });
       firebase.database().ref("users/"+uid+"/activity").push().set({
-        action: action,
-        itemID: id,
-        itemName: itemName,
+        action_performed: action,
+        object_changed: itemName,
         quantity: addNumber,
         date: date
       });
@@ -361,7 +380,6 @@ var Content = React.createClass({
                       </thead>
                       <tbody id="itemList">
                           <tr id="no-data" style={{display:'none'}}>
-                              <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
@@ -574,6 +592,11 @@ var MainContent = React.createClass({
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
+        /*if(self.state.type == 0){
+          firebase.auth().signOut().then(function() {
+            window.location.replace("http://127.0.0.1:8080/");
+          });
+        }*/
       } else {
         self.setState({ signedIn: false });
         window.location.replace("http://127.0.0.1:8080/");

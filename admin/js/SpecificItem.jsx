@@ -84,12 +84,12 @@ var Content = React.createClass({
        itemName: "null",
 itemDescription: "null",
       itemPrice: "null",
-      itemStock: "null",
+        itemQty: "null",
   latestHistory: "null"
       };
   },
 
-  componentWillMount: function(){
+  componentDidMount: function(){
     const self = this;
     var uid = firebase.auth().currentUser.uid;
     var refUser = firebase.database().ref('users/'+uid);
@@ -100,11 +100,12 @@ itemDescription: "null",
     });
     var ref = firebase.database().ref('items/'+itemID);
     ref.on('value', function(snapshot) {
+      document.getElementById("NameOfItem").innerHTML = snapshot.val().item_name; 
       self.setState({
          itemName: snapshot.val().item_name,
   itemDescription: snapshot.val().description,
         itemPrice: snapshot.val().price,
-        itemStock: snapshot.val().stock
+          itemQty: snapshot.val().quantity
       });
     });
     var refHistory = firebase.database().ref('items/'+itemID+'/item_history');
@@ -113,6 +114,23 @@ itemDescription: "null",
         latestHistory: data.val().date
       })
     })
+
+    $('#addStockModal').on('hidden.bs.modal', function () {
+      document.getElementById("addNumber").value="";
+    });
+
+    $('#deleteStockModal').on('hidden.bs.modal', function () {
+      document.getElementById("deleteNumber").value="";
+    });
+
+    $('#editItemModal').on('hidden.bs.modal', function () {
+      ref.on('value', function(snapshot) {
+        document.getElementById("editItem").value = snapshot.val().item_name;
+        document.getElementById("editDescription").value = snapshot.val().description; 
+        document.getElementById("editPrice").value = snapshot.val().price;
+      });
+    });
+
   },
 
   checkAddModal: function(){
@@ -124,6 +142,7 @@ itemDescription: "null",
       }else{
           document.getElementById("errorMessage").innerHTML= "Missing input.";
           $('#errorModal').appendTo("body").modal('show');
+          $('#addConfirmation').modal('hide');
       }
   },
 
@@ -136,6 +155,7 @@ itemDescription: "null",
       }else{
           document.getElementById("errorMessage").innerHTML= "Missing input.";
           $('#errorModal').appendTo("body").modal('show');
+          $('#deleteConfirmation').modal('hide');
       }
   },
 
@@ -149,6 +169,7 @@ itemDescription: "null",
       }else{
           document.getElementById("errorMessage").innerHTML= "Missing input.";
           $('#errorModal').appendTo("body").modal('show');
+          $('#editConfirmation').modal('hide');
       }
   },
 
@@ -164,82 +185,71 @@ itemDescription: "null",
     var now = new Date();
     var additionalStock = document.getElementById("addNumber").value;
     var date = document.getElementById("addDate").value;
-    var user = firebase.auth().currentUser.email;
     var action = "Restocked item."
     var uid = firebase.auth().currentUser.uid;
 
-    if(additionalStock && date){
-      var newStock = Number(this.state.itemStock) + Number(additionalStock);
-      firebase.database().ref('items/'+itemID).update({
-        stock: newStock
-      })
+    var newStock = Number(this.state.itemQty) + Number(additionalStock);
+    firebase.database().ref('items/'+itemID).update({
+      quantity: newStock
+    })
+    firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+      var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
       firebase.database().ref('items/'+itemID+"/item_history/").push().set({
-        user_email: user,
+        user: userName,
         date: date,
         action_performed: action,
-        stock: additionalStock
+        quantity: additionalStock
       });
-      firebase.database().ref("users/"+uid+"/activity").push().set({
-        action: action,
-        itemID: itemID,
-        itemName: this.state.itemName,
-        quantity: additionalStock,
-        date: date
-      });
-      $('#addConfirmation').modal('hide');
-      $('#addStockModal').modal('hide');
-      $('#informSuccessAdd').appendTo("body").modal('show');
-      setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
-      document.getElementById("addNumber").value = "";
-    }else{
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
-        $('#errorModal').appendTo("body").modal('show');
-        $('#addConfirmation').modal('hide');
-    }
+    });  
+    firebase.database().ref("users/"+uid+"/activity").push().set({
+      action_performed: action,
+      object_changed: this.state.itemName,
+      quantity: additionalStock,
+      date: date
+    });
+    $('#addConfirmation').modal('hide');
+    $('#addStockModal').modal('hide');
+    $('#informSuccessAdd').appendTo("body").modal('show');
+    setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
+    document.getElementById("addNumber").value = "";
   },
 
   releaseStock: function(){
     var now = new Date();
     var diminishedStock = document.getElementById("deleteNumber").value;
     var date = document.getElementById("deleteDate").value;
-    var user = firebase.auth().currentUser.email;
     var action = "Released item."
     var uid = firebase.auth().currentUser.uid;
-    var curStock = this.state.itemStock;
+    var curStock = this.state.itemQty;
 
-    if(diminishedStock && date){
-      if(diminishedStock <= curStock){
-        var newStock = Number(curStock) - Number(diminishedStock);
-        firebase.database().ref('items/'+itemID).update({
-          stock: newStock
-        })
-
+    
+    if(diminishedStock <= curStock){
+      var newStock = Number(curStock) - Number(diminishedStock);
+      firebase.database().ref('items/'+itemID).update({
+        quantity: newStock
+      })
+      firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+        var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
         firebase.database().ref('items/'+itemID+"/item_history/").push().set({
-          user_email: user,
+          user: userName,
           date: date,
           action_performed: action,
-          stock: diminishedStock
+          quantity: diminishedStock
         });
-
-        firebase.database().ref("users/"+uid+"/activity").push().set({
-          action: action,
-          itemID: itemID,
-          itemName: this.state.itemName,
-          quantity: diminishedStock,
-          date: date
-        });
-        $('#deleteConfirmation').modal('hide');
-        $('#deleteStockModal').modal('hide');
-        $('#informSuccessDelete').appendTo("body").modal('show');
-        setTimeout(function() { $("#informSuccessDelete").modal('hide'); }, 1000);
-        document.getElementById("deleteNumber").value = "";
-      }else{
-          document.getElementById("errorMessage").innerHTML= "Unable to delete.";
-          $('#errorModal').appendTo("body").modal('show');
-          $('#deleteConfirmation').modal('hide');
-      }
+      });
+      firebase.database().ref("users/"+uid+"/activity").push().set({
+        action_performed: action,
+        object_changed: this.state.itemName,
+        quantity: diminishedStock,
+        date: date
+      });
+      $('#deleteConfirmation').modal('hide');
+      $('#deleteStockModal').modal('hide');
+      $('#informSuccessDelete').appendTo("body").modal('show');
+      setTimeout(function() { $("#informSuccessDelete").modal('hide'); }, 1000);
+      document.getElementById("deleteNumber").value = "";
     }else{
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        document.getElementById("errorMessage").innerHTML= "Unable to delete.";
         $('#errorModal').appendTo("body").modal('show');
         $('#deleteConfirmation').modal('hide');
     }
@@ -247,43 +257,60 @@ itemDescription: "null",
 
   editItem: function(){
     var now = new Date();
-    var user = firebase.auth().currentUser.email;
     var action = "Edited item."
     var date = document.getElementById("editDate").value;
     var itemName = document.getElementById("editItem").value;
     var itemPrice = document.getElementById("editPrice").value;
     var itemDescription = document.getElementById("editDescription").value;
     var uid = firebase.auth().currentUser.uid;
+    var origName = document.getElementById("NameOfItem").innerHTML;
 
-    if(date && itemName && itemPrice){
-      firebase.database().ref('items/'+itemID).update({
-        item_name: itemName,
-      description: itemDescription,
-            price: itemPrice
-      })
-
-      firebase.database().ref('items/'+itemID+"/item_history/").push().set({
-        user_email: user,
-        date: date,
-        action_performed: action
+    /*alert(origName);*/
+    firebase.database().ref('items').once('value', function(snapshot) {
+      var iList = [];
+      var found = false;
+      snapshot.forEach(function(childSnapshot) {
+        var item = childSnapshot.val().item_name;
+        var itemList = {name: item};
+        iList.push(itemList);
       });
-
-      firebase.database().ref("users/"+uid+"/activity").push().set({
-        action: action,
-        itemID: itemID,
-        itemName: this.state.itemName,
-        quantity: "n/a",
-        date: date
-      });
-      $('#editConfirmation').modal('hide');
-      $('#editItemModal').modal('hide');
-      $('#informSuccess').appendTo("body").modal('show');
-      setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
-    }else{
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
+      for(var x = 0; x < iList.length; x++){
+        if(iList[x].name == itemName && itemName != origName){
+          found = true;
+          break;
+        }
+      }
+      if(found == false){
+        firebase.database().ref('items/'+itemID).update({
+          item_name: itemName,
+        description: itemDescription,
+              price: itemPrice
+        })
+        firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+          var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+          firebase.database().ref('items/'+itemID+"/item_history/").push().set({
+            user: userName,
+            date: date,
+            action_performed: action,
+            quantity: "n/a"
+          });
+        });  
+        firebase.database().ref("users/"+uid+"/activity").push().set({
+          action_performed: action,
+          object_changed: itemName,
+          quantity: "n/a",
+          date: date
+        });
+        $('#editConfirmation').modal('hide');
+        $('#editItemModal').modal('hide');
+        $('#informSuccess').appendTo("body").modal('show');
+        setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
+      }else{
+        document.getElementById("errorMessage").innerHTML= "Duplicate item.";
         $('#errorModal').appendTo("body").modal('show');
         $('#editConfirmation').modal('hide');
-    }
+      }
+    });
   },
 
   deleteItem: function(){
@@ -294,7 +321,6 @@ itemDescription: "null",
 
     firebase.database().ref("users/"+uid+"/activity").push().set({
       action: action,
-      itemID: itemID,
       itemName: this.state.itemName,
       quantity: "n/a",
       date: today
@@ -314,7 +340,6 @@ itemDescription: "null",
     document.getElementById("newDate").value = today;
     document.getElementById("existingDate").value = today;
   },
-
 
   onItemName: function(e) {
     this.setState({itemName: e.target.value});
@@ -338,7 +363,7 @@ itemDescription: "null",
             <div className="col-md-4">
                 <div className="box box-primary" id="basicInfo">
                     <div className="box-body box-profile table-responsive" id="specificItemLeftContent">
-                        <h1 className="text-center">{this.state.itemName}</h1>
+                        <h1 className="text-center" id="NameOfItem"></h1>
                         <br/>
                         <p>Description:</p>
                         <p className="text-muted">{this.state.itemDescription}</p>
@@ -370,7 +395,7 @@ itemDescription: "null",
                     <div className="box-body">
                         <br/>
                         <strong><i className="fa fa-suitcase margin-r-5"></i> Items in Stock</strong>
-                        <h3 className="text-muted" id="itemInfoContent">{this.state.itemStock}</h3>
+                        <h3 className="text-muted" id="itemInfoContent">{this.state.itemQty}</h3>
                         <hr/>
                         <strong><i className="fa fa-money margin-r-5"></i> Item Price</strong>
                         <h3 className="text-muted" id="itemInfoContent">{this.state.itemPrice}</h3>
@@ -400,11 +425,11 @@ itemDescription: "null",
                                 <div className="row">
                                     <div className="col-sm-6" id="addStockModalComponents">
                                         <label>Current Item Stock</label>
-                                        <input type="number" readOnly className="form-control" value={this.state.itemStock}/>
+                                        <input type="number" readOnly className="form-control" value={this.state.itemQty}/>
                                     </div>
                                     <div className="col-sm-6" id="addStockModalComponents">
                                         <label>Quantity to Add</label>
-                                        <input type="number" id="addNumber" className="form-control"/>
+                                        <input type="number" id="addNumber" className="form-control" min="1"/>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -443,11 +468,11 @@ itemDescription: "null",
                                 <div className="row">
                                     <div className="col-sm-6" id="delStockModalComponents">
                                         <label>Current Item Stock</label>
-                                        <input type="number" readOnly className="form-control" value={this.state.itemStock}/>
+                                        <input type="number" readOnly className="form-control" value={this.state.itemQty}/>
                                     </div>
                                     <div className="col-sm-6" id="delStockModalComponents">
                                         <label>Quantity to Delete</label>
-                                        <input type="number" id="deleteNumber" className="form-control"/>
+                                        <input type="number" id="deleteNumber" className="form-control" min="1"/>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -496,7 +521,7 @@ itemDescription: "null",
                                 <div className="row">
                                     <div className="col-sm-6" id="editItemModalComponents">
                                         <label>Item in Stock</label>
-                                        <input type="number" readOnly className="form-control" value={this.state.itemStock}/>
+                                        <input type="number" readOnly className="form-control" value={this.state.itemQty}/>
                                     </div>
                                     <div className="col-sm-6" id="editItemModalComponents">
                                         <label>Item Price</label>
@@ -668,6 +693,11 @@ var MainContent = React.createClass({
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
+        /*if(self.state.type == 0){
+          firebase.auth().signOut().then(function() {
+            window.location.replace("http://127.0.0.1:8080/");
+          });
+        }*/
       } else {
         self.setState({ signedIn: false });
         window.location.replace("http://127.0.0.1:8080/");

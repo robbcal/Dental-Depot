@@ -153,7 +153,7 @@ var Content = React.createClass({
       ref.on('child_added', function(data) {
         var id=data.key
         var itemName = data.val().item_name;
-        var itemStock = data.val().stock;
+        var itemStock = data.val().quantity;
 
         $("#item").append("<option id="+id+" value="+id+"|"+itemStock+">"+itemName+"</option>");
       });
@@ -161,7 +161,7 @@ var Content = React.createClass({
       ref.on('child_changed', function(data) {
         var id=data.key
         var itemName = data.val().item_name;
-        var itemStock = data.val().stock;
+        var itemStock = data.val().quantity;
 
         $("option#"+id).replaceWith("<option id="+id+" value="+id+"|"+itemStock+">"+itemName+"</option>");
       });
@@ -255,15 +255,15 @@ var Content = React.createClass({
         document.getElementById("number").value = "";
 
         if($('#transactionTable tr > td:contains('+id+')').length == 0){
-            $("#transactionTableBody").append("<tr id="+id+"><center><td id='del' class='delete'><center><button class='btn btn-danger btn-xs deleteRow' value="+id+">x</button></center></td><td style='display:none'><center>"+id+"</center></td><td class='name' value="+id+"><center>"+itemName+"</center></td><td id="+id+"A"+id+" class='number' value="+num+"><center>"+num+"</center></td><td id="+id+"B"+id+" class='subtotal' value="+subtotal.toFixed(2)+"><center>"+subtotal.toFixed(2)+"</center></td></tr>");
+            $("#transactionTableBody").append("<tr id="+id+"><td id='del' class='delete'><button class='btn btn-danger btn-xs deleteRow' value="+id+">x</button></td><td style='display:none'>"+id+"</td><td class='name' value="+id+">"+itemName+"</td><td id="+id+"A"+id+" class='number' value="+num+">"+num+"</td><td id="+id+"B"+id+" class='subtotal' value="+subtotal.toFixed(2)+">"+subtotal.toFixed(2)+"</td></tr>");
         }else{
           var transQty = $("td#"+id+"A"+id+"").text();
           var transSubtotal = $("td#"+id+"B"+id+"").text();
           var newQty = Number(transQty) + Number(num);
           var newSubtotal = Number(transSubtotal) + Number(subtotal);
 
-          $("td#"+id+"A"+id+"").replaceWith("<td id="+id+"A"+id+" class='number' value="+newQty+"><center>"+newQty+"</center></td>");
-          $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+"><center>"+newSubtotal.toFixed(2)+"</center></td>");
+          $("td#"+id+"A"+id+"").replaceWith("<td id="+id+"A"+id+" class='number' value="+newQty+">"+newQty+"</td>");
+          $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+">"+newSubtotal.toFixed(2)+"</td>");
         }
       }else{
         document.getElementById("errorMessage").innerHTML= "Missing input.";
@@ -273,7 +273,9 @@ var Content = React.createClass({
 
     checkTransaction: function(){
         var total = document.getElementById("total").value;
-        if(total != 0){
+        var customer = document.getElementById("customer").value;
+
+        if(total != 0 && customer != ""){
             $('#addConfirmation').appendTo("body").modal('show');
         }else{
             document.getElementById("errorMessage").innerHTML= "No items added.";
@@ -291,6 +293,7 @@ var Content = React.createClass({
       var transactionID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
       var userEmail = firebase.auth().currentUser.email;
       var uid = firebase.auth().currentUser.uid;
+      var customer = document.getElementById("customer").value;
 
       if(total != 0){
         for(var y = 1; y <= tableLength; y++){
@@ -308,7 +311,9 @@ var Content = React.createClass({
           firebase.database().ref("transactions/"+transactionID).set({
             total: total,
             user: userName,
-            release_method: release
+            release_method: release,
+            customer: customer,
+            date: date
           });
         });
 
@@ -319,34 +324,35 @@ var Content = React.createClass({
             item_subtotal: transactionItems[a].subtotal
           });
           firebase.database().ref('items/'+transactionItems[a].id).once('value', function(snapshot) {
-            var stock = snapshot.val().stock;
+            var stock = snapshot.val().quantity;
             var newQty = Number(stock) - Number(transactionItems[a].qty);
             firebase.database().ref("items/"+transactionItems[a].id).update({
-              stock: newQty
+              quantity: newQty
             });
-            firebase.database().ref("users/"+uid+"/activity").push().set({
-              action: "Purchased item.",
-              itemID: itemID,
-              itemName: transactionItems[a].name,
-              quantity: transactionItems[a].qty,
-              date: date
-            });
+            
             firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
               var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
               firebase.database().ref("items/"+transactionItems[a].id+"/item_history/").push().set({
                 user: userName,
                 date: date,
-                action_performed: "Purchased item.",
-                stock: transactionItems[a].qty
+                action_performed: "Add transaction.",
+                quantity: transactionItems[a].qty
               });
             });
           });
         }
+        firebase.database().ref("users/"+uid+"/activity").push().set({
+          action_performed: "Add transaction.",
+          object_changed: transactionID,
+          quantity: "n/a",
+          date: date
+        });
         document.getElementById("total").value = 0;
         document.getElementById("stock").value = "";
         document.getElementById("number").value = "";
         document.getElementById("ID").value = "";
         document.getElementById("price").value = "";
+        document.getElementById("customer").value = "";
         $("#item option:eq(0)").attr("selected", "selected");
         $("#transactionTable tbody tr").remove();
         $('#addConfirmation').modal('hide');
@@ -539,6 +545,11 @@ var MainContent = React.createClass({
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
+        /*if(self.state.type == 0){
+          firebase.auth().signOut().then(function() {
+            window.location.replace("http://127.0.0.1:8080/");
+          });
+        }*/
       } else {
         self.setState({ signedIn: false });
         window.location.replace("http://127.0.0.1:8080/");
