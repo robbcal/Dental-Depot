@@ -224,7 +224,7 @@ var Content = React.createClass({
                       </span>
                   </div>
               </div>
-              <div className="box-body">
+              <div className="box-body" id="usersMainTable">
                   <table id="user_table" className="table table-bordered table-hover dataTable">
                       <thead>
                           <tr>

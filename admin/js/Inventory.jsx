@@ -90,8 +90,8 @@ var Content = React.createClass({
       var itemName = data.val().item_name;
       var stock = data.val().stock;
 
-      $("#itemList").append("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+stock+"</center></td></tr>");
-      $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
+      $("#itemList").append("<tr id="+id+"><td>"+itemid+"</td><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+      $("#item").append("<option id="+id+" value="+id+">"+itemName+"</option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();
@@ -104,8 +104,8 @@ var Content = React.createClass({
       var itemName = data.val().item_name;
       var stock = data.val().stock;
 
-      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+stock+"</center></td></tr>");
-      $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
+      $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemid+"</td><td>"+itemName+"</td><td>"+stock+"</td></tr>");
+      $("option#"+id).replaceWith("<option id="+id+" value="+id+">"+itemName+"</option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();

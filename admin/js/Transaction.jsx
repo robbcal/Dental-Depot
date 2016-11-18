@@ -255,15 +255,15 @@ var Content = React.createClass({
         document.getElementById("number").value = "";
 
         if($('#transactionTable tr > td:contains('+id+')').length == 0){
-            $("#transactionTableBody").append("<tr id="+id+"><center><td id='del' class='delete'><center><button class='btn btn-danger btn-xs deleteRow' value="+id+">x</button></center></td><td style='display:none'><center>"+id+"</center></td><td class='name' value="+id+"><center>"+itemName+"</center></td><td id="+id+"A"+id+" class='number' value="+num+"><center>"+num+"</center></td><td id="+id+"B"+id+" class='subtotal' value="+subtotal.toFixed(2)+"><center>"+subtotal.toFixed(2)+"</center></td></tr>");
+            $("#transactionTableBody").append("<tr id="+id+"><td id='del' class='delete'><button class='btn btn-danger btn-xs deleteRow' value="+id+">x</button></td><td style='display:none'>"+id+"</td><td class='name' value="+id+">"+itemName+"</td><td id="+id+"A"+id+" class='number' value="+num+">"+num+"</td><td id="+id+"B"+id+" class='subtotal' value="+subtotal.toFixed(2)+">"+subtotal.toFixed(2)+"</td></tr>");
         }else{
           var transQty = $("td#"+id+"A"+id+"").text();
           var transSubtotal = $("td#"+id+"B"+id+"").text();
           var newQty = Number(transQty) + Number(num);
           var newSubtotal = Number(transSubtotal) + Number(subtotal);
 
-          $("td#"+id+"A"+id+"").replaceWith("<td id="+id+"A"+id+" class='number' value="+newQty+"><center>"+newQty+"</center></td>");
-          $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+"><center>"+newSubtotal.toFixed(2)+"</center></td>");
+          $("td#"+id+"A"+id+"").replaceWith("<td id="+id+"A"+id+" class='number' value="+newQty+">"+newQty+"</td>");
+          $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+">"+newSubtotal.toFixed(2)+"</td>");
         }
       }else{
         document.getElementById("errorMessage").innerHTML= "Missing input.";
