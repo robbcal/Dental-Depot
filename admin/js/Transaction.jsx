@@ -229,7 +229,7 @@ var Content = React.createClass({
       num = 0+num;
 
       if(Number(num) > max){
-        document.getElementById("errorMessage").innerHTML= "Insufficient stock.";
+        document.getElementById("errorMessage").innerHTML= "Insufficient stock";
         $('#errorModal').appendTo("body").modal('show');
         document.getElementById("number").value = "";
       }
@@ -322,10 +322,10 @@ var Content = React.createClass({
             var stock = snapshot.val().stock;
             var newQty = Number(stock) - Number(transactionItems[a].qty);
             firebase.database().ref("items/"+transactionItems[a].id).update({
-              stock: newQty
+              quantity: newQty
             });
             firebase.database().ref("users/"+uid+"/activity").push().set({
-              action: "Purchased item.",
+              action: "Purchased item",
               itemID: itemID,
               itemName: transactionItems[a].name,
               quantity: transactionItems[a].qty,
@@ -336,7 +336,7 @@ var Content = React.createClass({
               firebase.database().ref("items/"+transactionItems[a].id+"/item_history/").push().set({
                 user: userName,
                 date: date,
-                action_performed: "Purchased item.",
+                action_performed: "Purchased item",
                 quantity: transactionItems[a].qty
               });
             });
