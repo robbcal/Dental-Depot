@@ -317,52 +317,52 @@ var Content = React.createClass({
   render: function() {
     return (
       <div id="mainContent">
-          <form id="itemIDForm" type="get" action="SpecificItem.html">
-              <input type="hidden" id="item_id" name="item_id"/>
-              <button type="submit" value="Send" name="submit" id="submit" style={{display: 'none'}}></button>
-          </form>
-          <div className="box">
-              <div className="box-header" id="headerContent">
-                  <div className="col-sm-4">
-                      <div className="input-group input-group-md">
-                          <input type="text" name="tableSearch" className="form-control pull-right" id="inventorySearch" placeholder="Search" onChange={this.showTable}/>
-                          <div className="input-group-btn">
-                              <button type="submit" className="btn btn-default" id="inventoryButton">
-                                  <i className="fa fa-search"></i>
-                              </button>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="col-sm-4"></div>
-                  <div className="btn-group col-sm-2">
-                      <button className="btn btn-primary">ADD ITEM</button>
-                      <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                          <span className="caret"></span>
-                          <span className="sr-only">Toggle Dropdown</span>
-                      </button>
-                      <ul className="dropdown-menu" role="menu">
-                          <li><a data-toggle="modal" data-target="#newItemModal" onClick={this.generateIDandDate}>New Item</a></li>
-                          <li><a data-toggle="modal" data-target="#existingItemModal" onClick={this.generateDate}>Existing Item</a></li>
-                      </ul>
-                  </div>
-                  <div className="col-sm-2">
-                      <a className="btn btn-primary pull-right" id="addTransaction" href="Transaction.html">ADD TRANSACTION</a>
-                  </div>
+        <form id="itemIDForm" type="get" action="SpecificItem.html">
+          <input type="hidden" id="item_id" name="item_id"/>
+          <button type="submit" value="Send" name="submit" id="submit" style={{display: 'none'}}></button>
+        </form>
+        <div className="box">
+          <div className="box-header" id="headerContent">
+            <div className="col-sm-4">
+              <div className="input-group input-group-md">
+                <input type="text" name="tableSearch" className="form-control pull-right" id="inventorySearch" placeholder="Search" onChange={this.showTable}/>
+                <div className="input-group-btn">
+                  <button type="submit" className="btn btn-default" id="inventoryButton">
+                    <i className="fa fa-search"></i>
+                  </button>
+                </div>
               </div>
-              <div className="box-body table-responsive" id="inventoryMainTable">
-                  <table id="itemTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                      <thead>
-                          <tr>
-                              <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM ID</th>
-                              <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM NAME</th>
-                              <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">IN STOCK</th>
-                          </tr>
-                      </thead>
-                      <tbody id="itemList">
-                          <tr id="no-data" style={{display:'none'}}>
-                              <h5>No Results Found.</h5>
-                          </tr>
-                      </tbody>
+            </div>
+            <div className="col-sm-4"></div>
+            <div className="btn-group col-sm-2">
+              <button className="btn btn-primary">ADD ITEM</button>
+              <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <span className="caret"></span>
+                <span className="sr-only">Toggle Dropdown</span>
+              </button>
+              <ul className="dropdown-menu" role="menu">
+                <li><a data-toggle="modal" data-target="#newItemModal" onClick={this.generateIDandDate}>New Item</a></li>
+                <li><a data-toggle="modal" data-target="#existingItemModal" onClick={this.generateDate}>Existing Item</a></li>
+              </ul>
+            </div>
+            <div className="col-sm-2">
+              <a className="btn btn-primary pull-right" id="addTransaction" href="Transaction.html">ADD TRANSACTION</a>
+            </div>
+          </div>
+          <div className="box-body table-responsive" id="inventoryMainTable">
+            <table id="itemTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+              <thead>
+                <tr>
+                  <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM ID</th>
+                  <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM NAME</th>
+                  <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">IN STOCK</th>
+                </tr>
+              </thead>
+              <tbody id="itemList">
+                <tr id="no-data" style={{display:'none'}}>
+                  <h5>No Results Found.</h5>
+                </tr>
+              </tbody>
                   </table>
               </div>
           </div>

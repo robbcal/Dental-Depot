@@ -84,6 +84,23 @@ var Content = React.createClass({
       self.setState({
         cur_password: snapshot.val().password
       });
+
+      $(document).ready(function () {
+        (function ($) {
+            $('#userSearch').keyup(function () {
+              var rex = new RegExp($(this).val(), 'i');
+              $('#userList tr').hide();
+              $('#userList tr').filter(function () {
+                  return rex.test($(this).text());
+              }).show();
+              $('#no-data').hide();
+              if($('#userList tr:visible').length == 0)
+              {
+                $('#no-data').show();
+              }
+            })
+        }(jQuery));
+      });
     });
 
     var ref = firebase.database().ref('users');
@@ -179,6 +196,12 @@ var Content = React.createClass({
     alert("hilo");
   },
 
+  showTable: function(){
+    if($('#userSearch').val == null){
+      $('#userList tr').show();
+    }
+  },
+
   render: function() {
     return (
       <div>
@@ -186,32 +209,40 @@ var Content = React.createClass({
           <input type="hidden" id="user_id" name="user_id"/>
           <button type="submit" value="Send" name="submit" id="submit" style={{display: 'none'}}></button>
         </form>
+        <br/><br/>
+        <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div className="col-sm-4">
+              <div className="input-group input-group-md">
+                <input type="text" name="tableSearch" className="form-control pull-right" id="userSearch" placeholder="Search" onChange={this.showTable}/>
+                <div className="input-group-btn">
+                  <button type="submit" className="btn btn-default" id="userButton">
+                    <i className="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <span className="pull-right">
+              <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal">ADD USER</a>
+            </span>
+          </div>
           <br/><br/>
-          <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-              <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <span className="pull-left">
-                      <input type="text" id="userSearch" /*className="searchBox"*//>
-                      <button id="userSearchButton"><img src="../bootstrap/icons/search.png" height="15px"/></button>
-                  </span>
-                  <span className="pull-right">
-                      <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal">ADD USER</a>
-                  </span>
-              </div>
-              <br/><br/>
-              <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <table className="table table-hover table-striped table-bordered /*adminTable*/" id="user_table">
-                      <thead>
-                          <tr>
-                              <th><center>USERNAME</center></th>
-                              <th><center>EMAIL ADDRESS</center></th>
-                              <th><center>USER TYPE</center></th>
-                          </tr>
-                      </thead>
-                      <tbody id="userList">
-
-                      </tbody>
-                  </table>
-              </div>
+          <div className="box-body table-responsive" id="userMainTable">
+            <table id="userTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info" style={{backgroundColor: "#fff"}}>
+              <thead>
+                <tr>
+                  <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">USERNAME</th>
+                  <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">EMAIL ADDRESS</th>
+                  <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">USER TYPE</th>
+                </tr>
+              </thead>
+              <tbody id="userList">
+                <tr id="no-data" style={{display:'none'}}>
+                  <h5>No Results Found.</h5>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           </div>
 
           <div className="example-modal">

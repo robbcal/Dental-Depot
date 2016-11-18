@@ -101,6 +101,23 @@ var Content = React.createClass({
         password: snapshot.val().password
       });
     });
+
+    $(document).ready(function () {
+      (function ($) {
+          $('#activitySearch').keyup(function () {
+            var rex = new RegExp($(this).val(), 'i');
+            $('#activityList tr').hide();
+            $('#activityList tr').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+            $('#no-data').hide();
+            if($('#activityList tr:visible').length == 0)
+            {
+              $('#no-data').show();
+            }
+          })
+      }(jQuery));
+    });
   },
 
   checkProfile: function(){
@@ -245,23 +262,23 @@ var Content = React.createClass({
                   </div>
                 </div>
                 <div className="box-body table-responsive" id="activityMainTable">
-                <table id="activityTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                  <thead>
-                    <tr>
-                      <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ACTION</th>
-                      <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM/</th>
-                      <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">STOCK</th>
-                      <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">DATE</th>
-                    </tr>
-                  </thead>
-                  <tbody id="activityList">
-                    <tr id="no-data" style={{display:'none'}}>
-                      <h5>No Results Found.</h5>
-                    </tr>
-                  </tbody>
-                </table>
+                  <table id="activityTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                    <thead>
+                      <tr>
+                        <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ACTION</th>
+                        <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">ITEM/</th>
+                        <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">STOCK</th>
+                        <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">DATE</th>
+                      </tr>
+                    </thead>
+                    <tbody id="activityList">
+                      <tr id="no-data" style={{display:'none'}}>
+                        <h5>No Results Found.</h5>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
 
               <div className="active tab-pane" id="userProfileMainContent" style={{height: 360, marginLeft: 0, width: 890}}>
                 <h2><strong style={{paddingLeft: 50}}> {this.state.fullName} </strong></h2>
