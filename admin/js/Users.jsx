@@ -91,7 +91,7 @@ var Content = React.createClass({
       var birthdate = data.val().birthday;
       var userType = data.val().user_type;
 
-      $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
+      $("#userList").append("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td></tr>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("user_id").value = id;
         document.getElementById("submit").click();
@@ -109,7 +109,7 @@ var Content = React.createClass({
       var birthdate = data.val().birthday;
       var userType = data.val().user_type;
 
-      $("tr#"+id).replaceWith("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
+      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td></tr>");
       $("#"+id+"").dblclick(function() {
         alert(email);
       });
@@ -177,7 +177,7 @@ var Content = React.createClass({
     var birthdate = document.getElementById("birthdate").value;
     var userType = document.getElementById("userType").value;
     var password = "123456";
-    
+
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
       var uid = firebase.auth().currentUser.uid;
       var user = firebase.auth().currentUser;
@@ -216,7 +216,7 @@ var Content = React.createClass({
       }, function(error) {
         document.getElementById("errorMessage").innerHTML= error;
         $('#errorModal').appendTo("body").modal('show');
-      });  
+      });
     }).catch(function(error) {
         document.getElementById("errorMessage").innerHTML= error;
         $('#errorModal').appendTo("body").modal('show');
@@ -410,7 +410,7 @@ var MainContent = React.createClass({
         }, function(error) {
           console.log(error);
         });
-      }      
+      }
     }, function(error) {
         console.log(error);
     });

@@ -92,7 +92,7 @@ var Header = React.createClass({
           var user = data.val().user;
           var release = data.val().release_method;
           var customer = data.val().customer;
-          $("#transactionList").append("<tr id="+id+"><td>"+id+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+          $("#transactionList").append("<tr id="+id+"><td><center>"+id+"</center></td><td><center>"+total+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
           $("#"+id+"").dblclick(function() {
 
             $("#transactionTableBody tr").remove();
@@ -102,7 +102,7 @@ var Header = React.createClass({
             document.getElementById("transTotal").innerHTML = "Total: "+total;
             document.getElementById("transDate").innerHTML = "Date: "+date;
             document.getElementById("transRelease").innerHTML = "Release Method: "+release;
-            document.getElementById("transCustomer").innerHTML = customer;
+            document.getElementById("transCustomer").innerHTML = "Customer: "+customer;
 
             var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
             ref.on('child_added', function(data) {
@@ -110,8 +110,8 @@ var Header = React.createClass({
               var itemQuantity = data.val().item_quantity;
               var subtotal = data.val().item_subtotal;
 
-              $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+subtotal+"</td></tr>");
-            }); 
+              $("#transactionTableBody").append("<tr id="+id+"><td><center>"+itemName+"</center></td><td><center>"+itemQuantity+"</center></td><td><center>"+subtotal+"</center></td></tr>");
+            });
           });
         });
 
@@ -130,7 +130,7 @@ var Header = React.createClass({
               var object = data.val().object_changed;
               var quantity = data.val().quantity;
               var date = data.val().date;
-              $("#activityList").append("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+name+"</td></tr>");
+              $("#activityList").append("<tr><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td><td><center>"+name+"</center></td></tr>");
             })
           })
         });
@@ -162,6 +162,19 @@ var Header = React.createClass({
                 $('#no-data-activity').show();
               }
             })
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+                datasets: [{
+                  label: 'apples',
+                  data: [12, 19, 3, 17, 6, 3, 7],
+                  backgroundColor: "rgba(153,255,51,0.4)"
+                }]
+              }
+            });
           }(jQuery));
         });
       },
@@ -172,10 +185,20 @@ var Header = React.createClass({
         }
       },
 
+      generateDate: function(){
+        var now = new Date();
+        var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+        document.getElementById("daterange").value = today;
+      },
+
       showActivityTable: function(){
         if($('#activitySearch').val == null){
           $('#activityList tr').show();
         }
+      },
+
+      dateRange: function(){
+          $('input[name="daterange"]').daterangepicker();
       },
 
       deleteTransaction: function(){
@@ -210,7 +233,21 @@ var Header = React.createClass({
                     </ul>
                     <div className="tab-content table-responsive" id="tabContent">
                         <div className="active tab-pane" id="sales">
+                            <div className="row">
+                                <div className="col-sm-8">
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                                <div className="form-group col-sm-4">
+                                    <label>Date range:</label>
 
+                                    <div className="input-group">
+                                        <div className="input-group-addon">
+                                            <i className="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="text" className="form-control pull-right" name="daterange" id="daterange" onFocus={this.dateRange}/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="tab-pane" id="transaction">
@@ -345,12 +382,12 @@ var Header = React.createClass({
                                         <h5 id="transDate"></h5>
                                     </div>
                                     <div className="col-sm-6">
-                                        <h5 id="transRelease"></h5>
+                                        <h5 className="pull-right" id="transRelease"></h5>
                                     </div>
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#deleteTransactionModal">DELETE</button>
+                                <button type="button" className="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteTransactionModal">DELETE</button>
                             </div>
                         </div>
                     </div>
@@ -410,7 +447,7 @@ var MainContent = React.createClass({
         }, function(error) {
           console.log(error);
         });
-      }  
+      }
     }, function(error) {
       console.log(error);
     });

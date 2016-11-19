@@ -59,15 +59,10 @@ var Body = React.createClass({
                 </div>
             </div>
 
-            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                        <Content/>
-                    </div>
-                </div>
+            <div className="content-wrapper">
+                <section id="content" className="content"><Content/></section>
             </div>
 
-            {/* LOGOUT MODAL CONTENT */}
         </div>
       );
     }
@@ -97,7 +92,7 @@ itemDescription: "null",
     });
     var ref = firebase.database().ref('items/'+itemID);
     ref.on('value', function(snapshot) {
-      document.getElementById("NameOfItem").innerHTML = snapshot.val().item_name; 
+      document.getElementById("NameOfItem").innerHTML = snapshot.val().item_name;
       self.setState({
          itemName: snapshot.val().item_name,
   itemDescription: snapshot.val().description,
@@ -120,7 +115,7 @@ itemDescription: "null",
     $('#editItemModal').on('hidden.bs.modal', function () {
       ref.on('value', function(snapshot) {
         document.getElementById("editItem").value = snapshot.val().item_name;
-        document.getElementById("editDescription").value = snapshot.val().description; 
+        document.getElementById("editDescription").value = snapshot.val().description;
         document.getElementById("editPrice").value = snapshot.val().price;
       });
     });
@@ -193,7 +188,7 @@ itemDescription: "null",
         action_performed: action,
         quantity: additionalStock
       });
-    });  
+    });
     firebase.database().ref("users/"+uid+"/activity").push().set({
       action_performed: action,
       object_changed: this.state.itemName,
@@ -215,7 +210,7 @@ itemDescription: "null",
     var uid = firebase.auth().currentUser.uid;
     var curStock = this.state.itemQty;
 
-    
+
     if(diminishedStock <= curStock){
       var newStock = Number(curStock) - Number(diminishedStock);
       firebase.database().ref('items/'+itemID).update({
@@ -286,7 +281,7 @@ itemDescription: "null",
             action_performed: action,
             quantity: "n/a"
           });
-        });  
+        });
         firebase.database().ref("users/"+uid+"/activity").push().set({
           action_performed: action,
           object_changed: itemName,
@@ -373,7 +368,6 @@ itemDescription: "null",
                                 </ul>
                             </div>
                             <a className="btn btn-primary" id="specificItemButtons" data-toggle="modal" data-target="#editItemModal" onClick={this.generateDate}>EDIT</a>
-                            <a className="btn btn-danger" id="specificItemButtons" data-toggle="modal" data-target="#deleteItemModal">DELETE</a>
                         </center>
                     </div>
                 </div>
@@ -692,7 +686,7 @@ var MainContent = React.createClass({
         }, function(error) {
           console.log(error);
         });
-      }      
+      }
     }, function(error) {
         console.log(error);
     });

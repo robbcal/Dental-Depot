@@ -59,12 +59,8 @@ var Body = React.createClass({
               </div>
           </div>
 
-          <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-              <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                  <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                      <Content/>
-                  </div>
-              </div>
+          <div className="content-wrapper">
+              <section id="content" className="content"><Content/></section>
           </div>
       </div>
     );
@@ -197,7 +193,7 @@ var Content = React.createClass({
           $('#editInfoModal').modal('hide');
           $('#informSuccess').appendTo("body").modal('show');
           setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
-          
+
         }, function(error) {
           document.getElementById("errorMessage").innerHTML= error;
           $('#errorModal').appendTo("body").modal('show');
@@ -398,7 +394,7 @@ var MainContent = React.createClass({
         }, function(error) {
           console.log(error);
         });
-      }      
+      }
     }, function(error) {
         console.log(error);
     });
