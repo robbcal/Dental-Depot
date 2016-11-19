@@ -180,37 +180,43 @@ var Content = React.createClass({
     
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
       var uid = firebase.auth().currentUser.uid;
-      firebase.auth().signInWithEmailAndPassword(cur_email, cur_password).then(function(){
-        firebase.database().ref('users/'+uid).set({
-          firstname: firstName,
-          lastname: lastName,
-          user_email: email,
-          address: address,
-          contact_no: contactNumber,
-          age: age,
-          birthday: birthdate,
-          user_type: userType,
-          password: password
-        });
-        firebase.database().ref("users/"+curUID+"/activity").push().set({
-          action_performed: "Added user.",
-          object_changed: firstName+" "+lastName,
-          quantity: "n/a",
-          date: today
-        });
-        $('#addConfirmation').modal('hide');
-        $('#addUserModal').modal('hide');
-        $('#informSuccess').appendTo("body").modal('show');
-        setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
-        document.getElementById("firstName").value="";
-        document.getElementById("lastName").value="";
-        document.getElementById("email").value="";
-        document.getElementById("address").value="";
-        document.getElementById("contactNumber").value="";
-        document.getElementById("age").value="";
-        document.getElementById("birthdate").value="";
-        document.getElementById("userType").value="";
-      })
+      var user = firebase.auth().currentUser;
+      user.sendEmailVerification().then(function() {
+        firebase.auth().signInWithEmailAndPassword(cur_email, cur_password).then(function(){
+          firebase.database().ref('users/'+uid).set({
+            firstname: firstName,
+            lastname: lastName,
+            user_email: email,
+            address: address,
+            contact_no: contactNumber,
+            age: age,
+            birthday: birthdate,
+            user_type: userType,
+            password: password
+          });
+          firebase.database().ref("users/"+curUID+"/activity").push().set({
+            action_performed: "Added user.",
+            object_changed: firstName+" "+lastName,
+            quantity: "n/a",
+            date: today
+          });
+          $('#addConfirmation').modal('hide');
+          $('#addUserModal').modal('hide');
+          $('#informSuccess').appendTo("body").modal('show');
+          setTimeout(function() { $("#informSuccess").modal('hide'); }, 3000);
+          document.getElementById("firstName").value="";
+          document.getElementById("lastName").value="";
+          document.getElementById("email").value="";
+          document.getElementById("address").value="";
+          document.getElementById("contactNumber").value="";
+          document.getElementById("age").value="";
+          document.getElementById("birthdate").value="";
+          document.getElementById("userType").value="";
+        })
+      }, function(error) {
+        document.getElementById("errorMessage").innerHTML= error;
+        $('#errorModal').appendTo("body").modal('show');
+      });  
     }).catch(function(error) {
         document.getElementById("errorMessage").innerHTML= error;
         $('#errorModal').appendTo("body").modal('show');
@@ -339,8 +345,8 @@ var Content = React.createClass({
                           <div className="modal-body">
                               <center>
                                   <h5>Are you sure you want to add this user?</h5>
-                                  <button type="button" className="btn btn-primary" onClick={this.addUser}>YES</button>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal">NO</button>
+                                  <button type="button" className="btn btn-primary" onClick={this.addUser} id="confirmProfileEdit">YES</button>&nbsp;
+                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmProfileEdit">NO</button>
                               </center>
                           </div>
 
@@ -372,7 +378,7 @@ var Content = React.createClass({
                   <div className="modal-content">
                       <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                           <center>
-                              <h4><strong>Successfully Added User.</strong></h4>
+                              <h4><strong>Successfully Added User. Please check your email for verification.</strong></h4>
                           </center>
                       </div>
                   </div>
@@ -391,17 +397,21 @@ var MainContent = React.createClass({
   componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-          var uid = firebase.auth().currentUser.uid;
-          firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
-            self.setState({ signedIn: true, type: snapshot.val().user_type });
-            $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
-          });
-        } else {
-          self.setState({ signedIn: false });
+      if (user.emailVerified) {
+        var uid = firebase.auth().currentUser.uid;
+        firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
+          self.setState({ signedIn: true, type: snapshot.val().user_type });
+          $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+        });
+      }else {
+        alert("Email is not verified");
+        firebase.auth().signOut().then(function() {
           window.location.replace("http://127.0.0.1:8080/");
-        }
-      }, function(error) {
+        }, function(error) {
+          console.log(error);
+        });
+      }      
+    }, function(error) {
         console.log(error);
     });
   },
