@@ -119,37 +119,37 @@ var Content = React.createClass({
     });
 
     $('#existingItemModal').on('hidden.bs.modal', function () {
-        $("#item option:eq(0)").attr("selected", "selected");
-        document.getElementById("ID").value = "";
-        document.getElementById("existingDescription").value = "";
-        document.getElementById("existingPrice").value = "";
-        document.getElementById("existingStock").value = "";
-        document.getElementById("additionalNumber").value = "";
-      });
+      $("#item option:eq(0)").attr("selected", "selected");
+      document.getElementById("ID").value = "";
+      document.getElementById("existingDescription").value = "";
+      document.getElementById("existingPrice").value = "";
+      document.getElementById("existingStock").value = "";
+      document.getElementById("additionalNumber").value = "";
+    });
 
-      $('#newItemModal').on('hidden.bs.modal', function () {
-        document.getElementById("newItem").value="";
-        document.getElementById("newNumber").value="";
-        document.getElementById("newPrice").value="";
-        document.getElementById("newDescription").value="";
-      });
+    $('#newItemModal').on('hidden.bs.modal', function () {
+      document.getElementById("newItem").value="";
+      document.getElementById("newNumber").value="";
+      document.getElementById("newPrice").value="";
+      document.getElementById("newDescription").value="";
+    });
 
-      $(document).ready(function () {
-        (function ($) {
-            $('#inventorySearch').keyup(function () {
-              var rex = new RegExp($(this).val(), 'i');
-              $('#itemList tr').hide();
-              $('#itemList tr').filter(function () {
-                  return rex.test($(this).text());
-              }).show();
-              $('#no-data').hide();
-              if($('#itemList tr:visible').length == 0)
-              {
-                $('#no-data').show();
-              }
-            })
-        }(jQuery));
-      });
+    $(document).ready(function () {
+      (function ($) {
+        $('#inventorySearch').keyup(function () {
+          var rex = new RegExp($(this).val(), 'i');
+          $('#itemList tr').hide();
+          $('#itemList tr').filter(function () {
+              return rex.test($(this).text());
+          }).show();
+          $('#no-data').hide();
+          if($('#itemList tr:visible').length == 0)
+          {
+            $('#no-data').show();
+          }
+        })
+      }(jQuery));
+    });
   },
 
   showTable: function(){
@@ -328,9 +328,9 @@ var Content = React.createClass({
       $('#informSuccessAddExisting').appendTo("body").modal('show');
       setTimeout(function() { $("#informSuccessAddExisting").modal('hide'); }, 1000);
     }else{
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
-        $('#errorModal').appendTo("body").modal('show');
-        $('#addExistingConfirmation').modal('hide');
+      document.getElementById("errorMessage").innerHTML= "Missing input.";
+      $('#errorModal').appendTo("body").modal('show');
+      $('#addExistingConfirmation').modal('hide');
     }
   },
 
@@ -380,6 +380,7 @@ var Content = React.createClass({
                       </thead>
                       <tbody id="itemList">
                           <tr id="no-data" style={{display:'none'}}>
+                              <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
@@ -592,11 +593,6 @@ var MainContent = React.createClass({
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
-        /*if(self.state.type == 0){
-          firebase.auth().signOut().then(function() {
-            window.location.replace("http://127.0.0.1:8080/");
-          });
-        }*/
       } else {
         self.setState({ signedIn: false });
         window.location.replace("http://127.0.0.1:8080/");
@@ -617,7 +613,7 @@ var MainContent = React.createClass({
           </div>
         );
       }else if(this.state.type == "user"){
-        window.location.replace("../user/Items.html");
+        window.location.replace("../user/Inventory.html");
       }
     }else{
       res = (

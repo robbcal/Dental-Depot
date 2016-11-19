@@ -80,14 +80,12 @@ var Content = React.createClass({
        birthdate: "null",
            email: "null",
    contactNumber: "null",
-        password: "null",
         userType: "null"
       };
   },
 
-  componentWillMount: function(){
+  componentDidMount: function(){
     const self = this;
-    var uid = firebase.auth().currentUser.uid;
     var ref = firebase.database().ref('users/'+userID);
     ref.on('value', function(snapshot) {
       self.setState({
@@ -99,53 +97,51 @@ var Content = React.createClass({
        birthdate: snapshot.val().birthday,
            email: snapshot.val().user_email,
    contactNumber: snapshot.val().contact_no,
-        password: snapshot.val().password,
         userType: snapshot.val().user_type
       });
+      $('#userType option[value='+snapshot.val().user_type+']').attr('selected','selected');
+    });
+
+    $(document).ready(function () {
+      (function ($) {
+        $('#activitySearch').keyup(function () {
+          var rex = new RegExp($(this).val(), 'i');
+          $('#activityList tr').hide();
+          $('#activityList tr').filter(function () {
+              return rex.test($(this).text());
+          }).show();
+          $('#no-data').hide();
+          if($('#activityList tr:visible').length == 0)
+          {
+            $('#no-data').show();
+          }
+        })
+      }(jQuery));
     });
   },
 
-  componentDidMount: function(){
-      $(document).ready(function () {
-            (function ($) {
-                $('#activitySearch').keyup(function () {
-                  var rex = new RegExp($(this).val(), 'i');
-                  $('#activityList tr').hide();
-                  $('#activityList tr').filter(function () {
-                      return rex.test($(this).text());
-                  }).show();
-                  $('#no-data').hide();
-                  if($('#activityList tr:visible').length == 0)
-                  {
-                    $('#no-data').show();
-                  }
-                })
-            }(jQuery));
-          });
-      },
-
-      showTable: function(){
-        if($('#activitySearch').val == null){
-          $('#activityList tr').show();
-      }
+  showTable: function(){
+    if($('#activitySearch').val == null){
+      $('#activityList tr').show();
+    }
   },
 
   checkProfile: function(){
-      var firstname = document.getElementById("firstName").value;
-      var lastname = document.getElementById("lastName").value;
-      var address = document.getElementById("address").value;
-      var contactnumber = document.getElementById("contactNumber").value;
-      var email = document.getElementById("email").value;
-      var age = document.getElementById("age").value;
-      var birthdate = document.getElementById("birthdate").value;
-      var password = document.getElementById("password").value;
+    var firstName = document.getElementById("firstName").value;
+    var lastName = document.getElementById("lastName").value;
+    var contactNumber = document.getElementById("contactNumber").value;
+    var address = document.getElementById("address").value;
+    var birthdate = document.getElementById("birthdate").value;
+    var age = document.getElementById("age").value;
+    var type = document.getElementById("userType").value;  
 
-      if(firstname != "" && lastname != "" && address != "" && contactnumber != "" && email != "" && age != "" && birthdate != "" && password != ""){
-          $('#editConfirmation').appendTo("body").modal('show');
-      }else{
-          document.getElementById("errorMessage").innerHTML= "Missing input.";
-          $('#errorModal').appendTo("body").modal('show');
-      }
+    if(firstName && lastName && contactNumber && address && birthdate && age && type){
+        $('#editConfirmation').appendTo("body").modal('show');
+    }else{
+        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        $('#errorModal').appendTo("body").modal('show');
+        $('#editConfirmation').modal('hide');
+    }
   },
 
   showModal: function(){
@@ -174,96 +170,69 @@ var Content = React.createClass({
   onAge: function(e) {
     this.setState({age: e.target.value});
   },
-  onEmail: function(e) {
-    this.setState({email: e.target.value});
-  },
   onContactNumber: function(e) {
     this.setState({contactNumber: e.target.value});
   },
   onBirthdate: function(e) {
     this.setState({birthdate: e.target.value});
   },
-  onPassword: function(e) {
-    this.setState({password: e.target.value});
-  },
-
   onUserType: function(e) {
     this.setState({userType: e.target.value});
   },
 
-  checkProfile: function(){
-      var firstname = document.getElementById("firstName").value;
-      var lastname = document.getElementById("lastName").value;
-      var address = document.getElementById("address").value;
-      var contactnumber = document.getElementById("contactNumber").value;
-      var email = document.getElementById("email").value;
-      var age = document.getElementById("age").value;
-      var birthdate = document.getElementById("birthdate").value;
-      var password = document.getElementById("password").value;
-
-      if(firstname != "" && lastname != "" && address != "" && contactnumber != "" && email != "" && age != "" && birthdate != "" && password != ""){
-          $('#editConfirmation').appendTo("body").modal('show');
-      }else{
-          document.getElementById("errorMessage").innerHTML= "Missing input.";
-          $('#errorModal').appendTo("body").modal('show');
-      }
-  },
-
   editUser: function(){
+    var now = new Date();
+    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
     var uid = firebase.auth().currentUser.uid;
-    var firstname = document.getElementById("firstName").value;
-    var lastname = document.getElementById("lastName").value;
+    var firstName = document.getElementById("firstName").value;
+    var lastName = document.getElementById("lastName").value;
+    var contactNumber = document.getElementById("contactNumber").value;
     var address = document.getElementById("address").value;
-    var contactnumber = document.getElementById("contactNumber").value;
-    var email = document.getElementById("email").value;
-    var age = document.getElementById("age").value;
     var birthdate = document.getElementById("birthdate").value;
-    var password = document.getElementById("password").value;
+    var age = document.getElementById("age").value;
+    var type = document.getElementById("userType").value;
 
-    if(firstname && lastname && address && contactnumber && email && age && birthdate && password){
-      firebase.auth().currentUser.updateEmail(email).then(function() {
-        firebase.auth().currentUser.updatePassword(password).then(function() {
-          firebase.database().ref('users/'+userID).update({
-            firstname: firstname,
-            lastname: lastname,
-            user_email: email,
-            address: address,
-            contact_no: contactnumber,
-            age: age,
-            birthday: birthdate,
-            password: password
-          });
-          $('#editConfirmation').modal('hide');
-          $('#editInfoModal').modal('hide');
-          $('#informSuccess').appendTo("body").modal('show');
-          setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
-        }, function(error) {
-          document.getElementById("errorMessage").innerHTML= error;
-          $('#errorModal').appendTo("body").modal('show');
-          $('#editConfirmation').modal('hide');
-        });
-      }, function(error) {
-        document.getElementById("errorMessage").innerHTML= error;
-        $('#errorModal').appendTo("body").modal('show');
-        $('#editConfirmation').modal('hide');
-      });
-    }else{
-      document.getElementById("errorMessage").innerHTML= "Missing input.";
-      $('#errorModal').appendTo("body").modal('show');
-      $('#editConfirmation').modal('hide');
-    }
+    firebase.database().ref('users/'+userID).update({
+        firstname:firstName,
+         lastname:lastName,
+          address:contactNumber,
+              age:age,
+         birthday:birthdate,
+       contact_no:contactNumber,
+        user_type:type
+    })
+    firebase.database().ref("users/"+uid+"/activity").push().set({
+      action_performed: "Edited user.",
+      object_changed: firstName+" "+lastName,
+      quantity: "n/a",
+      date: today
+    });
+    $('#editConfirmation').modal('hide');
+    $('#editInfoModal').modal('hide');
+    $('#informSuccess').appendTo("body").modal('show');
+    setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
   },
 
   deleteUser: function(){
+    var firstName = document.getElementById("firstName").value;
+    var lastName = document.getElementById("lastName").value;
     var now = new Date();
     var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
     var uid = firebase.auth().currentUser.uid;
     var action = "Deleted user."
 
+    firebase.database().ref("users/"+uid+"/activity").push().set({
+      action_performed: action,
+      object_changed: firstName+" "+lastName,
+      quantity: "n/a",
+      date: today
+    });
+    $('#deleteUserModal').modal('hide');
+    $('#informSuccessDelete').appendTo("body").modal('show');
+    setTimeout(function() { $("#informSuccessDelete").modal('hide'); }, 3000);
     firebase.database().ref('users/'+userID).remove();
     window.location.replace("Users.html");
   },
-
 
   render: function() {
     return (
@@ -384,7 +353,7 @@ var Content = React.createClass({
                                     <div className="row">
                                         <div className="col-sm-6" id="editInfoModalComponents">
                                             <label>Email</label>
-                                            <input type="email" id="email" className="form-control" onChange={this.onEmail} value={this.state.email}/>
+                                            <input type="email" id="email" className="form-control" readOnly value={this.state.email}/>
                                         </div>
                                         <div className="col-sm-6" id="editInfoModalComponents">
                                             <label>Contact Number</label>
@@ -409,8 +378,11 @@ var Content = React.createClass({
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-6" id="editInfoModalComponents">
-                                            <label>Password</label>
-                                            <input type="password" id="password" className="form-control" onChange={this.onPassword} value={this.state.password}/>
+                                            <label>User Type</label>
+                                            <select id="userType" className="form-control" onChange={this.onType} value={this.state.useType}>
+                                              <option id="admin" value="admin">Admin</option>
+                                              <option id="user" value="user">User</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -519,11 +491,6 @@ var MainContent = React.createClass({
             self.setState({ signedIn: true, type: snapshot.val().user_type });
             $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
           });
-          /*if(self.state.type == 0){
-            firebase.auth().signOut().then(function() {
-              window.location.replace("http://127.0.0.1:8080/");
-            });
-          }*/
         } else {
           self.setState({ signedIn: false });
           window.location.replace("http://127.0.0.1:8080/");
@@ -544,7 +511,7 @@ var MainContent = React.createClass({
           </div>
         );
       }else if(this.state.type == "user"){
-        window.location.replace("../user/Items.html");
+        window.location.replace("../user/Inventory.html");
       }
     }else{
       res = (

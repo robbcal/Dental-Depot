@@ -10,7 +10,7 @@ var Content = React.createClass({
           if(type == "admin"){
             window.location.replace("admin/Inventory.html");
           }else if(type == "user"){
-            window.location.replace("user/Items.html");
+            window.location.replace("user/Inventory.html");
           }
         });
       }).catch(function(error) {
@@ -86,14 +86,13 @@ var Main = React.createClass({
     return { signedIn: false, type: 0, res : null};
   },
 
-  componentDidMount: function(){
+  componentWillMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
-          $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
       } else {
         self.setState({ signedIn: false });
@@ -120,7 +119,7 @@ var Main = React.createClass({
       if(this.state.type == "admin"){
         window.location.replace("admin/Inventory.html");
       }else if(this.state.type == "user"){
-        window.location.replace("user/Items.html");
+        window.location.replace("user/Inventory.html");
       }
     }
     return(

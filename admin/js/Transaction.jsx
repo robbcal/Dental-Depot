@@ -229,7 +229,7 @@ var Content = React.createClass({
       num = 0+num;
 
       if(Number(num) > max){
-        document.getElementById("errorMessage").innerHTML= "Insufficient stock.";
+        document.getElementById("errorMessage").innerHTML= "Insufficient stock";
         $('#errorModal').appendTo("body").modal('show');
         document.getElementById("number").value = "";
       }
@@ -266,7 +266,7 @@ var Content = React.createClass({
           $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+">"+newSubtotal.toFixed(2)+"</td>");
         }
       }else{
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        document.getElementById("errorMessage").innerHTML= "Missing input";
         $('#errorModal').appendTo("body").modal('show');
       }
     },
@@ -278,7 +278,7 @@ var Content = React.createClass({
         if(total != 0 && customer != ""){
             $('#addConfirmation').appendTo("body").modal('show');
         }else{
-            document.getElementById("errorMessage").innerHTML= "No items added.";
+            document.getElementById("errorMessage").innerHTML= "No items added";
             $('#errorModal').appendTo("body").modal('show');
         }
     },
@@ -359,9 +359,9 @@ var Content = React.createClass({
         $('#informSuccessAdd').appendTo("body").modal('show');
         setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
       }else{
-          $('#addConfirmation').modal('hide');
-          document.getElementById("errorMessage").innerHTML= "No items added.";
-          $('#errorModal').appendTo("body").modal('show');
+        $('#addConfirmation').modal('hide');
+        document.getElementById("errorMessage").innerHTML= "No items added.";
+        $('#errorModal').appendTo("body").modal('show');
       }
     },
 
@@ -418,10 +418,6 @@ var Content = React.createClass({
                               <label>Date</label>
                               <input type="date" id="date" className="form-control"/>
                           </div>
-                          <div className="col-sm-6" id="boxbodyContent">
-                              <label>Customer</label>
-                              <input type="text" id="customer" className="form-control"/>
-                          </div>
                       </div>
                       <div className="row">
                           <div className="col-sm-6" id="boxbodyContent"></div>
@@ -462,6 +458,9 @@ var Content = React.createClass({
                                   </tbody>
                               </table>
                           </div>
+                      </div>
+                      <div className="col-sm-8" id="boxbodyContent">
+                          <input type="text" id="customer" placeholder="Customer" className="form-control pull-left"/>
                       </div>
                       <button className="btn btn-primary btn-block" id="createTransactionButton" onClick={this.checkTransaction}>CREATE TRANSACTION</button>
                   </div>
@@ -545,11 +544,6 @@ var MainContent = React.createClass({
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
-        /*if(self.state.type == 0){
-          firebase.auth().signOut().then(function() {
-            window.location.replace("http://127.0.0.1:8080/");
-          });
-        }*/
       } else {
         self.setState({ signedIn: false });
         window.location.replace("http://127.0.0.1:8080/");
@@ -570,7 +564,7 @@ var MainContent = React.createClass({
           </div>
         );
       }else if(this.state.type == "user"){
-        window.location.replace("../user/Items.html");
+        window.location.replace("../user/Inventory.html");
       }
     }else{
       res = (

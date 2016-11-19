@@ -84,7 +84,7 @@ var Content = React.createClass({
       };
   },
 
-  componentWillMount: function(){
+  componentDidMount: function(){
     const self = this;
     var uid = firebase.auth().currentUser.uid;
     var ref = firebase.database().ref('users/'+uid);
@@ -159,6 +159,8 @@ var Content = React.createClass({
   },
 
   editUser: function(){
+    var now = new Date();
+    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
     var uid = firebase.auth().currentUser.uid;
     var firstname = document.getElementById("firstName").value;
     var lastname = document.getElementById("lastName").value;
@@ -182,10 +184,17 @@ var Content = React.createClass({
             birthday: birthdate,
             password: password
           });
+          firebase.database().ref('users/'+uid+'/activity').push().set({
+            action_performed: "Edited profile.",
+            object_changed: firstname+" "+lastname,
+            quantity: "n/a",
+            date: today
+          });
           $('#editConfirmation').modal('hide');
           $('#editInfoModal').modal('hide');
           $('#informSuccess').appendTo("body").modal('show');
           setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
+          
         }, function(error) {
           document.getElementById("errorMessage").innerHTML= error;
           $('#errorModal').appendTo("body").modal('show');
@@ -370,20 +379,14 @@ var MainContent = React.createClass({
       return { signedIn: false, type: 0 };
   },
 
-  componentWillMount: function(){
+  componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           var uid = firebase.auth().currentUser.uid;
           firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
             self.setState({ signedIn: true, type: snapshot.val().user_type });
-            $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
           });
-          /*if(self.state.type == 0){
-            firebase.auth().signOut().then(function() {
-              window.location.replace("http://127.0.0.1:8080/");
-            });
-          }*/
         } else {
           self.setState({ signedIn: false });
           window.location.replace("http://127.0.0.1:8080/");
@@ -404,7 +407,7 @@ var MainContent = React.createClass({
           </div>
         );
       }else if(this.state.type == "user"){
-        window.location.replace("../user/Items.html");
+        window.location.replace("../user/Inventory.html");
       }
     }else{
       res = (
