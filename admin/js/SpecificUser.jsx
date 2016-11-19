@@ -102,6 +102,19 @@ var Content = React.createClass({
       $('#userType option[value='+snapshot.val().user_type+']').attr('selected','selected');
     });
 
+    var ref = firebase.database().ref('users');
+    ref.once('value', function(snapshot) {
+        var uid = firebase.auth().currentUser.uid;
+        firebase.database().ref('users/'+uid+'/activity').on('child_added', function(data){
+          var action = data.val().action_performed;
+          var object = data.val().object_changed;
+          var quantity = data.val().quantity;
+          var date = data.val().date;
+          $("#activityList").append("<tr><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td></tr>");
+        })
+    });
+
+
     $(document).ready(function () {
       (function ($) {
         $('#activitySearch').keyup(function () {
@@ -133,7 +146,7 @@ var Content = React.createClass({
     var address = document.getElementById("address").value;
     var birthdate = document.getElementById("birthdate").value;
     var age = document.getElementById("age").value;
-    var type = document.getElementById("userType").value;  
+    var type = document.getElementById("userType").value;
 
     if(firstName && lastName && contactNumber && address && birthdate && age && type){
         $('#editConfirmation').appendTo("body").modal('show');
@@ -309,10 +322,10 @@ var Content = React.createClass({
                                     <table id="example1" className="table table-bordered table-striped dataTable">
                                         <thead>
                                             <tr>
-                                                <th><center>ITEM</center></th>
                                                 <th><center>ACTION</center></th>
+                                                <th><center>OBJECT</center></th>
+                                                <th><center>QUANTITY</center></th>
                                                 <th><center>DATE</center></th>
-                                                <th><center>USER</center></th>
                                             </tr>
                                         </thead>
                                         <tbody id="activityList">
@@ -498,7 +511,7 @@ var MainContent = React.createClass({
         }, function(error) {
           console.log(error);
         });
-      }    
+      }
     }, function(error) {
         console.log(error);
     });
