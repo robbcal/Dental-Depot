@@ -70,7 +70,7 @@ var Content = React.createClass({
                 <br/><br/>
             </div>
             <div className="col-sm-12 col-lg-12 col-md-12">
-                <div className="alert alert-danger alert-dismissible col-sm-12" id="errorBox">
+                <div className="alert alert-danger alert-dismissible col-sm-12" style={{display:'none'}} id="errorBox">
                     <h4><i className="icon fa fa-ban"></i>Error</h4>
                     <h6 id="errorAlert"></h6>
                 </div>
