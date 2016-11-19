@@ -379,7 +379,7 @@ var MainContent = React.createClass({
       return { signedIn: false, type: 0 };
   },
 
-  componentWillMount: function(){
+  componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
