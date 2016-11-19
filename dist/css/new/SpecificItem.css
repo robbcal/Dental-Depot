@@ -1,0 +1,52 @@
+#mainContent{
+    padding: 50px;
+    margin-top: -20px;
+}
+
+#specificItemContent{
+    padding: 30px;
+    margin-top: 30px;
+    margin-left: 0px;
+}
+
+#backButton{
+    height: 25px;
+}
+
+#itemContentImage{
+    height: 45px;
+}
+
+#itemContentName{
+    color: gray;
+}
+
+#itemContentCol{
+    margin-top: 9px;
+}
+
+.dropdown-menu{
+    right: 0;
+}
+
+#itemInfoContent{
+    margin-left: 25px;
+}
+
+#specificItemButtons{
+    margin: 5px;
+}
+
+#deleteItemButtons, #confirmEditItemButtons{
+    margin: 10px;
+}
+
+#editItemModalComponents, #addStockModalComponents, #delStockModalComponents{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+
+#specificItemLeftContent{
+    max-height: 300px;
+}

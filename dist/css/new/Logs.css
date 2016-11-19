@@ -1,0 +1,22 @@
+#logsTransSearch{
+    padding-right: 25px;
+}
+
+#mainContent{
+    margin: 20px;
+}
+
+#tabContent{
+    height: 480px;
+    overflow-x: hidden;
+}
+
+#transModal{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+
+#deleteTransButtons{
+    margin: 10px;
+}
