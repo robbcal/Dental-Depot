@@ -262,7 +262,7 @@ var Content = React.createClass({
         $('#errorModal').appendTo("body").modal('show');
         $('#addConfirmation').modal('hide');
       }
-    });  
+    });
   },
 
   displayItemOnModal: function(){
@@ -587,20 +587,23 @@ var MainContent = React.createClass({
   componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
-      if (user.emailVerified) {
+      if(!user){
+        self.setState({ signedIn: false});
+        window.location.replace("http://127.0.0.1:8080/");
+      }else if(user.emailVerified) {
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
-      }else {
+      }else{
         alert("Email is not verified");
         firebase.auth().signOut().then(function() {
           window.location.replace("http://127.0.0.1:8080/");
         }, function(error) {
           console.log(error);
         });
-      }  
+      }
     }, function(error) {
       console.log(error);
     });

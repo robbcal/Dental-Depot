@@ -100,7 +100,7 @@ itemDescription: "null",
     });
     var ref = firebase.database().ref('items/'+itemID);
     ref.on('value', function(snapshot) {
-      document.getElementById("NameOfItem").innerHTML = snapshot.val().item_name; 
+      document.getElementById("NameOfItem").innerHTML = snapshot.val().item_name;
       self.setState({
          itemName: snapshot.val().item_name,
   itemDescription: snapshot.val().description,
@@ -123,7 +123,7 @@ itemDescription: "null",
     $('#editItemModal').on('hidden.bs.modal', function () {
       ref.on('value', function(snapshot) {
         document.getElementById("editItem").value = snapshot.val().item_name;
-        document.getElementById("editDescription").value = snapshot.val().description; 
+        document.getElementById("editDescription").value = snapshot.val().description;
         document.getElementById("editPrice").value = snapshot.val().price;
       });
     });
@@ -196,7 +196,7 @@ itemDescription: "null",
         action_performed: action,
         quantity: additionalStock
       });
-    });  
+    });
     firebase.database().ref("users/"+uid+"/activity").push().set({
       action_performed: action,
       object_changed: this.state.itemName,
@@ -218,7 +218,7 @@ itemDescription: "null",
     var uid = firebase.auth().currentUser.uid;
     var curStock = this.state.itemQty;
 
-    
+
     if(diminishedStock <= curStock){
       var newStock = Number(curStock) - Number(diminishedStock);
       firebase.database().ref('items/'+itemID).update({
@@ -289,7 +289,7 @@ itemDescription: "null",
             action_performed: action,
             quantity: "n/a"
           });
-        });  
+        });
         firebase.database().ref("users/"+uid+"/activity").push().set({
           action_performed: action,
           object_changed: itemName,
@@ -682,20 +682,23 @@ var MainContent = React.createClass({
   componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
-      if (user.emailVerified) {
+      if(!user){
+        self.setState({ signedIn: false});
+        window.location.replace("http://127.0.0.1:8080/");
+      }else if(user.emailVerified) {
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
-      }else {
+      }else{
         alert("Email is not verified");
         firebase.auth().signOut().then(function() {
           window.location.replace("http://127.0.0.1:8080/");
         }, function(error) {
           console.log(error);
         });
-      }  
+      }
     }, function(error) {
       console.log(error);
     });

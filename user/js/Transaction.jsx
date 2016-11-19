@@ -329,7 +329,7 @@ var Content = React.createClass({
             firebase.database().ref("items/"+transactionItems[a].id).update({
               quantity: newQty
             });
-            
+
             firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
               var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
               firebase.database().ref("items/"+transactionItems[a].id+"/item_history/").push().set({
@@ -536,26 +536,29 @@ var MainContent = React.createClass({
   },
 
   componentDidMount: function(){
-    const self = this;
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user.emailVerified) {
-        var uid = firebase.auth().currentUser.uid;
-        firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
-          self.setState({ signedIn: true, type: snapshot.val().user_type });
-          $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
-        });
-      }else {
-        alert("Email is not verified");
-        firebase.auth().signOut().then(function() {
-          window.location.replace("http://127.0.0.1:8080/");
-        }, function(error) {
-          console.log(error);
-        });
-      }  
-    }, function(error) {
-      console.log(error);
-    });
-  },
+   const self = this;
+   firebase.auth().onAuthStateChanged(function(user) {
+     if(!user){
+       self.setState({ signedIn: false});
+       window.location.replace("http://127.0.0.1:8080/");
+     }else if(user.emailVerified) {
+       var uid = firebase.auth().currentUser.uid;
+       firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
+         self.setState({ signedIn: true, type: snapshot.val().user_type });
+         $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+       });
+     }else{
+       alert("Email is not verified");
+       firebase.auth().signOut().then(function() {
+         window.location.replace("http://127.0.0.1:8080/");
+       }, function(error) {
+         console.log(error);
+       });
+     }
+   }, function(error) {
+     console.log(error);
+   });
+ },
 
   render: function() {
     var res;
