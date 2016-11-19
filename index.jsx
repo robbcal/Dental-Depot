@@ -10,7 +10,7 @@ var Content = React.createClass({
           if(type == "admin"){
             window.location.replace("admin/Inventory.html");
           }else if(type == "user"){
-            window.location.replace("user/Items.html");
+            window.location.replace("user/Inventory.html");
           }
         });
       }).catch(function(error) {
@@ -119,7 +119,7 @@ var Main = React.createClass({
       if(this.state.type == "admin"){
         window.location.replace("admin/Inventory.html");
       }else if(this.state.type == "user"){
-        window.location.replace("user/Items.html");
+        window.location.replace("user/Inventory.html");
       }
     }
     return(

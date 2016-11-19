@@ -79,7 +79,7 @@ var Content = React.createClass({
       });
     });
 
-    var ref = firebase.database().ref('users');
+    var ref = firebase.database().ref('users').orderByChild('firstname');
     ref.on('child_added', function(data) {
       var id=data.key
       var firstName = data.val().firstname;
@@ -121,33 +121,53 @@ var Content = React.createClass({
     });
 
     $(document).ready(function () {
-          (function ($) {
-              $('#tableSearch').keyup(function () {
-                var rex = new RegExp($(this).val(), 'i');
-                $('#userList tr').hide();
-                $('#userList tr').filter(function () {
-                    return rex.test($(this).text());
-                }).show();
-                $('#no-data').hide();
-                if($('#userList tr:visible').length == 0)
-                {
-                  $('#no-data').show();
-                }
-              })
-          }(jQuery));
-        });
-    },
+      (function ($) {
+        $('#tableSearch').keyup(function () {
+          var rex = new RegExp($(this).val(), 'i');
+          $('#userList tr').hide();
+          $('#userList tr').filter(function () {
+              return rex.test($(this).text());
+          }).show();
+          $('#no-data').hide();
+          if($('#userList tr:visible').length == 0)
+          {
+            $('#no-data').show();
+          }
+        })
+      }(jQuery));
+    });
+  },
 
-    showTable: function(){
-      if($('#tableSearch').val == null){
-        $('#userList tr').show();
+  showTable: function(){
+    if($('#tableSearch').val == null){
+      $('#userList tr').show();
+    }
+  },
+
+  checkInput: function(){
+    var firstName = document.getElementById("firstName").value;
+    var lastName = document.getElementById("lastName").value;
+    var email = document.getElementById("email").value;
+    var address = document.getElementById("address").value;
+    var contactNumber = document.getElementById("contactNumber").value;
+    var age = document.getElementById("age").value;
+    var birthdate = document.getElementById("birthdate").value;
+    var userType = document.getElementById("userType").value;
+
+    if(firstName && lastName && address && contactNumber && email && age && birthdate && userType){
+      $('#addConfirmation').appendTo("body").modal('show');
+    }else{
+      document.getElementById("errorMessage").innerHTML= "Missing input.";
+      $('#errorModal').appendTo("body").modal('show');
     }
   },
 
   addUser: function(){
+    var curUID = firebase.auth().currentUser.uid;
+    var now = new Date();
+    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
     var cur_email = firebase.auth().currentUser.email;
     var cur_password = this.state.cur_password;
-
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
     var email = document.getElementById("email").value;
@@ -157,44 +177,44 @@ var Content = React.createClass({
     var birthdate = document.getElementById("birthdate").value;
     var userType = document.getElementById("userType").value;
     var password = "123456";
-
-    if(firstName && lastName && address && contactNumber && email && age && birthdate && userType){
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
-          var uid = firebase.auth().currentUser.uid;
-          firebase.auth().signInWithEmailAndPassword(cur_email, cur_password).then(function(){
-            firebase.database().ref('users/'+uid).set({
-              firstname: firstName,
-              lastname: lastName,
-              user_email: email,
-              address: address,
-              contact_no: contactNumber,
-              age: age,
-              birthday: birthdate,
-              user_type: userType,
-              password: password
-            });
-            $('#addUserModal').modal('hide');
-            $('#informSuccess').appendTo("body").modal('show');
-            setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
-            document.getElementById("firstName").value="";
-            document.getElementById("lastName").value="";
-            document.getElementById("email").value="";
-            document.getElementById("address").value="";
-            document.getElementById("contactNumber").value="";
-            document.getElementById("age").value="";
-            document.getElementById("birthdate").value="";
-            document.getElementById("userType").value="";
-          })
-        }).catch(function(error) {
-            document.getElementById("errorMessage").innerHTML= error;
-            $('#errorModal').appendTo("body").modal('show');
-            $('#addConfirmation').modal('hide');
+    
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
+      var uid = firebase.auth().currentUser.uid;
+      firebase.auth().signInWithEmailAndPassword(cur_email, cur_password).then(function(){
+        firebase.database().ref('users/'+uid).set({
+          firstname: firstName,
+          lastname: lastName,
+          user_email: email,
+          address: address,
+          contact_no: contactNumber,
+          age: age,
+          birthday: birthdate,
+          user_type: userType,
+          password: password
         });
-    }else {
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
-        $('#errorModal').appendTo("body").modal('show');
+        firebase.database().ref("users/"+curUID+"/activity").push().set({
+          action_performed: "Added user.",
+          object_changed: firstName+" "+lastName,
+          quantity: "n/a",
+          date: today
+        });
         $('#addConfirmation').modal('hide');
-    }
+        $('#addUserModal').modal('hide');
+        $('#informSuccess').appendTo("body").modal('show');
+        setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
+        document.getElementById("firstName").value="";
+        document.getElementById("lastName").value="";
+        document.getElementById("email").value="";
+        document.getElementById("address").value="";
+        document.getElementById("contactNumber").value="";
+        document.getElementById("age").value="";
+        document.getElementById("birthdate").value="";
+        document.getElementById("userType").value="";
+      })
+    }).catch(function(error) {
+        document.getElementById("errorMessage").innerHTML= error;
+        $('#errorModal').appendTo("body").modal('show');
+    });
   },
 
 
@@ -303,7 +323,7 @@ var Content = React.createClass({
                           </div>
                           <div className="modal-footer">
                               <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                              <button type="button" className="btn btn-primary" onClick={this.addUser}>ADD</button>
+                              <button type="button" className="btn btn-primary" onClick={this.checkInput}>ADD</button>
                           </div>
                       </div>
                   </div>
@@ -397,7 +417,7 @@ var MainContent = React.createClass({
           </div>
         );
       }else if(this.state.type == "user"){
-        window.location.replace("../user/Items.html");
+        window.location.replace("../user/Inventory.html");
       }
     }else{
       res = (

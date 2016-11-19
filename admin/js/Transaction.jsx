@@ -273,7 +273,9 @@ var Content = React.createClass({
 
     checkTransaction: function(){
         var total = document.getElementById("total").value;
-        if(total != 0){
+        var customer = document.getElementById("customer").value;
+
+        if(total != 0 && customer != ""){
             $('#addConfirmation').appendTo("body").modal('show');
         }else{
             document.getElementById("errorMessage").innerHTML= "No items added";
@@ -291,6 +293,7 @@ var Content = React.createClass({
       var transactionID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
       var userEmail = firebase.auth().currentUser.email;
       var uid = firebase.auth().currentUser.uid;
+      var customer = document.getElementById("customer").value;
 
       if(total != 0){
         for(var y = 1; y <= tableLength; y++){
@@ -308,7 +311,9 @@ var Content = React.createClass({
           firebase.database().ref("transactions/"+transactionID).set({
             total: total,
             user: userName,
-            release_method: release
+            release_method: release,
+            customer: customer,
+            date: date
           });
         });
 
@@ -319,29 +324,29 @@ var Content = React.createClass({
             item_subtotal: transactionItems[a].subtotal
           });
           firebase.database().ref('items/'+transactionItems[a].id).once('value', function(snapshot) {
-            var stock = snapshot.val().stock;
+            var stock = snapshot.val().quantity;
             var newQty = Number(stock) - Number(transactionItems[a].qty);
             firebase.database().ref("items/"+transactionItems[a].id).update({
               quantity: newQty
             });
-            firebase.database().ref("users/"+uid+"/activity").push().set({
-              action: "Purchased item",
-              itemID: itemID,
-              itemName: transactionItems[a].name,
-              quantity: transactionItems[a].qty,
-              date: date
-            });
+            
             firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
               var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
               firebase.database().ref("items/"+transactionItems[a].id+"/item_history/").push().set({
                 user: userName,
                 date: date,
-                action_performed: "Purchased item",
+                action_performed: "Add transaction.",
                 quantity: transactionItems[a].qty
               });
             });
           });
         }
+        firebase.database().ref("users/"+uid+"/activity").push().set({
+          action_performed: "Add transaction.",
+          object_changed: transactionID,
+          quantity: "n/a",
+          date: date
+        });
         document.getElementById("total").value = 0;
         document.getElementById("stock").value = "";
         document.getElementById("number").value = "";
@@ -354,9 +359,9 @@ var Content = React.createClass({
         $('#informSuccessAdd').appendTo("body").modal('show');
         setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
       }else{
-          $('#addConfirmation').modal('hide');
-          document.getElementById("errorMessage").innerHTML= "No items added";
-          $('#errorModal').appendTo("body").modal('show');
+        $('#addConfirmation').modal('hide');
+        document.getElementById("errorMessage").innerHTML= "No items added.";
+        $('#errorModal').appendTo("body").modal('show');
       }
     },
 
@@ -559,7 +564,7 @@ var MainContent = React.createClass({
           </div>
         );
       }else if(this.state.type == "user"){
-        window.location.replace("../user/Items.html");
+        window.location.replace("../user/Inventory.html");
       }
     }else{
       res = (

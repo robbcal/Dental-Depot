@@ -88,10 +88,10 @@ var Content = React.createClass({
       var id = data.key;
       var itemid = id;
       var itemName = data.val().item_name;
-      var stock = data.val().quantity;
+      var quantity = data.val().quantity;
 
-      $("#itemList").append("<tr id="+id+"><td>"+itemid+"</td><td>"+itemName+"</td><td>"+stock+"</td></tr>");
-      $("#item").append("<option id="+id+" value="+id+">"+itemName+"</option>");
+      $("#itemList").append("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
+      $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();
@@ -102,10 +102,10 @@ var Content = React.createClass({
       var id = data.key;
       var itemid = id;
       var itemName = data.val().item_name;
-      var stock = data.val().quantity;
+      var quantity = data.val().quantity;
 
-      $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemid+"</td><td>"+itemName+"</td><td>"+stock+"</td></tr>");
-      $("option#"+id).replaceWith("<option id="+id+" value="+id+">"+itemName+"</option>");
+      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
+      $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
         document.getElementById("submit").click();
@@ -119,37 +119,37 @@ var Content = React.createClass({
     });
 
     $('#existingItemModal').on('hidden.bs.modal', function () {
-        $("#item option:eq(0)").attr("selected", "selected");
-        document.getElementById("ID").value = "";
-        document.getElementById("existingDescription").value = "";
-        document.getElementById("existingPrice").value = "";
-        document.getElementById("existingStock").value = "";
-        document.getElementById("additionalNumber").value = "";
-      });
+      $("#item option:eq(0)").attr("selected", "selected");
+      document.getElementById("ID").value = "";
+      document.getElementById("existingDescription").value = "";
+      document.getElementById("existingPrice").value = "";
+      document.getElementById("existingStock").value = "";
+      document.getElementById("additionalNumber").value = "";
+    });
 
-      $('#newItemModal').on('hidden.bs.modal', function () {
-        document.getElementById("newItem").value="";
-        document.getElementById("newNumber").value="";
-        document.getElementById("newPrice").value="";
-        document.getElementById("newDescription").value="";
-      });
+    $('#newItemModal').on('hidden.bs.modal', function () {
+      document.getElementById("newItem").value="";
+      document.getElementById("newNumber").value="";
+      document.getElementById("newPrice").value="";
+      document.getElementById("newDescription").value="";
+    });
 
-      $(document).ready(function () {
-        (function ($) {
-            $('#inventorySearch').keyup(function () {
-              var rex = new RegExp($(this).val(), 'i');
-              $('#itemList tr').hide();
-              $('#itemList tr').filter(function () {
-                  return rex.test($(this).text());
-              }).show();
-              $('#no-data').hide();
-              if($('#itemList tr:visible').length == 0)
-              {
-                $('#no-data').show();
-              }
-            })
-        }(jQuery));
-      });
+    $(document).ready(function () {
+      (function ($) {
+        $('#inventorySearch').keyup(function () {
+          var rex = new RegExp($(this).val(), 'i');
+          $('#itemList tr').hide();
+          $('#itemList tr').filter(function () {
+              return rex.test($(this).text());
+          }).show();
+          $('#no-data').hide();
+          if($('#itemList tr:visible').length == 0)
+          {
+            $('#no-data').show();
+          }
+        })
+      }(jQuery));
+    });
   },
 
   showTable: function(){
@@ -194,10 +194,10 @@ var Content = React.createClass({
       var date = document.getElementById("existingDate").value;
 
       if(id != "" && price != "" && curStock != "" && addNumber != "" && date != ""){
-          $('#addExistingConfirmation').appendTo("body").modal('show');
+        $('#addExistingConfirmation').appendTo("body").modal('show');
       }else{
-          document.getElementById("errorMessage").innerHTML= "Missing input.";
-          $('#errorModal').appendTo("body").modal('show');
+        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        $('#errorModal').appendTo("body").modal('show');
       }
   },
 
@@ -205,44 +205,64 @@ var Content = React.createClass({
     var now = new Date();
     var itemID = document.getElementById("newId").value;
     var itemName = document.getElementById("newItem").value;
-    var stock = document.getElementById("newNumber").value;
+    var qty = document.getElementById("newNumber").value;
     var price = document.getElementById("newPrice").value;
     var uid = firebase.auth().currentUser.uid;
     var date = document.getElementById("newDate").value;
     var description = document.getElementById("newDescription").value;
     var action = "Added item.";
 
-    firebase.database().ref('items/'+itemID).set({
-      key: itemID,
-      item_name: itemName,
-      description: description,
-      quantity: Number(stock),
-      price: price
-    });
-    firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
-      var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
-      firebase.database().ref("items/"+itemID+"/item_history/").push().set({
-        user: userName,
-        date: date,
-        action_performed: action,
-        quantity: Number(stock)
+    firebase.database().ref('items').once('value', function(snapshot) {
+      var iList = [];
+      var found = false;
+      snapshot.forEach(function(childSnapshot) {
+        var item = childSnapshot.val().item_name;
+        var itemList = {name: item};
+        iList.push(itemList);
       });
-    });
-    firebase.database().ref("users/"+uid+"/activity").push().set({
-      action: action,
-      itemID: itemID,
-      itemName: itemName,
-      quantity: stock,
-      date: date
-    });
-    document.getElementById("newItem").value="";
-    document.getElementById("newNumber").value="";
-    document.getElementById("newPrice").value="";
-    document.getElementById("newDescription").value="";
-    $('#addConfirmation').modal('hide');
-    $('#newItemModal').modal('hide');
-    $('#informSuccessAdd').appendTo("body").modal('show');
-    setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
+      for(var x = 0; x < iList.length; x++){
+        if(iList[x].name == itemName){
+          found = true;
+          break;
+        }
+      }
+      if(found == false){
+        firebase.database().ref('items/'+itemID).set({
+          key: itemID,
+          item_name: itemName,
+          description: description,
+          quantity: Number(qty),
+          price: price
+        });
+        firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+          var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+          firebase.database().ref("items/"+itemID+"/item_history/").push().set({
+            user: userName,
+            date: date,
+            action_performed: action,
+            quantity: Number(qty)
+          });
+        });
+        firebase.database().ref("users/"+uid+"/activity").push().set({
+          action_performed: action,
+          object_changed: itemName,
+          quantity: qty,
+          date: date
+        });
+        document.getElementById("newItem").value="";
+        document.getElementById("newNumber").value="";
+        document.getElementById("newPrice").value="";
+        document.getElementById("newDescription").value="";
+        $('#addConfirmation').modal('hide');
+        $('#newItemModal').modal('hide');
+        $('#informSuccessAdd').appendTo("body").modal('show');
+        setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
+      }else{
+        document.getElementById("errorMessage").innerHTML= "Duplicate item.";
+        $('#errorModal').appendTo("body").modal('show');
+        $('#addConfirmation').modal('hide');
+      }
+    });  
   },
 
   displayItemOnModal: function(){
@@ -291,9 +311,8 @@ var Content = React.createClass({
         });
       });
       firebase.database().ref("users/"+uid+"/activity").push().set({
-        action: action,
-        itemID: id,
-        itemName: itemName,
+        action_performed: action,
+        object_changed: itemName,
         quantity: addNumber,
         date: date
       });
@@ -309,9 +328,9 @@ var Content = React.createClass({
       $('#informSuccessAddExisting').appendTo("body").modal('show');
       setTimeout(function() { $("#informSuccessAddExisting").modal('hide'); }, 1000);
     }else{
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
-        $('#errorModal').appendTo("body").modal('show');
-        $('#addExistingConfirmation').modal('hide');
+      document.getElementById("errorMessage").innerHTML= "Missing input.";
+      $('#errorModal').appendTo("body").modal('show');
+      $('#addExistingConfirmation').modal('hide');
     }
   },
 
@@ -594,7 +613,7 @@ var MainContent = React.createClass({
           </div>
         );
       }else if(this.state.type == "user"){
-        window.location.replace("../user/Items.html");
+        window.location.replace("../user/Inventory.html");
       }
     }else{
       res = (
