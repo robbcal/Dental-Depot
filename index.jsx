@@ -90,28 +90,11 @@ var Main = React.createClass({
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-<<<<<<< HEAD
-       if (user.emailVerified) {
-          var uid = firebase.auth().currentUser.uid;
-          firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
-            self.setState({ signedIn: true, type: snapshot.val().user_type });
-            $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
-          });
-        }else {
-          alert("Email is not verified");
-          firebase.auth().signOut().then(function() {
-            window.location.replace("http://127.0.0.1:8080/");
-          }, function(error) {
-            console.log(error);
-          });
-        }  
-=======
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
->>>>>>> master
       } else {
         self.setState({ signedIn: false });
       }

@@ -36,20 +36,12 @@ var Header = React.createClass({
                               </li>
                           </ul>
                       </div>
-<<<<<<< HEAD
-                  </div>
-              </div>
-          );
-        }
-      });
-=======
                   </nav>
               </header>
           </div>
       );
     }
   });
->>>>>>> master
 
     var Body = React.createClass({
         render: function() {
@@ -83,30 +75,6 @@ var Header = React.createClass({
         },
 
         componentDidMount: function(){
-<<<<<<< HEAD
-          const self = this;
-          firebase.auth().onAuthStateChanged(function(user) {
-              if (user) {
-                if (user.emailVerified) {
-                  var uid = firebase.auth().currentUser.uid;
-                  firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
-                    self.setState({ signedIn: true, type: snapshot.val().user_type });
-                    $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
-                  });
-                }else {
-                  firebase.auth().signOut().then(function() {
-                    window.location.replace("http://127.0.0.1:8080/");
-                  }, function(error) {
-                    console.log(error);
-                  });
-                }  
-              } else {
-                self.setState({ signedIn: false });
-                window.location.replace("http://127.0.0.1:8080/");
-              }
-            }, function(error) {
-              console.log(error);
-=======
             const self = this;
             var uid = firebase.auth().currentUser.uid;
             var ref = firebase.database().ref('users/'+uid);
@@ -181,7 +149,6 @@ var Header = React.createClass({
             object_changed: idTrans,
             quantity: "n/a",
             date: today
->>>>>>> master
           });
           $('#deleteTransactionModal').modal('hide');
           $('#informSuccessDelete').appendTo("body").modal('show');

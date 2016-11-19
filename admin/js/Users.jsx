@@ -93,12 +93,8 @@ var Content = React.createClass({
 
       $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
       $("#"+id+"").dblclick(function() {
-<<<<<<< HEAD
-        alert(email);
-=======
         document.getElementById("user_id").value = id;
         document.getElementById("submit").click();
->>>>>>> master
       });
     });
 
@@ -162,45 +158,6 @@ var Content = React.createClass({
     var userType = document.getElementById("userType").value;
     var password = "123456";
 
-<<<<<<< HEAD
-    firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
-      var uid = firebase.auth().currentUser.uid;
-      firebase.auth().currentUser.sendEmailVerification().then(function() {
-        alert("Email sent.");
-        firebase.auth().signInWithEmailAndPassword(cur_email, cur_password).then(function(){
-          firebase.database().ref('users/'+uid).set({
-            firstname: firstName,
-            lastname: lastName,
-            user_email: email,
-            address: address,
-            contact_no: contactNumber,
-            age: age,
-            birthday: birthdate,
-            user_type: userType,
-            password: password
-          });
-          alert("User Added");
-          $('#addUserModal').modal('hide');
-          document.getElementById("firstName").value="";
-          document.getElementById("lastName").value="";
-          document.getElementById("email").value="";
-          document.getElementById("address").value="";
-          document.getElementById("contactNumber").value="";
-          document.getElementById("age").value="";
-          document.getElementById("birthdate").value="";
-          document.getElementById("userType").value="";
-        })
-      }, function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        alert(errorCode+" : "+errorMessage);
-      });
-    }).catch(function(error) {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      alert(errorCode+" : "+errorMessage);
-    });
-=======
     if(firstName && lastName && address && contactNumber && email && age && birthdate && userType){
         firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
           var uid = firebase.auth().currentUser.uid;
@@ -238,7 +195,6 @@ var Content = React.createClass({
         $('#errorModal').appendTo("body").modal('show');
         $('#addConfirmation').modal('hide');
     }
->>>>>>> master
   },
 
 
@@ -417,22 +373,6 @@ var MainContent = React.createClass({
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-<<<<<<< HEAD
-          if (user.emailVerified) {
-            var uid = firebase.auth().currentUser.uid;
-            firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
-              self.setState({ signedIn: true, type: snapshot.val().user_type });
-              $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
-            });
-          }else {
-            alert("Email is not verified");
-            firebase.auth().signOut().then(function() {
-              window.location.replace("http://127.0.0.1:8080/");
-            }, function(error) {
-              console.log(error);
-            });
-          }  
-=======
           var uid = firebase.auth().currentUser.uid;
           firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
             self.setState({ signedIn: true, type: snapshot.val().user_type });
@@ -443,7 +383,6 @@ var MainContent = React.createClass({
               window.location.replace("http://127.0.0.1:8080/");
             });
           }*/
->>>>>>> master
         } else {
           self.setState({ signedIn: false });
           window.location.replace("http://127.0.0.1:8080/");

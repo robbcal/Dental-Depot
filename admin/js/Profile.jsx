@@ -84,7 +84,7 @@ var Content = React.createClass({
       };
   },
 
-  componentDidMount: function(){
+  componentWillMount: function(){
     const self = this;
     var uid = firebase.auth().currentUser.uid;
     var ref = firebase.database().ref('users/'+uid);
@@ -102,19 +102,6 @@ var Content = React.createClass({
         userType: snapshot.val().user_type
       });
     });
-
-    $('#editInfoModal').on('hidden.bs.modal', function () {
-      ref.on('value', function(snapshot) {
-        document.getElementById("firstName").value = snapshot.val().firstname;
-        document.getElementById("lastName").value = snapshot.val().lastname; 
-        document.getElementById("email").value = snapshot.val().user_email;
-        document.getElementById("contactNumber").value = snapshot.val().contact_no;
-        document.getElementById("address").value = snapshot.val().address;
-        document.getElementById("birthdate").value = snapshot.val().birthday;
-        document.getElementById("password").value = snapshot.val().password;
-      });
-    });
-
   },
 
   checkProfile: function(){
@@ -383,26 +370,10 @@ var MainContent = React.createClass({
       return { signedIn: false, type: 0 };
   },
 
-  componentDidMount: function(){
+  componentWillMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-<<<<<<< HEAD:admin/js/AdminProfile.jsx
-          if (user.emailVerified) {
-            var uid = firebase.auth().currentUser.uid;
-            firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
-              self.setState({ signedIn: true, type: snapshot.val().user_type });
-              $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
-            });
-          }else {
-            alert("Email is not verified");
-            firebase.auth().signOut().then(function() {
-              window.location.replace("http://127.0.0.1:8080/");
-            }, function(error) {
-              console.log(error);
-            });
-          }  
-=======
           var uid = firebase.auth().currentUser.uid;
           firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
             self.setState({ signedIn: true, type: snapshot.val().user_type });
@@ -413,7 +384,6 @@ var MainContent = React.createClass({
               window.location.replace("http://127.0.0.1:8080/");
             });
           }*/
->>>>>>> master:admin/js/Profile.jsx
         } else {
           self.setState({ signedIn: false });
           window.location.replace("http://127.0.0.1:8080/");
