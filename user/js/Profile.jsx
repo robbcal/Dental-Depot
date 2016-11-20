@@ -82,7 +82,6 @@ var Content = React.createClass({
        birthdate: "null",
            email: "null",
    contactNumber: "null",
-        password: "null",
         userType: "null"
       };
   },
@@ -101,7 +100,6 @@ var Content = React.createClass({
        birthdate: snapshot.val().birthday,
            email: snapshot.val().user_email,
    contactNumber: snapshot.val().contact_no,
-        password: snapshot.val().password,
         userType: snapshot.val().user_type
       });
     });
@@ -144,7 +142,7 @@ var Content = React.createClass({
       document.getElementById("birthdate").value = snapshot.val().birthday;
       document.getElementById("email").value = snapshot.val().user_email;
       document.getElementById("contactNumber").value = snapshot.val().contact_no;
-      document.getElementById("password").value = snapshot.val().password;
+      document.getElementById("password").value = atob(snapshot.val().password);
     });
     document.getElementById("firstName").style.borderColor = "";
     document.getElementById("lastName").style.borderColor = "";
@@ -167,7 +165,7 @@ var Content = React.createClass({
     var email = document.getElementById("email").value;
     var age = document.getElementById("age").value;
     var birthdate = document.getElementById("birthdate").value;
-    var password = document.getElementById("password").value;
+    var password = btoa(document.getElementById("password").value);
 
     if(firstname && lastname && address && contactnumber && email && age && birthdate && password){
       firebase.auth().currentUser.updateEmail(email).then(function() {

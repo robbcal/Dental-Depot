@@ -1,7 +1,7 @@
 var Content = React.createClass({
   login: function(){
     var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
+    var password = btoa(document.getElementById("password").value);
     if(email && password){
       firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
         var uid = firebase.auth().currentUser.uid;

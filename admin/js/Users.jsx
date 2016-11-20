@@ -187,8 +187,8 @@ var Content = React.createClass({
     var age = document.getElementById("age").value;
     var birthdate = document.getElementById("birthdate").value;
     var userType = document.getElementById("userType").value;
-    var password = "123456";
-    
+    var password = btoa("123456");
+
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
       var uid = firebase.auth().currentUser.uid;
       var user = firebase.auth().currentUser;
@@ -465,12 +465,12 @@ var MainContent = React.createClass({
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
       }else{
-        alert("Email is not verified");
+        /*alert("Email is not verified");
         firebase.auth().signOut().then(function() {
           window.location.replace("http://127.0.0.1:8080/");
         }, function(error) {
           console.log(error);
-        });
+        });*/
       }  
     }, function(error) {
         console.log(error);
