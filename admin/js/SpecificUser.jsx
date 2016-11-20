@@ -102,6 +102,15 @@ var Content = React.createClass({
       $('#userType option[value='+snapshot.val().user_type+']').attr('selected','selected');
     });
 
+    firebase.database().ref('users/'+userID+'/activity').orderByKey("date").on('child_added', function(data){
+      var action = data.val().action_performed;
+      var object = data.val().object_changed;
+      var quantity = data.val().quantity;
+      var date = data.val().date;
+
+      $("#activityList").append("<tr><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td></tr>");
+    });  
+
     $(document).ready(function () {
       (function ($) {
         $('#activitySearch').keyup(function () {
@@ -308,20 +317,20 @@ var Content = React.createClass({
                                 <div className="box-body">
                                     <table id="example1" className="table table-bordered table-striped dataTable">
                                         <thead>
-                                            <tr>
-                                                <th><center>ITEM</center></th>
-                                                <th><center>ACTION</center></th>
-                                                <th><center>DATE</center></th>
-                                                <th><center>USER</center></th>
-                                            </tr>
+                                          <tr>
+                                            <th><center>ACTION</center></th>
+                                            <th><center>OBJECT</center></th>
+                                            <th><center>QUANTITY</center></th>
+                                            <th><center>DATE</center></th>
+                                          </tr>
                                         </thead>
                                         <tbody id="activityList">
-                                            <tr id="no-data" style={{display:'none'}}>
-                                                <td><center>No Results Found.</center></td>
-                                                <td><center>No Results Found.</center></td>
-                                                <td><center>No Results Found.</center></td>
-                                                <td><center>No Results Found.</center></td>
-                                            </tr>
+                                          <tr id="no-data" style={{display:'none'}}>
+                                            <td><center>No Results Found.</center></td>
+                                            <td><center>No Results Found.</center></td>
+                                            <td><center>No Results Found.</center></td>
+                                            <td><center>No Results Found.</center></td>
+                                          </tr>
                                         </tbody>
                                     </table>
                                 </div>

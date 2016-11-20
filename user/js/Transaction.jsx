@@ -11,13 +11,14 @@ var Header = React.createClass({
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
   },
 
-  showModal: function(){
-    $('#logoutConfirmation').appendTo("body").modal('show');
+  showConfirmLogout: function(){
+    $('#confirmModal').appendTo("body").modal("show");
+    $('[data-toggle="tooltip"]').tooltip();
   },
 
   render: function() {
     return (
-        <div className="wrapper">
+      <div className="wrapper">
             <header className="main-header">
                 <a href="Inventory.html" className="logo">
                     <span className="logo-mini"><b>DD</b></span>
@@ -30,24 +31,11 @@ var Header = React.createClass({
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li>
-                                <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
+                                <a href="#"><span onClick={this.logout}>
                                     <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
                                 </span></a>
                             </li>
                         </ul>
-                    </div>
-                    <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
-                        <div className="modal-dialog modal-sm">
-                            <div className="modal-content">
-                                <div className="modal-body">
-                                    <center>
-                                        <h5>Logout without continuing transaction?</h5>
-                                        <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
-                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                                    </center>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </nav>
             </header>
@@ -57,79 +45,32 @@ var Header = React.createClass({
 });
 
 var Body = React.createClass({
-  render: function() {
+    render: function() {
       return (
-          <div>
-              <aside className="main-sidebar">
-                  <section className="sidebar">
-                      <ul className="sidebar-menu">
-                          <br/>
-                          <li className="header">NAVIGATION</li>
-                          <li className="active"><a data-toggle="modal" data-target="#inventoryConfirmation"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
-                          <li><a data-toggle="modal" data-target="#usersConfirmation"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
-                          <li><a data-toggle="modal" data-target="#logsConfirmation"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
-                          <li><a data-toggle="modal" data-target="#profileConfirmation"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
-                      </ul>
-                  </section>
-              </aside>
-              <div className="content-wrapper">
-                  <section id="content" className="content"><Content/></section>
-              </div>
-              <div className="modal fade bs-example-modal-lg" id="inventoryConfirmation">
-                  <div className="modal-dialog modal-sm">
-                      <div className="modal-content">
-                          <div className="modal-body">
-                              <center>
-                                  <h5>Proceed to Inventory without continuing transaction?</h5>
-                                  <a role="button" className="btn btn-primary" href="Inventory.html" id="itemButtons">YES</a>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                              </center>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div className="modal fade bs-example-modal-lg" id="usersConfirmation">
-                  <div className="modal-dialog modal-sm">
-                      <div className="modal-content">
-                          <div className="modal-body">
-                              <center>
-                                  <h5>Proceed to Users without continuing transaction?</h5>
-                                  <a role="button" className="btn btn-primary" href="Users.html" id="itemButtons">YES</a>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                              </center>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div className="modal fade bs-example-modal-lg" id="logsConfirmation">
-                  <div className="modal-dialog modal-sm">
-                      <div className="modal-content">
-                          <div className="modal-body">
-                              <center>
-                                  <h5>Proceed to Logs without continuing transaction?</h5>
-                                  <a role="button" className="btn btn-primary" href="Logs.html" id="itemButtons">YES</a>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                              </center>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div className="modal fade bs-example-modal-lg" id="profileConfirmation">
-                  <div className="modal-dialog modal-sm">
-                      <div className="modal-content">
-                          <div className="modal-body">
-                              <center>
-                                  <h5>Proceed to Profile without continuing transaction?</h5>
-                                  <a role="button" className="btn btn-primary" href="Profile.html" id="itemButtons">YES</a>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                              </center>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-    );
-  }
+        <div>
+            <div className="main-sidebar">
+                <div className="sidebar">
+                    <ul className="sidebar-menu">
+                        <br/>
+                        <li className="header">NAVIGATION</li>
+                        <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                        <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
+                        <Content/>
+                    </div>
+                </div>
+            </div>
+
+            {/* LOGOUT MODAL CONTENT */}
+        </div>
+      );
+    }
 });
 
 var Content = React.createClass({
@@ -530,7 +471,6 @@ var Content = React.createClass({
     );
   }
 });
-
 var MainContent = React.createClass({
   getInitialState: function() {
       return { signedIn: false, type: 0 };
@@ -539,7 +479,7 @@ var MainContent = React.createClass({
   componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
-      if(!user){
+     if(!user){
         self.setState({ signedIn: false});
         window.location.replace("http://127.0.0.1:8080/");
       }else if(user.emailVerified) {
@@ -557,7 +497,7 @@ var MainContent = React.createClass({
         });
       }  
     }, function(error) {
-      console.log(error);
+        console.log(error);
     });
   },
 
@@ -565,14 +505,14 @@ var MainContent = React.createClass({
     var res;
     if(this.state.signedIn == true){
       if(this.state.type == "admin"){
+        window.location.replace("../admin/Inventory.html");
+      }else if(this.state.type == "user"){
         res = (
           <div>
               <Header/>
               <Body/>
           </div>
         );
-      }else if(this.state.type == "user"){
-        window.location.replace("../user/Inventory.html");
       }
     }else{
       res = (
