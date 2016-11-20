@@ -120,6 +120,17 @@ var Content = React.createClass({
       $("tr#"+id).remove();
     });
 
+    $('#addUserModal').on('hidden.bs.modal', function () {
+      document.getElementById("firstName").value="";
+      document.getElementById("lastName").value="";
+      document.getElementById("email").value="";
+      document.getElementById("address").value="";
+      document.getElementById("contactNumber").value="";
+      document.getElementById("age").value="";
+      document.getElementById("birthdate").value="";
+      $("#userType option:eq(0)").attr("selected", "selected");
+    });
+
     $(document).ready(function () {
       (function ($) {
         $('#tableSearch').keyup(function () {
@@ -211,7 +222,7 @@ var Content = React.createClass({
           document.getElementById("contactNumber").value="";
           document.getElementById("age").value="";
           document.getElementById("birthdate").value="";
-          document.getElementById("userType").value="";
+          $("#userType option:eq(0)").attr("selected", "selected");
         })
       }, function(error) {
         document.getElementById("errorMessage").innerHTML= error;
@@ -223,6 +234,53 @@ var Content = React.createClass({
     });
   },
 
+  forValidation: function(){
+    document.getElementById("firstName").style.borderColor = "red";
+    document.getElementById("lastName").style.borderColor = "red";
+    document.getElementById("email").style.borderColor = "red";
+    document.getElementById("address").style.borderColor = "red";
+    document.getElementById("contactNumber").style.borderColor = "red";
+    document.getElementById("age").style.borderColor = "red";
+    document.getElementById("birthdate").style.borderColor = "red";
+  },
+
+  formValidation: function(){
+    if(document.getElementById("firstName").value == ""){
+      document.getElementById("firstName").style.borderColor = "red";
+    }else{
+      document.getElementById("firstName").style.borderColor = "";
+    }
+    if(document.getElementById("lastName").value == ""){
+      document.getElementById("lastName").style.borderColor = "red";
+    }else{
+      document.getElementById("lastName").style.borderColor = "";
+    }
+    if(document.getElementById("email").value == ""){
+      document.getElementById("email").style.borderColor = "red";
+    }else{
+      document.getElementById("email").style.borderColor = "";
+    }
+    if(document.getElementById("address").value == ""){
+      document.getElementById("address").style.borderColor = "red";
+    }else{
+      document.getElementById("address").style.borderColor = "";
+    }
+    if(document.getElementById("contactNumber").value == ""){
+      document.getElementById("contactNumber").style.borderColor = "red";
+    }else{
+      document.getElementById("contactNumber").style.borderColor = "";
+    }
+    if(document.getElementById("age").value == ""){
+      document.getElementById("age").style.borderColor = "red";
+    }else{
+      document.getElementById("age").style.borderColor = "";
+    }
+    if(document.getElementById("birthdate").value == ""){
+      document.getElementById("birthdate").style.borderColor = "red";
+    }else{
+      document.getElementById("birthdate").style.borderColor = "";
+    }
+  },
 
   render: function() {
     return (
@@ -246,7 +304,7 @@ var Content = React.createClass({
                   <div className="col-sm-2"></div>
                   <div className="col-sm-6">
                       <span className="pull-right">
-                          <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal">ADD USER</a>
+                          <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal" onClick={this.forValidation}>ADD USER</a>
                       </span>
                   </div>
               </div>
@@ -282,39 +340,39 @@ var Content = React.createClass({
                               <div className="row">
                                   <div className="col-sm-6" id="editInfoModalComponents">
                                       <label>First Name</label>
-                                      <input type="text" id="firstName" className="form-control"/>
+                                      <input type="text" id="firstName" className="form-control" onChange={this.formValidation}/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div className="col-sm-6" id="editInfoModalComponents">
                                       <label>Last Name</label>
-                                      <input type="text" id="lastName" className="form-control"/>
+                                      <input type="text" id="lastName" className="form-control" onChange={this.formValidation}/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div className="col-sm-6" id="editInfoModalComponents">
                                       <label>Email</label>
-                                      <input type="email" id="email" className="form-control"/>
+                                      <input type="email" id="email" className="form-control" onChange={this.formValidation}/>
                                   </div>
                                   <div className="col-sm-6" id="editInfoModalComponents">
                                       <label>Contact Number</label>
-                                      <input type="text" id="contactNumber" className="form-control"/>
+                                      <input type="text" id="contactNumber" className="form-control" onChange={this.formValidation}/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div id="editInfoModalComponents">
                                       <label>Address</label>
-                                      <input type="text" id="address" className="form-control"/>
+                                      <input type="text" id="address" className="form-control" onChange={this.formValidation}/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div className="col-sm-8" id="editInfoModalComponents">
                                       <label>Birthdate</label>
-                                      <input type="date" id="birthdate" className="form-control"/>
+                                      <input type="date" id="birthdate" className="form-control" onChange={this.formValidation}/>
                                   </div>
                                   <div className="col-sm-4" id="editInfoModalComponents">
                                       <label>Age</label>
-                                      <input type="number" id="age" className="form-control"/>
+                                      <input type="number" id="age" className="form-control" onChange={this.formValidation}/>
                                   </div>
                               </div>
                               <div className="row">

@@ -99,10 +99,9 @@ var Content = React.createClass({
    contactNumber: snapshot.val().contact_no,
         userType: snapshot.val().user_type
       });
-      $('#userType option[value='+snapshot.val().user_type+']').attr('selected','selected');
     });
 
-    firebase.database().ref('users/'+userID+'/activity').orderByKey("date").on('child_added', function(data){
+    firebase.database().ref('users/'+userID+'/activity').orderByKey().on('child_added', function(data){
       var action = data.val().action_performed;
       var object = data.val().object_changed;
       var quantity = data.val().quantity;
@@ -167,26 +166,22 @@ var Content = React.createClass({
     }
   },
 
-  onFirstName: function(e) {
-    this.setState({firstname: e.target.value});
-  },
-  onLastName: function(e) {
-    this.setState({lastname: e.target.value});
-  },
-  onAddress: function(e) {
-    this.setState({address: e.target.value});
-  },
-  onAge: function(e) {
-    this.setState({age: e.target.value});
-  },
-  onContactNumber: function(e) {
-    this.setState({contactNumber: e.target.value});
-  },
-  onBirthdate: function(e) {
-    this.setState({birthdate: e.target.value});
-  },
-  onUserType: function(e) {
-    this.setState({userType: e.target.value});
+  displayInfo: function(){
+    firebase.database().ref('users/'+userID).once('value', function(data){
+      document.getElementById("firstName").value = data.val().firstname;
+      document.getElementById("lastName").value = data.val().lastname;
+      document.getElementById("address").value = data.val().address;
+      document.getElementById("age").value = data.val().age;
+      document.getElementById("birthdate").value = data.val().birthday;
+      document.getElementById("contactNumber").value = data.val().contact_no;
+      $('#userType option[value='+data.val().user_type+']').attr('selected','selected');
+    });
+    document.getElementById("firstName").style.borderColor = "";
+    document.getElementById("lastName").style.borderColor = "";
+    document.getElementById("contactNumber").style.borderColor = "";
+    document.getElementById("address").style.borderColor = "";
+    document.getElementById("birthdate").style.borderColor = ""; 
+    document.getElementById("age").style.borderColor = "";
   },
 
   editUser: function(){
@@ -204,7 +199,7 @@ var Content = React.createClass({
     firebase.database().ref('users/'+userID).update({
         firstname:firstName,
          lastname:lastName,
-          address:contactNumber,
+          address:address,
               age:age,
          birthday:birthdate,
        contact_no:contactNumber,
@@ -243,6 +238,39 @@ var Content = React.createClass({
     window.location.replace("Users.html");
   },
 
+  formValidation: function(){
+    if(document.getElementById("firstName").value == ""){
+      document.getElementById("firstName").style.borderColor = "red";
+    }else{
+      document.getElementById("firstName").style.borderColor = "";
+    }
+    if(document.getElementById("lastName").value == ""){
+      document.getElementById("lastName").style.borderColor = "red";
+    }else{
+      document.getElementById("lastName").style.borderColor = "";
+    }
+    if(document.getElementById("contactNumber").value == ""){
+      document.getElementById("contactNumber").style.borderColor = "red";
+    }else{
+      document.getElementById("contactNumber").style.borderColor = "";
+    }
+    if(document.getElementById("address").value == ""){
+      document.getElementById("address").style.borderColor = "red";
+    }else{
+      document.getElementById("address").style.borderColor = "";
+    }
+    if(document.getElementById("birthdate").value == ""){
+      document.getElementById("birthdate").style.borderColor = "red";
+    }else{
+      document.getElementById("birthdate").style.borderColor = "";
+    }
+    if(document.getElementById("age").value == ""){
+      document.getElementById("age").style.borderColor = "red";
+    }else{
+      document.getElementById("age").style.borderColor = "";
+    }
+  },
+    
   render: function() {
     return (
         <div id="mainContent">
@@ -267,7 +295,7 @@ var Content = React.createClass({
                                         <p className="text-muted text-center">{this.state.userType}</p>
                                         <br/>
                                         <div className="row" id="buttonRow"><center>
-                                            <button className="btn btn-primary" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal">EDIT</button>
+                                            <button className="btn btn-primary" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal" onClick={this.displayInfo}>EDIT</button>
                                             <button className="btn btn-danger" id="deleteUserButton" data-toggle="modal" data-target="#deleteUserModal">DELETE</button>
                                         </center></div>
                                     </div>
@@ -350,13 +378,13 @@ var Content = React.createClass({
                                     <div className="row">
                                         <div className="col-sm-6" id="editInfoModalComponents">
                                             <label>First Name</label>
-                                            <input type="text" id="firstName" className="form-control" onChange={this.onFirstName} value={this.state.firstname}/>
+                                            <input type="text" id="firstName" className="form-control" onChange={this.formValidation}/>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-6" id="editInfoModalComponents">
                                             <label>Last Name</label>
-                                            <input type="text" id="lastName" className="form-control" onChange={this.onLastName} value={this.state.lastname}/>
+                                            <input type="text" id="lastName" className="form-control" onChange={this.formValidation}/>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -366,29 +394,29 @@ var Content = React.createClass({
                                         </div>
                                         <div className="col-sm-6" id="editInfoModalComponents">
                                             <label>Contact Number</label>
-                                            <input type="text" id="contactNumber" className="form-control" onChange={this.onContactNumber} value={this.state.contactNumber}/>
+                                            <input type="text" id="contactNumber" className="form-control" onChange={this.formValidation}/>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div id="editInfoModalComponents">
                                             <label>Address</label>
-                                            <input type="text" id="address" className="form-control" onChange={this.onAddress} value={this.state.address}/>
+                                            <input type="text" id="address" className="form-control" onChange={this.formValidation}/>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-8" id="editInfoModalComponents">
                                             <label>Birthdate</label>
-                                            <input type="date" id="birthdate" className="form-control" onChange={this.onBirthdate} value={this.state.birthdate}/>
+                                            <input type="date" id="birthdate" className="form-control" onChange={this.formValidation}/>
                                         </div>
                                         <div className="col-sm-4" id="editInfoModalComponents">
                                             <label>Age</label>
-                                            <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age} disabled/>
+                                            <input type="number" id="age" className="form-control" onChange={this.formValidation} />
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-6" id="editInfoModalComponents">
                                             <label>User Type</label>
-                                            <select id="userType" className="form-control" onChange={this.onType} value={this.state.useType}>
+                                            <select id="userType" className="form-control">
                                               <option id="admin" value="admin">Admin</option>
                                               <option id="user" value="user">User</option>
                                             </select>

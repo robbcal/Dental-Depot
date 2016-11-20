@@ -172,6 +172,25 @@ itemDescription: "null",
     document.getElementById("addDate").value = today;
     document.getElementById("deleteDate").value = today;
     document.getElementById("editDate").value = today;
+    document.getElementById("addNumber").style.borderColor = "red";
+    document.getElementById("addDate").style.borderColor = "";
+    document.getElementById("deleteNumber").style.borderColor = "red";
+    document.getElementById("deleteDate").style.borderColor = "";
+  },
+
+  generateInfo: function(){
+    var now = new Date();
+    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    document.getElementById("editDate").value = today;
+    firebase.database().ref('items/'+itemID).once('value', function(snapshot) {
+      document.getElementById('editItem').value = snapshot.val().item_name;
+      document.getElementById('editDescription').value = snapshot.val().description;
+      document.getElementById('editPrice').value = snapshot.val().price;
+    })
+    document.getElementById("editItem").style.borderColor = "";
+    document.getElementById("editDescription").style.borderColor = "";
+    document.getElementById("editPrice").style.borderColor = "";
+    document.getElementById("editDate").style.borderColor = "";
   },
 
   restockItem: function(){
@@ -185,7 +204,7 @@ itemDescription: "null",
     firebase.database().ref('items/'+itemID).update({
       quantity: newStock
     })
-    firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+    firebase.database().ref('users/'+uid).once('value', function(snapshot) {
       var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
       firebase.database().ref('items/'+itemID+"/item_history/").push().set({
         user: userName,
@@ -333,16 +352,47 @@ itemDescription: "null",
     document.getElementById("existingDate").value = today;
   },
 
-  onItemName: function(e) {
-    this.setState({itemName: e.target.value});
-  },
-
-  onItemPrice: function(e) {
-    this.setState({itemPrice: e.target.value});
-  },
-
-  onItemDescription: function(e) {
-    this.setState({itemDescription: e.target.value});
+  formValidation: function(){
+    if(document.getElementById("addNumber").value == ""){
+      document.getElementById("addNumber").style.borderColor = "red";
+    }else{
+      document.getElementById("addNumber").style.borderColor = "";
+    }
+    if(document.getElementById("addDate").value == ""){
+      document.getElementById("addDate").style.borderColor = "red";
+    }else{
+      document.getElementById("addDate").style.borderColor = "";
+    }
+    if(document.getElementById("deleteNumber").value == ""){
+      document.getElementById("deleteNumber").style.borderColor = "red";
+    }else{
+      document.getElementById("deleteNumber").style.borderColor = "";
+    }
+    if(document.getElementById("deleteDate").value == ""){
+      document.getElementById("deleteDate").style.borderColor = "red";
+    }else{
+      document.getElementById("deleteDate").style.borderColor = "";
+    }
+    if(document.getElementById("editItem").value == ""){
+      document.getElementById("editItem").style.borderColor = "red";
+    }else{
+      document.getElementById("editItem").style.borderColor = "";
+    }
+    if(document.getElementById("editDescription").value == ""){
+      document.getElementById("editDescription").style.borderColor = "red";
+    }else{
+      document.getElementById("editDescription").style.borderColor = "";
+    }
+    if(document.getElementById("editPrice").value == ""){
+      document.getElementById("editPrice").style.borderColor = "red";
+    }else{
+      document.getElementById("editPrice").style.borderColor = "";
+    }
+    if(document.getElementById("editDate").value == ""){
+      document.getElementById("editDate").style.borderColor = "red";
+    }else{
+      document.getElementById("editDate").style.borderColor = "";
+    }
   },
 
   render: function() {
@@ -372,7 +422,7 @@ itemDescription: "null",
                                     <li><a data-toggle="modal" data-target="#deleteStockModal" onClick={this.generateDate}>Delete</a></li>
                                 </ul>
                             </div>
-                            <a className="btn btn-primary" id="specificItemButtons" data-toggle="modal" data-target="#editItemModal" onClick={this.generateDate}>EDIT</a>
+                            <a className="btn btn-primary" id="specificItemButtons" data-toggle="modal" data-target="#editItemModal" onClick={this.generateInfo}>EDIT</a>
                             <a className="btn btn-danger" id="specificItemButtons" data-toggle="modal" data-target="#deleteItemModal">DELETE</a>
                         </center>
                     </div>
@@ -421,7 +471,7 @@ itemDescription: "null",
                                     </div>
                                     <div className="col-sm-6" id="addStockModalComponents">
                                         <label>Quantity to Add</label>
-                                        <input type="number" id="addNumber" className="form-control" min="1"/>
+                                        <input type="number" id="addNumber" className="form-control" min="1" onChange={this.formValidation}/>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -431,7 +481,7 @@ itemDescription: "null",
                                     </div>
                                     <div className="col-sm-6" id="addStockModalComponents">
                                         <label>Date</label>
-                                        <input type="date" id="addDate" className="form-control"/>
+                                        <input type="date" id="addDate" className="form-control" onChange={this.formValidation}/>
                                     </div>
                                 </div>
                             </div>
@@ -464,7 +514,7 @@ itemDescription: "null",
                                     </div>
                                     <div className="col-sm-6" id="delStockModalComponents">
                                         <label>Quantity to Delete</label>
-                                        <input type="number" id="deleteNumber" className="form-control" min="1"/>
+                                        <input type="number" id="deleteNumber" className="form-control" min="1" onChange={this.formValidation}/>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -474,7 +524,7 @@ itemDescription: "null",
                                     </div>
                                     <div className="col-sm-6" id="delStockModalComponents">
                                         <label>Date</label>
-                                        <input type="date" id="deleteDate" className="form-control"/>
+                                        <input type="date" id="deleteDate" className="form-control" onChange={this.formValidation}/>
                                     </div>
                                 </div>
                             </div>
@@ -503,11 +553,11 @@ itemDescription: "null",
                                 <div className="row">
                                     <div className="col-sm-6" id="editItemModalComponents">
                                         <label>Item Name</label>
-                                        <input type="text" id="editItem" className="form-control" onChange={this.onItemName} value={this.state.itemName}/>
+                                        <input type="text" id="editItem" className="form-control" onChange={this.formValidation}/>
                                     </div>
                                     <div className="col-sm-6" id="editItemModalComponents">
                                         <label>Item Description</label>
-                                        <textarea id="editDescription" className="form-control" onChange={this.onItemDescription} value={this.state.itemDescription}></textarea>
+                                        <textarea id="editDescription" className="form-control" onChange={this.formValidation}></textarea>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -517,7 +567,7 @@ itemDescription: "null",
                                     </div>
                                     <div className="col-sm-6" id="editItemModalComponents">
                                         <label>Item Price</label>
-                                        <input type="number" id="editPrice" className="form-control" onChange={this.onItemPrice} value={this.state.itemPrice}/>
+                                        <input type="number" id="editPrice" className="form-control" onChange={this.formValidation}/>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -527,7 +577,7 @@ itemDescription: "null",
                                     </div>
                                     <div className="col-sm-6" id="editItemModalComponents">
                                         <label>Date</label>
-                                        <input type="date" id="editDate" className="form-control"/>
+                                        <input type="date" id="editDate" className="form-control" onChange={this.formValidation}/>
                                     </div>
                                 </div>
                             </div>

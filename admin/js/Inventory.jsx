@@ -147,7 +147,7 @@ var Content = React.createClass({
           {
             $('#no-data').show();
           }
-        })
+        });
       }(jQuery));
     });
   },
@@ -164,12 +164,19 @@ var Content = React.createClass({
     var ID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
     document.getElementById("newId").value = ID;
     document.getElementById("newDate").value = today;
+    document.getElementById("newItem").style.borderColor = "red";
+    document.getElementById("newDescription").style.borderColor = "red";
+    document.getElementById("newNumber").style.borderColor = "red";
+    document.getElementById("newPrice").style.borderColor = "red";
+    document.getElementById("newDate").style.borderColor = "";
   },
 
   generateDate: function(){
     var now = new Date();
     var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
     document.getElementById("existingDate").value = today;
+    document.getElementById("additionalNumber").style.borderColor = "red";
+    document.getElementById("existingDate").style.borderColor = "";
   },
 
   checkNewItem: function(){
@@ -334,6 +341,44 @@ var Content = React.createClass({
     }
   },
 
+  formValidation: function(){
+    if(document.getElementById("newItem").value == ""){
+      document.getElementById("newItem").style.borderColor = "red";
+    }else{
+      document.getElementById("newItem").style.borderColor = "";
+    }
+    if(document.getElementById("newDescription").value == ""){
+      document.getElementById("newDescription").style.borderColor = "red";
+    }else{
+      document.getElementById("newDescription").style.borderColor = "";
+    }
+    if(document.getElementById("newNumber").value == ""){
+      document.getElementById("newNumber").style.borderColor = "red";
+    }else{
+      document.getElementById("newNumber").style.borderColor = "";
+    }
+    if(document.getElementById("newPrice").value == ""){
+      document.getElementById("newPrice").style.borderColor = "red";
+    }else{
+      document.getElementById("newPrice").style.borderColor = "";
+    }
+    if(document.getElementById("newDate").value == ""){
+      document.getElementById("newDate").style.borderColor = "red";
+    }else{
+      document.getElementById("newDate").style.borderColor = "";
+    }
+    if(document.getElementById("additionalNumber").value == ""){
+      document.getElementById("additionalNumber").style.borderColor = "red";
+    }else{
+      document.getElementById("additionalNumber").style.borderColor = "";
+    }
+    if(document.getElementById("existingDate").value == ""){
+      document.getElementById("existingDate").style.borderColor = "red";
+    }else{
+      document.getElementById("existingDate").style.borderColor = "";
+    }
+  },
+
   render: function() {
     return (
       <div id="mainContent">
@@ -407,21 +452,21 @@ var Content = React.createClass({
                           <div className="row">
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Item Name</label>
-                                  <input type="text" id="newItem" className="form-control"/>
+                                  <input type="text" id="newItem" className="form-control" onChange={this.formValidation}/>
                               </div>
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Item Description</label>
-                                  <textarea id="newDescription" className="form-control"></textarea>
+                                  <textarea id="newDescription" className="form-control" onChange={this.formValidation}></textarea>
                               </div>
                           </div>
                           <div className="row">
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Quantity</label>
-                                  <input type="number" id="newNumber" className="form-control"/>
+                                  <input type="number" id="newNumber" className="form-control" onChange={this.formValidation}/>
                               </div>
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Item Price</label>
-                                  <input type="number" id="newPrice" className="form-control"/>
+                                  <input type="number" id="newPrice" className="form-control" onChange={this.formValidation}/>
                               </div>
                           </div>
                           <div className="row">
@@ -431,7 +476,7 @@ var Content = React.createClass({
                               </div>
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Date</label>
-                                  <input type="date" id="newDate" className="form-control"/>
+                                  <input type="date" id="newDate" className="form-control" onChange={this.formValidation}/>
                               </div>
                           </div>
                       </div>
@@ -520,7 +565,7 @@ var Content = React.createClass({
                               </div>
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Quantity to Add</label>
-                                  <input type="number" id="additionalNumber" className="form-control" min="1"/>
+                                  <input type="number" id="additionalNumber" className="form-control" min="1" onChange={this.formValidation}/>
                               </div>
                           </div>
                           <div className="row">
@@ -536,7 +581,7 @@ var Content = React.createClass({
                               </div>
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Date</label>
-                                  <input type="date" id="existingDate" className="form-control"/>
+                                  <input type="date" id="existingDate" className="form-control" onChange={this.formValidation}/>
                               </div>
                           </div>
                       </div>

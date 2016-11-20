@@ -198,6 +198,8 @@ var Content = React.createClass({
         document.getElementById("price").value = "";
         $("#item option:eq(0)").attr("selected", "selected");
       });
+      document.getElementById("number").style.borderColor = "red";
+      document.getElementById("customer").style.borderColor = "red";
     },
 
     displayItemOnModal: function(){
@@ -366,6 +368,24 @@ var Content = React.createClass({
       }
     },
 
+    formValidation: function(){
+      if(document.getElementById("number").value == ""){
+        document.getElementById("number").style.borderColor = "red";
+      }else{
+        document.getElementById("number").style.borderColor = "";
+      }
+      if(document.getElementById("customer").value == ""){
+        document.getElementById("customer").style.borderColor = "red";
+      }else{
+        document.getElementById("customer").style.borderColor = "";
+      }
+      if(document.getElementById("date").value == ""){
+        document.getElementById("date").style.borderColor = "red";
+      }else{
+        document.getElementById("date").style.borderColor = "";
+      }
+    },
+
   render: function() {
     return (
       <div className="row" id="mainContent">
@@ -403,7 +423,7 @@ var Content = React.createClass({
                       <div className="row">
                           <div className="col-sm-6" id="boxbodyContent">
                               <label>Quantity</label>
-                              <input type="number" id="number" className="form-control" min="1" onBlur={this.checkStock}/>
+                              <input type="number" id="number" className="form-control" min="1" onChange={this.formValidation} onBlur={this.checkStock}/>
                           </div>
                           <div className="col-sm-6" id="boxbodyContent">
                               <label>Release Method</label>
@@ -417,7 +437,7 @@ var Content = React.createClass({
                       <div className="row">
                           <div className="col-sm-6" id="boxbodyContent">
                               <label>Date</label>
-                              <input type="date" id="date" className="form-control"/>
+                              <input type="date" id="date" className="form-control" onChange={this.formValidation}/>
                           </div>
                       </div>
                       <div className="row">
@@ -461,7 +481,7 @@ var Content = React.createClass({
                           </div>
                       </div>
                       <div className="col-sm-8" id="boxbodyContent">
-                          <input type="text" id="customer" placeholder="Customer" className="form-control pull-left"/>
+                          <input type="text" id="customer" placeholder="Customer" className="form-control pull-left" onChange={this.formValidation}/>
                       </div>
                       <button className="btn btn-primary btn-block" id="createTransactionButton" onClick={this.checkTransaction}>CREATE TRANSACTION</button>
                   </div>
