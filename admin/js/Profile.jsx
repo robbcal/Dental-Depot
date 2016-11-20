@@ -79,7 +79,6 @@ var Content = React.createClass({
        birthdate: "null",
            email: "null",
    contactNumber: "null",
-        password: "null",
         userType: "null"
       };
   },
@@ -98,7 +97,6 @@ var Content = React.createClass({
        birthdate: snapshot.val().birthday,
            email: snapshot.val().user_email,
    contactNumber: snapshot.val().contact_no,
-        password: snapshot.val().password,
         userType: snapshot.val().user_type
       });
     });
@@ -130,32 +128,27 @@ var Content = React.createClass({
     $('#editConfirmation').appendTo("body").modal('show');
   },
 
-  onUserType: function(e) {
-    this.setState({userType: e.target.value});
-  },
-  onFirstName: function(e) {
-    this.setState({firstname: e.target.value});
-  },
-  onLastName: function(e) {
-    this.setState({lastname: e.target.value});
-  },
-  onAddress: function(e) {
-    this.setState({address: e.target.value});
-  },
-  onAge: function(e) {
-    this.setState({age: e.target.value});
-  },
-  onEmail: function(e) {
-    this.setState({email: e.target.value});
-  },
-  onContactNumber: function(e) {
-    this.setState({contactNumber: e.target.value});
-  },
-  onBirthdate: function(e) {
-    this.setState({birthdate: e.target.value});
-  },
-  onPassword: function(e) {
-    this.setState({password: e.target.value});
+  displayInfo: function(){
+    var uid = firebase.auth().currentUser.uid;
+    var ref = firebase.database().ref('users/'+uid);
+    ref.on('value', function(snapshot) {
+      document.getElementById("firstName").value = snapshot.val().firstname;
+      document.getElementById("lastName").value = snapshot.val().lastname;
+      document.getElementById("address").value = snapshot.val().address;
+      document.getElementById("age").value = snapshot.val().age;
+      document.getElementById("birthdate").value = snapshot.val().birthday;
+      document.getElementById("email").value = snapshot.val().user_email;
+      document.getElementById("contactNumber").value = snapshot.val().contact_no;
+      document.getElementById("password").value = atob(snapshot.val().password);
+    });
+    document.getElementById("firstName").style.borderColor = "";
+    document.getElementById("lastName").style.borderColor = "";
+    document.getElementById("address").style.borderColor = "";
+    document.getElementById("contactNumber").style.borderColor = "";
+    document.getElementById("email").style.borderColor = "";
+    document.getElementById("age").style.borderColor = "";
+    document.getElementById("birthdate").style.borderColor = "";
+    document.getElementById("password").style.borderColor = "";
   },
 
   editUser: function(){
@@ -169,7 +162,7 @@ var Content = React.createClass({
     var email = document.getElementById("email").value;
     var age = document.getElementById("age").value;
     var birthdate = document.getElementById("birthdate").value;
-    var password = document.getElementById("password").value;
+    var password = btoa(document.getElementById("password").value);
 
     if(firstname && lastname && address && contactnumber && email && age && birthdate && password){
       firebase.auth().currentUser.updateEmail(email).then(function() {
@@ -212,6 +205,49 @@ var Content = React.createClass({
     }
   },
 
+  formValidation: function(){
+    if(document.getElementById("firstName").value == ""){
+      document.getElementById("firstName").style.borderColor = "red";
+    }else{
+      document.getElementById("firstName").style.borderColor = "";
+    }
+    if(document.getElementById("lastName").value == ""){
+      document.getElementById("lastName").style.borderColor = "red";
+    }else{
+      document.getElementById("lastName").style.borderColor = "";
+    }
+    if(document.getElementById("address").value == ""){
+      document.getElementById("address").style.borderColor = "red";
+    }else{
+      document.getElementById("address").style.borderColor = "";
+    }
+    if(document.getElementById("contactNumber").value == ""){
+      document.getElementById("contactNumber").style.borderColor = "red";
+    }else{
+      document.getElementById("contactNumber").style.borderColor = "";
+    }
+    if(document.getElementById("email").value == ""){
+      document.getElementById("email").style.borderColor = "red";
+    }else{
+      document.getElementById("email").style.borderColor = "";
+    }
+    if(document.getElementById("age").value == ""){
+      document.getElementById("age").style.borderColor = "red";
+    }else{
+      document.getElementById("age").style.borderColor = "";
+    }
+    if(document.getElementById("birthdate").value == ""){
+      document.getElementById("birthdate").style.borderColor = "red";
+    }else{
+      document.getElementById("birthdate").style.borderColor = "";
+    }
+    if(document.getElementById("password").value == ""){
+      document.getElementById("password").style.borderColor = "red";
+    }else{
+      document.getElementById("password").style.borderColor = "";
+    }
+  },
+
   render: function() {
       return (
           <div className="row" id="userProfileContent">
@@ -225,7 +261,7 @@ var Content = React.createClass({
 
                           <p className="text-muted text-center">{this.state.userType}</p>
                           <br/>
-                          <a className="btn btn-primary pull-right btn-block" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal">
+                          <a className="btn btn-primary pull-right btn-block" id="editInfoButton" data-toggle="modal" data-target="#editInfoModal" onClick={this.displayInfo}>
                               EDIT INFO
                           </a>
                       </div>
@@ -319,45 +355,45 @@ var Content = React.createClass({
                                   <div className="row">
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>First Name</label>
-                                          <input type="text" id="firstName" className="form-control" onChange={this.onFirstName} value={this.state.firstname}/>
+                                          <input type="text" id="firstName" className="form-control" onChange={this.formValidation}/>
                                       </div>
                                   </div>
                                   <div className="row">
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>Last Name</label>
-                                          <input type="text" id="lastName" className="form-control" onChange={this.onLastName} value={this.state.lastname}/>
+                                          <input type="text" id="lastName" className="form-control" onChange={this.formValidation}/>
                                       </div>
                                   </div>
                                   <div className="row">
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>Email</label>
-                                          <input type="email" id="email" className="form-control" onChange={this.onEmail} value={this.state.email}/>
+                                          <input type="email" id="email" className="form-control" onChange={this.formValidation}/>
                                       </div>
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>Contact Number</label>
-                                          <input type="text" id="contactNumber" className="form-control" onChange={this.onContactNumber} value={this.state.contactNumber}/>
+                                          <input type="text" id="contactNumber" className="form-control" onChange={this.formValidation}/>
                                       </div>
                                   </div>
                                   <div className="row">
                                       <div id="editInfoModalComponents">
                                           <label>Address</label>
-                                          <input type="text" id="address" className="form-control" onChange={this.onAddress} value={this.state.address}/>
+                                          <input type="text" id="address" className="form-control" onChange={this.formValidation}/>
                                       </div>
                                   </div>
                                   <div className="row">
                                       <div className="col-sm-8" id="editInfoModalComponents">
                                           <label>Birthdate</label>
-                                          <input type="date" id="birthdate" className="form-control" onChange={this.onBirthdate} value={this.state.birthdate}/>
+                                          <input type="date" id="birthdate" className="form-control" onChange={this.formValidation}/>
                                       </div>
                                       <div className="col-sm-4" id="editInfoModalComponents">
                                           <label>Age</label>
-                                          <input type="number" id="age" className="form-control" onChange={this.onAge} value={this.state.age} disabled/>
+                                          <input type="number" id="age" className="form-control" onChange={this.formValidation}/>
                                       </div>
                                   </div>
                                   <div className="row">
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>Password</label>
-                                          <input type="password" id="password" className="form-control" onChange={this.onPassword} value={this.state.password}/>
+                                          <input type="password" id="password" className="form-control" onChange={this.formValidation}/>
                                       </div>
                                   </div>
                               </div>
@@ -382,13 +418,16 @@ var MainContent = React.createClass({
   componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
-      if (user.emailVerified) {
+      if(!user){
+        self.setState({ signedIn: false});
+        window.location.replace("http://127.0.0.1:8080/");
+      }else if(user.emailVerified) {
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
-      }else {
+      }else{
         alert("Email is not verified");
         firebase.auth().signOut().then(function() {
           window.location.replace("http://127.0.0.1:8080/");
