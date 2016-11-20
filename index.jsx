@@ -8,12 +8,6 @@ var Content = React.createClass({
             $("#loginButton").trigger('click');
           }
         });
-        $("#email").keyup(function(event){
-          if(event.keyCode == 13){
-            event.preventDefault();
-            $("#loginButton").trigger('click');
-          }
-        });
       }(jQuery));
     });
   },
