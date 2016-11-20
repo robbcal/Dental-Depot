@@ -2,40 +2,28 @@ var Content = React.createClass({
   login: function(){
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
-    $("body").css("cursor", "progress");
     if(email && password){
       firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           var type = snapshot.val().user_type
           if(type == "admin"){
-            window.location.replace("admin/AdminProfile.html");
+            window.location.replace("admin/Inventory.html");
           }else if(type == "user"){
-            window.location.replace("user/Profile.html");
+            window.location.replace("user/Inventory.html");
           }
         });
       }).catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
-<<<<<<< HEAD
-        // document.getElementById("errorAlert").style.display = "block";
         document.getElementById("errorAlert").innerHTML= errorMessage;
         $('#errorBox').show();
-        // $('#errorModal').appendTo("body").modal('show');
-=======
-        document.getElementById("errorAlert").innerHTML= errorMessage;
-        $('#errorBox').show();
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
         document.getElementById("email").value = "";
         document.getElementById("password").value = "";
       });
     }else{
       document.getElementById("errorAlert").innerHTML= "Input required data";
       $('#errorBox').show();
-<<<<<<< HEAD
-    //   $('#errorModal').appendTo("body").modal('show');
-=======
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
     }
   },
 
@@ -55,7 +43,6 @@ var Content = React.createClass({
   render: function() {
     return (
     <div>
-<<<<<<< HEAD
       <div className="login-box" id="loginBox">
         <div className="login-logo col-lg-12 col-md-12 col-sm-12" id="loginLogo">
           <a href="http://127.0.0.1:8080/">
@@ -68,86 +55,39 @@ var Content = React.createClass({
             </div>
           </a>
         </div>
-        <div className="login-box-body" id="loginBoxBody">
-          <div className="form-group has-feedback" id="formGroup">
-            <input required type="email" id="email" className="form-control" placeholder="email address"/>
+        <form action="javascript:void(-1)" method="post" id="loginForm">
+          <div className="login-box-body" id="loginBoxBody">
+            <div className="form-group has-feedback" id="formGroup">
+              <input required type="email" id="email" className="form-control" placeholder="email address"/>
+            </div>
+            <div className="form-group has-feedback" id="formGroup">
+              <input required type="password" id="password" className="form-control" placeholder="password"/>
+            </div>
+            <div className="col-sm-12" id="loginSubmit">
+              <center><button className="btn btn-primary col-sm-12" id="loginButton" onClick={this.login}>
+                LOGIN
+              </button></center>
+            </div>
+            <br/><br/>
           </div>
-          <div className="form-group has-feedback" id="formGroup">
-            <input required type="password" id="password" className="form-control" placeholder="password"/>
-          </div>
-          <div className="col-sm-12" id="loginSubmit">
-            <center><button className="btn btn-primary col-sm-12" id="loginButton" onClick={this.login}>
-              LOGIN
-            </button></center>
-          </div>
-          <br/><br/>
-        </div>
-        <div className="col-sm-12 col-lg-12 col-md-12">
-          <div className="alert alert-danger alert-dismissible col-sm-12" id="errorBox" >
-            <h4><i className="icon fa fa-ban"></i>Error</h4>
-            <h6 id="errorAlert"></h6>
-          </div>
-        </div>
-      </div>
-
-        {/* <div className="example-modal">
-            <div className="modal fade bs-example-modal-lg" id="errorModal">
-            <div className="modal-dialog modal-sm">
-            <div className="modal-content">
-            <div className="modal-header">
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            <h5 className="modal-title">Error</h5>
-            </div>
-            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h5><strong id="errorMessage">Error</strong></h5>
-            </div>
-            <div className="modal-footer">
-            <button type="button" className="btn btn-default pull-right" data-dismiss="modal">OK</button>
-            </div>
-            </div>
-            </div>
-            </div>
-        </div> */}
-=======
-        <div className="login-box" id="loginBox">
-            <div className="login-logo col-lg-12 col-md-12 col-sm-12" id="loginLogo">
-                <a href="http://127.0.0.1:8080/">
-                    <div className="col-lg-6 col-md-6 col-sm-6" id="toothImgHolder">
-                        <img src="bootstrap/icons/tooth.png" id="toothImg"/>
-                    </div>
-                    <div className="col-lg-6 col-md-6 col-sm-6" id="projectNameHolder">
-                        <span><h1 id="dentalDepotIndex1">DENTAL</h1></span>
-                        <span><h1 id="dentalDepotIndex2">DEPOT</h1></span>
-                    </div>
-                </a>
-            </div>
-            <div className="login-box-body" id="loginBoxBody">
-                <div className="form-group has-feedback" id="formGroup">
-                    <input required type="email" id="email" className="form-control" placeholder="email address"/>
-                </div>
-                <div className="form-group has-feedback" id="formGroup">
-                    <input required type="password" id="password" className="form-control" placeholder="password"/>
-                </div>
-                <div className="col-sm-12" id="loginSubmit">
-                    <center><button className="btn btn-primary col-sm-12" id="loginButton" onClick={this.login}>
-                        LOGIN
-                    </button></center>
-                </div>
-                <br/><br/>
-            </div>
+        </form>
             <div className="col-sm-12 col-lg-12 col-md-12">
-                <div className="alert alert-danger alert-dismissible col-sm-12" id="errorBox">
+                <div className="alert alert-danger alert-dismissible col-sm-12" style={{display:'none'}} id="errorBox">
                     <h4><i className="icon fa fa-ban"></i>Error</h4>
                     <h6 id="errorAlert"></h6>
                 </div>
             </div>
         </div>
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
     </div>
     );
   }
+});
+
+$("#password").keyup(function(event){
+    if(event.keyCode == 13){
+        event.preventDefault();
+        $("#loginButton").trigger('click');
+    }
 });
 
 var Main = React.createClass({
@@ -158,10 +98,6 @@ var Main = React.createClass({
   componentWillMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
-<<<<<<< HEAD
-      $("body").css("cursor", "progress");
-=======
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
       if (user) {
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
@@ -190,9 +126,9 @@ var Main = React.createClass({
         </div>
       );
       if(this.state.type == "admin"){
-        window.location.replace("admin/AdminProfile.html");
+        window.location.replace("admin/Inventory.html");
       }else if(this.state.type == "user"){
-        window.location.replace("user/Profile.html");
+        window.location.replace("user/Inventory.html");
       }
     }
     return(
