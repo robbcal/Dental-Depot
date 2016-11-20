@@ -1,4 +1,23 @@
 var Content = React.createClass({
+  componentDidMount: function(){
+    $(document).ready(function () {
+      (function ($) {
+        $("#password").keyup(function(event){
+          if(event.keyCode == 13){
+            event.preventDefault();
+            $("#loginButton").trigger('click');
+          }
+        });
+        $("#email").keyup(function(event){
+          if(event.keyCode == 13){
+            event.preventDefault();
+            $("#loginButton").trigger('click');
+          }
+        });
+      }(jQuery));
+    });
+  },
+
   login: function(){
     var email = document.getElementById("email").value;
     var password = btoa(document.getElementById("password").value);
@@ -57,10 +76,10 @@ var Content = React.createClass({
             </div>
             <div className="login-box-body" id="loginBoxBody">
                 <div className="form-group has-feedback" id="formGroup">
-                    <input required type="email" id="email" className="form-control" placeholder="email address"/>
+                    <input type="email" id="email" className="form-control" placeholder="email address"/>
                 </div>
                 <div className="form-group has-feedback" id="formGroup">
-                    <input required type="password" id="password" className="form-control" placeholder="password"/>
+                    <input type="password" id="password" className="form-control" placeholder="password"/>
                 </div>
                 <div className="col-sm-12" id="loginSubmit">
                     <center><button className="btn btn-primary col-sm-12" id="loginButton" onClick={this.login}>
