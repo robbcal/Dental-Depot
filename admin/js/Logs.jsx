@@ -105,7 +105,7 @@ var Header = React.createClass({
               document.getElementById("transDate").innerHTML = "Date: "+date;
               document.getElementById("transRelease").innerHTML = "Release Method: "+release;
               document.getElementById("transCustomer").innerHTML = customer;
-              
+
               var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
               ref.on('child_added', function(data) {
                 var itemName = data.val().item_name;
@@ -113,9 +113,9 @@ var Header = React.createClass({
                 var subtotal = data.val().item_subtotal;
 
                 $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+subtotal+"</td></tr>");
-              }); 
+              });
             });
-          });  
+          });
         });
 
         ref.on('child_removed', function(data) {
@@ -142,6 +142,38 @@ var Header = React.createClass({
               $("tr#"+id).remove();
             });
           })
+        });
+
+        // today sales
+        var ref = firebase.database().ref('transactions');
+        var now = new Date();
+        var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+        ref.on('value', function(snapshot) {
+            var total = 0;
+            snapshot.forEach(function(childSnapshot){
+                var childKey = childSnapshot.key;
+                var date = childSnapshot.val().date;
+                if(date == today){
+                    total = total + parseFloat(childSnapshot.val().total);
+                }
+                document.getElementById("todaySales").innerHTML = total;
+            });
+        });
+
+        // yesterday sales
+        var ref = firebase.database().ref('transactions');
+        var now = new Date();
+        var yesterday = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+(now.getDate()-1);
+        ref.on('value', function(snapshot) {
+            var total = 0;
+            snapshot.forEach(function(childSnapshot){
+                var childKey = childSnapshot.key;
+                var date = childSnapshot.val().date;
+                if(date == yesterday){
+                    total = total + parseFloat(childSnapshot.val().total);
+                }
+                document.getElementById("yesterdaySales").innerHTML = total;
+            });
         });
 
         $(document).ready(function () {
@@ -171,19 +203,6 @@ var Header = React.createClass({
                 $('#no-data-activity').show();
               }
             });
-
-            var ctx = document.getElementById('myChart').getContext('2d');
-            var myChart = new Chart(ctx, {
-              type: 'line',
-              data: {
-                labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-                datasets: [{
-                  label: 'apples',
-                  data: [12, 19, 3, 17, 6, 3, 7],
-                  backgroundColor: "rgba(153,255,51,0.4)"
-                }]
-              }
-            });
           }(jQuery));
         });
       },
@@ -198,6 +217,23 @@ var Header = React.createClass({
         if($('#activitySearch').val == null){
           $('#activityList tr').show();
         }
+      },
+
+      generateSales: function(){
+        // specific sale
+        var ref = firebase.database().ref('transactions');
+        var day = document.getElementById("daterange").value;
+        ref.on('value', function(snapshot) {
+            var total = 0;
+            snapshot.forEach(function(childSnapshot){
+                var childKey = childSnapshot.key;
+                var date = childSnapshot.val().date;
+                if(date == day){
+                    total = total + parseFloat(childSnapshot.val().total);
+                }
+                document.getElementById("dailySale").innerHTML = total;
+            });
+        });
       },
 
       deleteTransaction: function(){
@@ -232,18 +268,60 @@ var Header = React.createClass({
                     </ul>
                     <div className="tab-content table-responsive" id="tabContent">
                         <div className="active tab-pane" id="sales">
-                          <div className="row">
-                                <div className="col-sm-8">
-                                    <canvas id="myChart"></canvas>
-                                </div>
-                                <div className="form-group col-sm-4">
-                                    <label>Date range:</label>
+                            <div className="row" id="salesContent">
+                                <div className="col-lg-2 col-xs-6"></div>
+                                <div className="col-lg-4 col-xs-6">
+                                    <div className="small-box bg-navy">
+                                        <div className="inner">
+                                            <h3 id="yesterdaySales"></h3>
 
-                                    <div className="input-group">
-                                        <div className="input-group-addon">
-                                            <i className="fa fa-calendar"></i>
+                                            <p>Yesterday's Sales</p>
                                         </div>
-                                        <input type="text" className="form-control pull-right" name="daterange" id="daterange" onFocus={this.dateRange}/>
+                                        <div className="icon">
+                                            <i className="ion ion-refresh"></i>
+                                        </div>
+                                        <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div className="col-lg-4 col-xs-6">
+                                    <div className="small-box bg-aqua">
+                                        <div className="inner">
+                                            <h3 id="todaySales"></h3>
+
+                                            <p>Today's Sales</p>
+                                        </div>
+                                        <div className="icon">
+                                            <i className="ion ion-calendar"></i>
+                                        </div>
+                                        <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row" id="salesContent2">
+                                <div className="box box-primary" id="basicInfo">
+                                    <div className="box-header with-border">
+                                        <h3 className="box-title">Sales Tracker</h3>
+                                    </div>
+                                    <div className="box-body">
+                                        <div className="row" id="boxContent">
+                                            <div className="col-sm-1"></div>
+                                            <div className="form-group col-sm-4">
+                                                <label>Date:</label>
+
+                                                <div className="input-group">
+                                                    <div className="input-group-addon">
+                                                        <i className="fa fa-calendar"></i>
+                                                    </div>
+                                                    <input type="date" className="form-control pull-right" onInput={this.generateSales} id="daterange"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-1"></div>
+                                            <div className="col-sm-4">
+                                                <strong><i className="fa fa-calendar-check-o margin-r-5"></i> Total Sales for this Day:</strong>
+                                                <h1 className="text-muted" id="dailySale"></h1>
+                                            </div>
+                                            <div className="col-sm-2"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -449,7 +527,7 @@ var MainContent = React.createClass({
         }, function(error) {
           console.log(error);
         });
-      }  
+      }
     }, function(error) {
       console.log(error);
     });
