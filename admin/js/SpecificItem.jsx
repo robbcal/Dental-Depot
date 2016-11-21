@@ -770,6 +770,7 @@ var MainContent = React.createClass({
     }else{
       res = (
         <div>
+          <div className="se-pre-con"></div>
         </div>
       );
     }
