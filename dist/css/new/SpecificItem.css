@@ -36,8 +36,6 @@
 #specificItemButtons{
     margin: 5px;
 }
-<<<<<<< HEAD
-=======
 
 #deleteItemButtons, #confirmEditItemButtons{
     margin: 10px;
@@ -52,4 +50,3 @@
 #specificItemLeftContent{
     max-height: 300px;
 }
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7

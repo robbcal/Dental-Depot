@@ -9,4 +9,3 @@ installation:
 
 run:
 	lr-http-server -l 3000 -w **/*.css,**/*.html,**/*.js,**/*.jsx
-	

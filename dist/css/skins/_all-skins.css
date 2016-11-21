@@ -1796,18 +1796,4 @@
   .skin-purple-light.sidebar-mini.sidebar-collapse .sidebar-menu > li > .treeview-menu {
     border-left: 1px solid #d2d6de;
   }
-
-  ::-webkit-input-placeholder {
-     font-style: italic;
-  }
-  :-moz-placeholder {
-     font-style: italic;
-  }
-  ::-moz-placeholder {
-     font-style: italic;
-  }
-  :-ms-input-placeholder {
-     font-style: italic;
-  }
-
 }

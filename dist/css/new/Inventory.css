@@ -3,11 +3,7 @@
 }
 
 #headerContent{
-<<<<<<< HEAD
-    margin-top: 30px;
-=======
     margin-top: 20px;
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
 }
 
 .box-body{
@@ -16,11 +12,7 @@
 }
 
 #userTable{
-<<<<<<< HEAD
-    margin-bottom: 30px;
-=======
     margin-bottom: 20px;
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
 }
 
 #editInfoModalComponents{
@@ -28,8 +20,6 @@
     padding-right: 20px;
     padding-bottom: 10px;
 }
-<<<<<<< HEAD
-=======
 
 #modalComponents{
     padding-left: 20px;
@@ -44,4 +34,3 @@
 #inventoryMainTable{
     height: 440px;
 }
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7

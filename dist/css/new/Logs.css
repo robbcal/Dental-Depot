@@ -1,20 +1,4 @@
 #logsTransSearch{
-<<<<<<< HEAD
-    padding-right: 10px;
-    width: 250px;
-}
-
-#logsRowThree{
-    padding: 10px;
-}
-
-#logsTransPagination{
-    margin-top: -20px;
-}
-
-#mainContent{
-    margin: 20px;
-=======
     padding-right: 25px;
 }
 
@@ -35,5 +19,4 @@
 
 #deleteTransButtons{
     margin: 10px;
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
 }

@@ -11,22 +11,14 @@ var Header = React.createClass({
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
   },
 
-  showConfirmationModal: function(){
-    $('#editConfirmation').appendTo("body").modal('show');
+  showConfirmLogout: function(){
+    $('#confirmModal').appendTo("body").modal("show");
+    $('[data-toggle="tooltip"]').tooltip();
   },
-
-  showDeleteModal: function(){
-    $('#deleteConfirmation').appendTo("body").modal('show');
-  },
-
-  showAddModal: function(){
-    $('#addConfirmation').appendTo("body").modal('show');
-  },
-
 
   render: function() {
     return (
-        <div className="wrapper">
+      <div className="wrapper">
             <header className="main-header">
                 <a href="Inventory.html" className="logo">
                     <span className="logo-mini"><b>DD</b></span>
@@ -53,27 +45,32 @@ var Header = React.createClass({
 });
 
 var Body = React.createClass({
-  render: function() {
+    render: function() {
       return (
         <div>
-            <aside className="main-sidebar">
-                <section className="sidebar">
+            <div className="main-sidebar">
+                <div className="sidebar">
                     <ul className="sidebar-menu">
                         <br/>
                         <li className="header">NAVIGATION</li>
                         <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
-                        <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
-                        <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
                         <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                     </ul>
-                </section>
-            </aside>
-            <div className="content-wrapper">
-                <section id="content" className="content"><Content/></section>
+                </div>
             </div>
+
+            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
+                        <Content/>
+                    </div>
+                </div>
+            </div>
+
+            {/* LOGOUT MODAL CONTENT */}
         </div>
-    );
-  }
+      );
+    }
 });
 
 var Content = React.createClass({
@@ -750,7 +747,7 @@ var MainContent = React.createClass({
         });
       }  
     }, function(error) {
-      console.log(error);
+        console.log(error);
     });
   },
 
@@ -758,14 +755,14 @@ var MainContent = React.createClass({
     var res;
     if(this.state.signedIn == true){
       if(this.state.type == "admin"){
+        window.location.replace("../admin/Inventory.html");
+      }else if(this.state.type == "user"){
         res = (
           <div>
               <Header/>
               <Body/>
           </div>
         );
-      }else if(this.state.type == "user"){
-        window.location.replace("../user/Inventory.html");
       }
     }else{
       res = (

@@ -1,7 +1,20 @@
 var Content = React.createClass({
+  componentDidMount: function(){
+    $(document).ready(function () {
+      (function ($) {
+        $("#password").keyup(function(event){
+          if(event.keyCode == 13){
+            event.preventDefault();
+            $("#loginButton").trigger('click');
+          }
+        });
+      }(jQuery));
+    });
+  },
+
   login: function(){
     var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
+    var password = btoa(document.getElementById("password").value);
     if(email && password){
       firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
         var uid = firebase.auth().currentUser.uid;
@@ -43,34 +56,32 @@ var Content = React.createClass({
   render: function() {
     return (
     <div>
-      <div className="login-box" id="loginBox">
-        <div className="login-logo col-lg-12 col-md-12 col-sm-12" id="loginLogo">
-          <a href="http://127.0.0.1:8080/">
-            <div className="col-lg-6 col-md-6 col-sm-6" id="toothImgHolder">
-              <img src="bootstrap/icons/tooth.png" id="toothImg"/>
+        <div className="login-box" id="loginBox">
+            <div className="login-logo col-lg-12 col-md-12 col-sm-12" id="loginLogo">
+                <a href="http://127.0.0.1:8080/">
+                    <div className="col-lg-6 col-md-6 col-sm-6" id="toothImgHolder">
+                        <img src="bootstrap/icons/tooth.png" id="toothImg"/>
+                    </div>
+                    <div className="col-lg-6 col-md-6 col-sm-6" id="projectNameHolder">
+                        <span><h1 id="dentalDepotIndex1">DENTAL</h1></span>
+                        <span><h1 id="dentalDepotIndex2">DEPOT</h1></span>
+                    </div>
+                </a>
             </div>
-            <div className="col-lg-6 col-md-6 col-sm-6" id="projectNameHolder">
-              <span><h1 id="dentalDepotIndex1">DENTAL</h1></span>
-              <span><h1 id="dentalDepotIndex2">DEPOT</h1></span>
+            <div className="login-box-body" id="loginBoxBody">
+                <div className="form-group has-feedback" id="formGroup">
+                    <input type="email" id="email" className="form-control" placeholder="email address"/>
+                </div>
+                <div className="form-group has-feedback" id="formGroup">
+                    <input type="password" id="password" className="form-control" placeholder="password"/>
+                </div>
+                <div className="col-sm-12" id="loginSubmit">
+                    <center><button className="btn btn-primary col-sm-12" id="loginButton" onClick={this.login}>
+                        LOGIN
+                    </button></center>
+                </div>
+                <br/><br/>
             </div>
-          </a>
-        </div>
-        <form action="javascript:void(-1)" method="post" id="loginForm">
-          <div className="login-box-body" id="loginBoxBody">
-            <div className="form-group has-feedback" id="formGroup">
-              <input required type="email" id="email" className="form-control" placeholder="email address"/>
-            </div>
-            <div className="form-group has-feedback" id="formGroup">
-              <input required type="password" id="password" className="form-control" placeholder="password"/>
-            </div>
-            <div className="col-sm-12" id="loginSubmit">
-              <center><button className="btn btn-primary col-sm-12" id="loginButton" onClick={this.login}>
-                LOGIN
-              </button></center>
-            </div>
-            <br/><br/>
-          </div>
-        </form>
             <div className="col-sm-12 col-lg-12 col-md-12">
                 <div className="alert alert-danger alert-dismissible col-sm-12" style={{display:'none'}} id="errorBox">
                     <h4><i className="icon fa fa-ban"></i>Error</h4>
@@ -81,13 +92,6 @@ var Content = React.createClass({
     </div>
     );
   }
-});
-
-$("#password").keyup(function(event){
-    if(event.keyCode == 13){
-        event.preventDefault();
-        $("#loginButton").trigger('click');
-    }
 });
 
 var Main = React.createClass({

@@ -12,22 +12,11 @@
  */
 
 /*LAMDAG ADDITIONS*/
-<<<<<<< HEAD
-#sidebarMainTabs{
-    margin-left: 10px;
-}
-=======
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
 #sidebarProfileTab{
     margin-left: 4px;
 }
 #sidebarImage{
     height: 15px;
-<<<<<<< HEAD
-    margin-left: 10px;
-    margin-top: -2px;
-=======
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
 }
 #mainHeader{
     margin-left: -15px;
@@ -51,10 +40,6 @@
   vertical-align: middle;
 }
 
-<<<<<<< HEAD
-#confirmProfileEdit{
-    margin: 10px;
-=======
 .content-wrapper{
     min-height: 1036px;
     background-color: #e1e1e1;
@@ -62,7 +47,6 @@
 
 .content{
     background-color: #e1e1e1;
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
 }
 
 /*LAMDAG ADDITIONS*/

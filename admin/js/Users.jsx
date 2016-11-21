@@ -13,29 +13,6 @@ var Header = React.createClass({
 
   render: function() {
     return (
-<<<<<<< HEAD
-        <div>
-          <div className="main-header">
-            <div className="logo">
-              <span className="logo-lg" id="mainHeader">Dental Depot</span>
-            </div>
-            <div className="navbar navbar-static-top" role="navigation">
-              <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-                <span className="sr-only">Toggle navigation</span>
-              </a>
-              {/* comment */}
-              <div className="navbar-custom-menu">
-                <ul className="nav navbar-nav">
-                  <li className="dropdown user user-menu">
-                    <a href="#"><span onClick={this.logout}>
-                      <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="bottom"/>
-                    </span></a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-=======
         <div className="wrapper">
             <header className="main-header">
                 <a href="Inventory.html" className="logo">
@@ -57,7 +34,6 @@ var Header = React.createClass({
                     </div>
                 </nav>
             </header>
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
         </div>
     );
   }
@@ -67,30 +43,6 @@ var Body = React.createClass({
   render: function() {
     return (
         <div>
-<<<<<<< HEAD
-          <div className="main-sidebar">
-            <div className="sidebar">
-              <ul className="sidebar-menu">
-                <br/>
-                <li className="header">NAVIGATION</li>
-                <li><a href="Inventory.html"><i><img src="../bootstrap/icons/boxes.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Inventory</span></a></li>
-                <li className="active"><a href="Users.html"><i><img src="../bootstrap/icons/multiple-users-silhouette.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Users</span></a></li>
-                <li><a href="SpecificUser.html"><i><img src="../bootstrap/icons/graph-line-screen.png" id="sidebarImage"/></i><span id="sidebarMainTabs">Specific User</span></a></li>
-                <li><a href="AdminProfile.html"><i className="fa fa-user" id="sidebarImage"></i><span id="sidebarProfileTab">Profile</span></a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-            <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-              <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                <Content/>
-              </div>
-            </div>
-          </div>
-
-          {/* LOGOUT MODAL CONTENT */}
-=======
             <aside className="main-sidebar">
                 <section className="sidebar">
                     <ul className="sidebar-menu">
@@ -106,7 +58,6 @@ var Body = React.createClass({
             <div className="content-wrapper">
                 <section id="content" className="content"><Content/></section>
             </div>
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
         </div>
     );
   }
@@ -126,26 +77,9 @@ var Content = React.createClass({
       self.setState({
         cur_password: snapshot.val().password
       });
-
-      $(document).ready(function () {
-        (function ($) {
-            $('#userSearch').keyup(function () {
-              var rex = new RegExp($(this).val(), 'i');
-              $('#userList tr').hide();
-              $('#userList tr').filter(function () {
-                  return rex.test($(this).text());
-              }).show();
-              $('#no-data').hide();
-              if($('#userList tr:visible').length == 0)
-              {
-                $('#no-data').show();
-              }
-            })
-        }(jQuery));
-      });
     });
 
-    var ref = firebase.database().ref('users');
+    var ref = firebase.database().ref('users').orderByChild('firstname');
     ref.on('child_added', function(data) {
       var id=data.key
       var firstName = data.val().firstname;
@@ -181,81 +115,47 @@ var Content = React.createClass({
       });
     });
 
-<<<<<<< HEAD
-=======
-    var ref = firebase.database().ref('users');
-    ref.on('child_added', function(data) {
-      var id=data.key
-      var firstName = data.val().firstname;
-      var lastName = data.val().lastname;
-      var email = data.val().user_email;
-      var address = data.val().address;
-      var contactNumber = data.val().contact_no;
-      var age = data.val().age;
-      var birthdate = data.val().birthday;
-      var userType = data.val().user_type;
-
-      $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
-      $("#"+id+"").dblclick(function() {
-        document.getElementById("user_id").value = id;
-        document.getElementById("submit").click();
-      });
-    });
-
-    ref.on('child_changed', function(data) {
-      var id=data.key
-      var firstName = data.val().firstname;
-      var lastName = data.val().lastname;
-      var email = data.val().user_email;
-      var address = data.val().address;
-      var contactNumber = data.val().contact_no;
-      var age = data.val().age;
-      var birthdate = data.val().birthday;
-      var userType = data.val().user_type;
-
-      $("tr#"+id).replaceWith("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td></tr>");
-      $("#"+id+"").dblclick(function() {
-        alert(email);
-      });
-    });
-
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
     ref.on('child_removed', function(data) {
       var id=data.key
       $("tr#"+id).remove();
     });
 
-<<<<<<< HEAD
-=======
-    $(document).ready(function () {
-          (function ($) {
-              $('#tableSearch').keyup(function () {
-                var rex = new RegExp($(this).val(), 'i');
-                $('#userList tr').hide();
-                $('#userList tr').filter(function () {
-                    return rex.test($(this).text());
-                }).show();
-                $('#no-data').hide();
-                if($('#userList tr:visible').length == 0)
-                {
-                  $('#no-data').show();
-                }
-              })
-          }(jQuery));
-        });
-    },
+    $('#addUserModal').on('hidden.bs.modal', function () {
+      document.getElementById("firstName").value="";
+      document.getElementById("lastName").value="";
+      document.getElementById("email").value="";
+      document.getElementById("address").value="";
+      document.getElementById("contactNumber").value="";
+      document.getElementById("age").value="";
+      document.getElementById("birthdate").value="";
+      $("#userType option:eq(0)").attr("selected", "selected");
+    });
 
-    showTable: function(){
-      if($('#tableSearch').val == null){
-        $('#userList tr').show();
-    }
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
+    $(document).ready(function () {
+      (function ($) {
+        $('#tableSearch').keyup(function () {
+          var rex = new RegExp($(this).val(), 'i');
+          $('#userList tr').hide();
+          $('#userList tr').filter(function () {
+              return rex.test($(this).text());
+          }).show();
+          $('#no-data').hide();
+          if($('#userList tr:visible').length == 0)
+          {
+            $('#no-data').show();
+          }
+        })
+      }(jQuery));
+    });
   },
 
-  addUser: function(){
-    var cur_email = firebase.auth().currentUser.email;
-    var cur_password = this.state.cur_password;
+  showTable: function(){
+    if($('#tableSearch').val == null){
+      $('#userList tr').show();
+    }
+  },
 
+  checkInput: function(){
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
     var email = document.getElementById("email").value;
@@ -264,98 +164,124 @@ var Content = React.createClass({
     var age = document.getElementById("age").value;
     var birthdate = document.getElementById("birthdate").value;
     var userType = document.getElementById("userType").value;
-    var password = "123456";
 
     if(firstName && lastName && address && contactNumber && email && age && birthdate && userType){
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
-          var uid = firebase.auth().currentUser.uid;
-          firebase.auth().signInWithEmailAndPassword(cur_email, cur_password).then(function(){
-            firebase.database().ref('users/'+uid).set({
-              firstname: firstName,
-              lastname: lastName,
-              user_email: email,
-              address: address,
-              contact_no: contactNumber,
-              age: age,
-              birthday: birthdate,
-              user_type: userType,
-              password: password
-            });
-            $('#addUserModal').modal('hide');
-            $('#informSuccess').appendTo("body").modal('show');
-            setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
-            document.getElementById("firstName").value="";
-            document.getElementById("lastName").value="";
-            document.getElementById("email").value="";
-            document.getElementById("address").value="";
-            document.getElementById("contactNumber").value="";
-            document.getElementById("age").value="";
-            document.getElementById("birthdate").value="";
-            document.getElementById("userType").value="";
-          })
-        }).catch(function(error) {
-            document.getElementById("errorMessage").innerHTML= error;
-            $('#errorModal').appendTo("body").modal('show');
-            $('#addConfirmation').modal('hide');
-        });
-    }else {
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
+      $('#addConfirmation').appendTo("body").modal('show');
+    }else{
+      document.getElementById("errorMessage").innerHTML= "Missing input.";
+      $('#errorModal').appendTo("body").modal('show');
+    }
+  },
+
+  addUser: function(){
+    var curUID = firebase.auth().currentUser.uid;
+    var now = new Date();
+    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var cur_email = firebase.auth().currentUser.email;
+    var cur_password = this.state.cur_password;
+    var firstName = document.getElementById("firstName").value;
+    var lastName = document.getElementById("lastName").value;
+    var email = document.getElementById("email").value;
+    var address = document.getElementById("address").value;
+    var contactNumber = document.getElementById("contactNumber").value;
+    var age = document.getElementById("age").value;
+    var birthdate = document.getElementById("birthdate").value;
+    var userType = document.getElementById("userType").value;
+    var password = btoa("123456");
+
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
+      var uid = firebase.auth().currentUser.uid;
+      var user = firebase.auth().currentUser;
+      user.sendEmailVerification().then(function() {
+        firebase.auth().signInWithEmailAndPassword(cur_email, cur_password).then(function(){
+          firebase.database().ref('users/'+uid).set({
+            firstname: firstName,
+            lastname: lastName,
+            user_email: email,
+            address: address,
+            contact_no: contactNumber,
+            age: age,
+            birthday: birthdate,
+            user_type: userType,
+            password: password
+          });
+          firebase.database().ref("users/"+curUID+"/activity").push().set({
+            action_performed: "Added user.",
+            object_changed: firstName+" "+lastName,
+            quantity: "n/a",
+            date: today
+          });
+          $('#addConfirmation').modal('hide');
+          $('#addUserModal').modal('hide');
+          $('#informSuccess').appendTo("body").modal('show');
+          setTimeout(function() { $("#informSuccess").modal('hide'); }, 3000);
+          document.getElementById("firstName").value="";
+          document.getElementById("lastName").value="";
+          document.getElementById("email").value="";
+          document.getElementById("address").value="";
+          document.getElementById("contactNumber").value="";
+          document.getElementById("age").value="";
+          document.getElementById("birthdate").value="";
+          $("#userType option:eq(0)").attr("selected", "selected");
+        })
+      }, function(error) {
+        document.getElementById("errorMessage").innerHTML= error;
         $('#errorModal').appendTo("body").modal('show');
-        $('#addConfirmation').modal('hide');
+      });  
+    }).catch(function(error) {
+        document.getElementById("errorMessage").innerHTML= error;
+        $('#errorModal').appendTo("body").modal('show');
+    });
+  },
+
+  forValidation: function(){
+    document.getElementById("firstName").style.borderColor = "red";
+    document.getElementById("lastName").style.borderColor = "red";
+    document.getElementById("email").style.borderColor = "red";
+    document.getElementById("address").style.borderColor = "red";
+    document.getElementById("contactNumber").style.borderColor = "red";
+    document.getElementById("age").style.borderColor = "red";
+    document.getElementById("birthdate").style.borderColor = "red";
+  },
+
+  formValidation: function(){
+    if(document.getElementById("firstName").value == ""){
+      document.getElementById("firstName").style.borderColor = "red";
+    }else{
+      document.getElementById("firstName").style.borderColor = "";
+    }
+    if(document.getElementById("lastName").value == ""){
+      document.getElementById("lastName").style.borderColor = "red";
+    }else{
+      document.getElementById("lastName").style.borderColor = "";
+    }
+    if(document.getElementById("email").value == ""){
+      document.getElementById("email").style.borderColor = "red";
+    }else{
+      document.getElementById("email").style.borderColor = "";
+    }
+    if(document.getElementById("address").value == ""){
+      document.getElementById("address").style.borderColor = "red";
+    }else{
+      document.getElementById("address").style.borderColor = "";
+    }
+    if(document.getElementById("contactNumber").value == ""){
+      document.getElementById("contactNumber").style.borderColor = "red";
+    }else{
+      document.getElementById("contactNumber").style.borderColor = "";
+    }
+    if(document.getElementById("age").value == ""){
+      document.getElementById("age").style.borderColor = "red";
+    }else{
+      document.getElementById("age").style.borderColor = "";
+    }
+    if(document.getElementById("birthdate").value == ""){
+      document.getElementById("birthdate").style.borderColor = "red";
+    }else{
+      document.getElementById("birthdate").style.borderColor = "";
     }
   },
 
-
-<<<<<<< HEAD
-  showTable: function(){
-    if($('#userSearch').val == null){
-      $('#userList tr').show();
-    }
-  },
-
-  render: function() {
-    return (
-      <div>
-        <form id="UserIDForm" type="get" action="SpecificUser.html">
-          <input type="hidden" id="user_id" name="user_id"/>
-          <button type="submit" value="Send" name="submit" id="submit" style={{display: 'none'}}></button>
-        </form>
-        <br/><br/>
-        <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <div className="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div className="col-sm-4">
-              <div className="input-group input-group-md">
-                <input type="text" name="tableSearch" className="form-control pull-right" id="userSearch" placeholder="Search" onChange={this.showTable}/>
-                <div className="input-group-btn">
-                  <button type="submit" className="btn btn-default" id="userButton">
-                    <i className="fa fa-search"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <span className="pull-right">
-              <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal">ADD USER</a>
-            </span>
-          </div>
-          <br/><br/>
-          <div className="box-body table-responsive" id="userMainTable">
-            <table id="userTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info" style={{backgroundColor: "#fff"}}>
-              <thead>
-                <tr>
-                  <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">USERNAME</th>
-                  <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">EMAIL ADDRESS</th>
-                  <th className="sorting" tabIndex="0" aria-controls="example2" rowSpan="1" colSpan="1" aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">USER TYPE</th>
-                </tr>
-              </thead>
-              <tbody id="userList">
-                <tr id="no-data" style={{display:'none'}}>
-                  <h5>No Results Found.</h5>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          </div>
-=======
   render: function() {
     return (
       <div id="mainContent">
@@ -378,7 +304,7 @@ var Content = React.createClass({
                   <div className="col-sm-2"></div>
                   <div className="col-sm-6">
                       <span className="pull-right">
-                          <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal">ADD USER</a>
+                          <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal" onClick={this.forValidation}>ADD USER</a>
                       </span>
                   </div>
               </div>
@@ -396,13 +322,11 @@ var Content = React.createClass({
                               <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
-                              <td><center>No Results Found.</center></td>
                           </tr>
                       </tbody>
                   </table>
               </div>
           </div>
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
 
           <div className="example-modal">
               <div className="modal fade bs-example-modal-lg" id="addUserModal">
@@ -410,113 +334,62 @@ var Content = React.createClass({
                       <div className="modal-content">
                           <div className="modal-header">
                               <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-<<<<<<< HEAD
-                              <h4 className="modal-title">ADD USER</h4>
-                          </div>
-                          <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                              <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                  <span>
-                                      <label>First Name</label>
-                                      <input type="text" id="firstName" className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>Last Name</label>
-                                      <input type="text" id="lastName" className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>Email</label>
-                                      <input type="email" id="email" className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>Address</label>
-                                      <input type="text" id="address" className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>Contact Number</label>
-                                      <input type="text" id="contactNumber" className="form-control"/>
-                                  </span>
-                                  <span>
-                                      <label>Age</label>
-                                      <input type="number" id="age" className="form-control"/>
-                                  </span>
-                              </div>
-                              <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                  <span>
-                                      <label>Birthdate</label>
-                                      <input type="date" id="birthdate" className="form-control"/>
-                                  </span>
-                                  <span>
-=======
                               <h4 className="modal-title">Add User</h4>
                           </div>
                           <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                               <div className="row">
                                   <div className="col-sm-6" id="editInfoModalComponents">
                                       <label>First Name</label>
-                                      <input type="text" id="firstName" className="form-control"/>
+                                      <input type="text" id="firstName" className="form-control" onChange={this.formValidation}/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div className="col-sm-6" id="editInfoModalComponents">
                                       <label>Last Name</label>
-                                      <input type="text" id="lastName" className="form-control"/>
+                                      <input type="text" id="lastName" className="form-control" onChange={this.formValidation}/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div className="col-sm-6" id="editInfoModalComponents">
                                       <label>Email</label>
-                                      <input type="email" id="email" className="form-control"/>
+                                      <input type="email" id="email" className="form-control" onChange={this.formValidation}/>
                                   </div>
                                   <div className="col-sm-6" id="editInfoModalComponents">
                                       <label>Contact Number</label>
-                                      <input type="text" id="contactNumber" className="form-control"/>
+                                      <input type="text" id="contactNumber" className="form-control" onChange={this.formValidation}/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div id="editInfoModalComponents">
                                       <label>Address</label>
-                                      <input type="text" id="address" className="form-control"/>
+                                      <input type="text" id="address" className="form-control" onChange={this.formValidation}/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div className="col-sm-8" id="editInfoModalComponents">
                                       <label>Birthdate</label>
-                                      <input type="date" id="birthdate" className="form-control"/>
+                                      <input type="date" id="birthdate" className="form-control" onChange={this.formValidation}/>
                                   </div>
                                   <div className="col-sm-4" id="editInfoModalComponents">
                                       <label>Age</label>
-                                      <input type="number" id="age" className="form-control"/>
+                                      <input type="number" id="age" className="form-control" onChange={this.formValidation}/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div className="col-sm-6" id="editInfoModalComponents">
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
                                       <label>User Type</label>
                                       <select id="userType" className="form-control">
                                           <option value="admin">Admin</option>
                                           <option value="user">User</option>
                                       </select>
-<<<<<<< HEAD
-                                  </span>
-                              </div>
-
-=======
                                   </div>
                               </div>
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
                           </div>
                           <div className="modal-footer">
                               <button type="button" className="btn btn-default pull-left" data-dismiss="modal">CANCEL</button>
-                              <button type="button" className="btn btn-primary" onClick={this.addUser}>ADD</button>
+                              <button type="button" className="btn btn-primary" onClick={this.checkInput}>ADD</button>
                           </div>
                       </div>
-<<<<<<< HEAD
-                  </div>
-              </div>
-          </div>
-
-=======
                   </div>
               </div>
           </div>
@@ -530,8 +403,8 @@ var Content = React.createClass({
                           <div className="modal-body">
                               <center>
                                   <h5>Are you sure you want to add this user?</h5>
-                                  <button type="button" className="btn btn-primary" onClick={this.addUser}>YES</button>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal">NO</button>
+                                  <button type="button" className="btn btn-primary" onClick={this.addUser} id="confirmProfileEdit">YES</button>&nbsp;
+                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmProfileEdit">NO</button>
                               </center>
                           </div>
 
@@ -563,13 +436,12 @@ var Content = React.createClass({
                   <div className="modal-content">
                       <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                           <center>
-                              <h4><strong>Successfully Added User.</strong></h4>
+                              <h4><strong>Successfully Added User. Please check your email for verification.</strong></h4>
                           </center>
                       </div>
                   </div>
               </div>
           </div>
->>>>>>> bf84ac1a5ead3828d9b0460805a3b6faf9bd0ab7
       </div>
     );
   }
@@ -583,17 +455,24 @@ var MainContent = React.createClass({
   componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-          var uid = firebase.auth().currentUser.uid;
-          firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
-            self.setState({ signedIn: true, type: snapshot.val().user_type });
-            $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
-          });
-        } else {
-          self.setState({ signedIn: false });
+      if(!user){
+        self.setState({ signedIn: false});
+        window.location.replace("http://127.0.0.1:8080/");
+      }else if(user.emailVerified) {
+        var uid = firebase.auth().currentUser.uid;
+        firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
+          self.setState({ signedIn: true, type: snapshot.val().user_type });
+          $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+        });
+      }else{
+        /*alert("Email is not verified");
+        firebase.auth().signOut().then(function() {
           window.location.replace("http://127.0.0.1:8080/");
-        }
-      }, function(error) {
+        }, function(error) {
+          console.log(error);
+        });*/
+      }  
+    }, function(error) {
         console.log(error);
     });
   },
@@ -609,7 +488,7 @@ var MainContent = React.createClass({
           </div>
         );
       }else if(this.state.type == "user"){
-        window.location.replace("../user/Items.html");
+        window.location.replace("../user/Inventory.html");
       }
     }else{
       res = (
