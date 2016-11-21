@@ -95,7 +95,7 @@ var Header = React.createClass({
           var customer = data.val().customer;
           firebase.database().ref('users/'+userID).once('value', function(dataSnapshot){
             var name = dataSnapshot.val().firstname+" "+dataSnapshot.val().lastname;
-            $("#transactionList").append("<tr id="+id+"><td>"+id+"</td><td>"+total+"</td><td>"+date+"</td><td>"+name+"</td></tr>");
+            $("#transactionList").append("<tr id="+id+"><td><center>"+id+"</center></td><td><center>"+total+"</center></td><td><center>"+date+"</center></td><td><center>"+name+"</center></td></tr>");
             $("#"+id+"").dblclick(function() {
               $("#transactionTableBody tr").remove();
               document.getElementById("transID").value = id;
@@ -112,7 +112,7 @@ var Header = React.createClass({
                 var itemQuantity = data.val().item_quantity;
                 var subtotal = data.val().item_subtotal;
 
-                $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+subtotal+"</td></tr>");
+                $("#transactionTableBody").append("<tr id="+id+"><td><center>"+itemName+"</center></td><td><center>"+itemQuantity+"</center></td><td><center>"+subtotal+"</center></td></tr>");
               });
             });
           });
@@ -134,7 +134,7 @@ var Header = React.createClass({
               var object = data.val().object_changed;
               var quantity = data.val().quantity;
               var date = data.val().date;
-              $("#activityList").append("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+name+"</td></tr>");
+              $("#activityList").append("<tr id="+id+"><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td><td><center>"+name+"</center></td></tr>");
             });
 
             firebase.database().ref('users/'+childKey+'/activity').on('child_removed', function(data) {
@@ -157,6 +157,7 @@ var Header = React.createClass({
                     total = total + parseFloat(childSnapshot.val().total);
                 }
                 document.getElementById("todaySales").innerHTML = total;
+                document.getElementById("dateToday").innerHTML = today;
             });
         });
 
@@ -173,6 +174,7 @@ var Header = React.createClass({
                     total = total + parseFloat(childSnapshot.val().total);
                 }
                 document.getElementById("yesterdaySales").innerHTML = total;
+                document.getElementById("dateYesterday").innerHTML = yesterday;
             });
         });
 
@@ -280,7 +282,7 @@ var Header = React.createClass({
                                         <div className="icon">
                                             <i className="ion ion-refresh"></i>
                                         </div>
-                                        <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right"></i></a>
+                                        <p className="small-box-footer" id="dateYesterday"></p>
                                     </div>
                                 </div>
                                 <div className="col-lg-4 col-xs-6">
@@ -293,8 +295,8 @@ var Header = React.createClass({
                                         <div className="icon">
                                             <i className="ion ion-calendar"></i>
                                         </div>
-                                        <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right"></i></a>
-                                    </div>
+                                        <p className="small-box-footer" id="dateToday"></p>
+                                </div>
                                 </div>
                             </div>
                             <div className="row" id="salesContent2">
