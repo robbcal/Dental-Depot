@@ -198,6 +198,15 @@ var Content = React.createClass({
         document.getElementById("price").value = "";
         document.getElementById("item").value="0";
       });
+      $(document).ready(function () {
+        (function ($) {    
+          $("#number").keypress(function(event) {
+            if ( event.which == 45 ) {
+                event.preventDefault();
+             }
+          });
+        }(jQuery));
+      });
       document.getElementById("number").style.borderColor = "red";
       document.getElementById("customer").style.borderColor = "red";
     },

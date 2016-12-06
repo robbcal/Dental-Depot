@@ -127,6 +127,15 @@ itemDescription: "null",
         document.getElementById("editPrice").value = snapshot.val().price;
       });
     });
+    $(document).ready(function () {
+      (function ($) {    
+        $("#addNumber, #deleteNumber, #editPrice").keypress(function(event) {
+          if ( event.which == 45 ) {
+              event.preventDefault();
+           }
+        });
+      }(jQuery));
+    });
   },
 
   checkAddModal: function(){

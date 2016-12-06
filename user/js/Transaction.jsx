@@ -137,7 +137,16 @@ var Content = React.createClass({
         document.getElementById("number").value = "";
         document.getElementById("ID").value = "";
         document.getElementById("price").value = "";
-        $("#item option:eq(0)").attr("selected", "selected");
+        document.getElementById("item").value="0";
+      });
+      $(document).ready(function () {
+        (function ($) {    
+          $("#number").keypress(function(event) {
+            if ( event.which == 45 ) {
+                event.preventDefault();
+             }
+          });
+        }(jQuery));
       });
       document.getElementById("number").style.borderColor = "red";
       document.getElementById("customer").style.borderColor = "red";
@@ -347,7 +356,7 @@ var Content = React.createClass({
                           <div className="col-sm-6">
                               <label>Item Name</label>
                               <select id="item" className="form-control" onChange={this.displayItemOnModal}>
-                                  <option id="header" value="">- Choose an item -</option>
+                                  <option id="header" value="0">- Choose an item -</option>
                               </select>
                           </div>
                       </div>

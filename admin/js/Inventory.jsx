@@ -148,6 +148,11 @@ var Content = React.createClass({
             $('#no-data').show();
           }
         });
+        $("#newNumber, #newPrice, #additionalNumber").keypress(function(event) {
+          if ( event.which == 45 ) {
+              event.preventDefault();
+           }
+        });
       }(jQuery));
     });
   },
