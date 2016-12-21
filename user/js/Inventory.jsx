@@ -159,6 +159,16 @@ var Content = React.createClass({
               event.preventDefault();
            }
         });
+        $("#newNumber, #additionalNumber").keypress(function(event) {
+          if ( event.which == 46 ) {
+              event.preventDefault();
+           }
+        });
+        $('#newPrice').blur(function(){
+          var num = parseFloat($(this).val());
+          var cleanNum = num.toFixed(2);
+          $(this).val(cleanNum);
+        });
       }(jQuery));
     });
   },
@@ -197,7 +207,12 @@ var Content = React.createClass({
       var date = document.getElementById("newDate").value;
 
       if(itemName != "" && stock != "" && price != "" && date != ""){
+        if(Number(stock) <= 0 || Number(price) <= 0){
+          document.getElementById("errorMessage").innerHTML= "Invalid quantity/price.";
+          $('#errorModal').appendTo("body").modal('show');
+        }else{
           $('#addConfirmation').appendTo("body").modal('show');
+        }
       }else{
           document.getElementById("errorMessage").innerHTML= "Missing input.";
           $('#errorModal').appendTo("body").modal('show');
@@ -212,7 +227,12 @@ var Content = React.createClass({
       var date = document.getElementById("existingDate").value;
 
       if(id != "" && price != "" && curStock != "" && addNumber != "" && date != ""){
-        $('#addExistingConfirmation').appendTo("body").modal('show');
+        if(Number(addNumber) <= 0){
+          document.getElementById("errorMessage").innerHTML= "Invalid quantity.";
+          $('#errorModal').appendTo("body").modal('show');
+        }else{
+          $('#addExistingConfirmation').appendTo("body").modal('show');  
+        }
       }else{
         document.getElementById("errorMessage").innerHTML= "Missing input.";
         $('#errorModal').appendTo("body").modal('show');
@@ -463,21 +483,21 @@ var Content = React.createClass({
                           <div className="row">
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Item Name</label>
-                                  <input type="text" id="newItem" className="form-control" onChange={this.formValidation}/>
+                                  <input type="text" id="newItem" className="form-control" onChange={this.formValidation} maxLength="50"/>
                               </div>
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Item Description</label>
-                                  <textarea id="newDescription" className="form-control" onChange={this.formValidation}></textarea>
+                                  <textarea id="newDescription" className="form-control" onChange={this.formValidation} maxLength="200"></textarea>
                               </div>
                           </div>
                           <div className="row">
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Quantity</label>
-                                  <input type="number" id="newNumber" className="form-control" onChange={this.formValidation}/>
+                                  <input type="number" id="newNumber" className="form-control" min="1" onChange={this.formValidation}/>
                               </div>
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Item Price</label>
-                                  <input type="number" id="newPrice" className="form-control" onChange={this.formValidation}/>
+                                  <input type="number" id="newPrice" className="form-control" min="0.01" onChange={this.formValidation}/>
                               </div>
                           </div>
                           <div className="row">

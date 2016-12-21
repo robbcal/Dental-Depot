@@ -131,8 +131,18 @@ itemDescription: "null",
       (function ($) {    
         $("#addNumber, #deleteNumber, #editPrice").keypress(function(event) {
           if ( event.which == 45 ) {
-              event.preventDefault();
-           }
+            event.preventDefault();
+          }
+        });
+        $("#addNumber, #deleteNumber").keypress(function(event) {
+          if ( event.which == 46 ) {
+            event.preventDefault();
+          }
+        });
+        $('#editPrice').blur(function(){
+          var num = parseFloat($(this).val());
+          var cleanNum = num.toFixed(2);
+          $(this).val(cleanNum);
         });
       }(jQuery));
     });
@@ -143,7 +153,13 @@ itemDescription: "null",
       var date = document.getElementById("addDate").value;
 
       if(additionalStock != "" && date != ""){
-        $('#addConfirmation').appendTo("body").modal('show');
+        if(Number(additionalStock) <= 0){
+          document.getElementById("errorMessage").innerHTML= "Invalid input.";
+          $('#errorModal').appendTo("body").modal('show');
+          $('#addConfirmation').modal('hide');
+        }else{
+          $('#addConfirmation').appendTo("body").modal('show');
+        }
       }else{
         document.getElementById("errorMessage").innerHTML= "Missing input.";
         $('#errorModal').appendTo("body").modal('show');
@@ -156,7 +172,13 @@ itemDescription: "null",
       var date = document.getElementById("deleteDate").value;
 
       if(diminishedStock != "" && date != ""){
-        $('#deleteConfirmation').appendTo("body").modal('show');
+        if(Number(diminishedStock) <= 0){
+          document.getElementById("errorMessage").innerHTML= "Invalid input.";
+          $('#errorModal').appendTo("body").modal('show');
+          $('#deleteConfirmation').modal('hide');
+        }else{
+          $('#deleteConfirmation').appendTo("body").modal('show');  
+        }
       }else{
         document.getElementById("errorMessage").innerHTML= "Missing input.";
         $('#errorModal').appendTo("body").modal('show');
@@ -170,7 +192,13 @@ itemDescription: "null",
       var itemPrice = document.getElementById("editPrice").value;
 
       if(date != "" && itemName != "" && itemPrice != ""){
-        $('#editConfirmation').appendTo("body").modal('show');
+        if(Number(itemPrice) <= 0){
+          document.getElementById("errorMessage").innerHTML= "Invalid price.";
+          $('#errorModal').appendTo("body").modal('show');
+          $('#editConfirmation').modal('hide');
+        }else{
+          $('#editConfirmation').appendTo("body").modal('show');
+        }
       }else{
         document.getElementById("errorMessage").innerHTML= "Missing input.";
         $('#errorModal').appendTo("body").modal('show');
@@ -565,11 +593,11 @@ itemDescription: "null",
                                 <div className="row">
                                     <div className="col-sm-6" id="editItemModalComponents">
                                         <label>Item Name</label>
-                                        <input type="text" id="editItem" className="form-control" onChange={this.formValidation}/>
+                                        <input type="text" id="editItem" className="form-control" onChange={this.formValidation} maxLength="50"/>
                                     </div>
                                     <div className="col-sm-6" id="editItemModalComponents">
                                         <label>Item Description</label>
-                                        <textarea id="editDescription" className="form-control" onChange={this.formValidation}></textarea>
+                                        <textarea id="editDescription" className="form-control" onChange={this.formValidation} maxLength="200"></textarea>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -579,7 +607,7 @@ itemDescription: "null",
                                     </div>
                                     <div className="col-sm-6" id="editItemModalComponents">
                                         <label>Item Price</label>
-                                        <input type="number" id="editPrice" className="form-control" onChange={this.formValidation}/>
+                                        <input type="number" id="editPrice" className="form-control" min="0.01" onChange={this.formValidation}/>
                                     </div>
                                 </div>
                                 <div className="row">

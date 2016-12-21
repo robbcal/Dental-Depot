@@ -201,7 +201,7 @@ var Content = React.createClass({
       $(document).ready(function () {
         (function ($) {    
           $("#number").keypress(function(event) {
-            if ( event.which == 45 ) {
+            if (event.which == 45 || event.which == 46) {
                 event.preventDefault();
              }
           });
@@ -243,6 +243,10 @@ var Content = React.createClass({
         document.getElementById("errorMessage").innerHTML= "Insufficient stock";
         $('#errorModal').appendTo("body").modal('show');
         document.getElementById("number").value = "";
+      }else if(Number(num) == 0){
+        document.getElementById("errorMessage").innerHTML= "Invalid input";
+        $('#errorModal').appendTo("body").modal('show');
+        document.getElementById("number").value = "";
       }
     },
 
@@ -266,7 +270,7 @@ var Content = React.createClass({
         document.getElementById("number").value = "";
 
         if($('#transactionTable tr > td:contains('+id+')').length == 0){
-            $("#transactionTableBody").append("<tr id="+id+"><td id='del' class='delete'><button class='btn btn-danger btn-xs deleteRow' value="+id+">x</button></td><td style='display:none'>"+id+"</td><td class='name' value="+id+">"+itemName+"</td><td id="+id+"A"+id+" class='number' value="+num+">"+num+"</td><td id="+id+"B"+id+" class='subtotal' value="+subtotal.toFixed(2)+">"+subtotal.toFixed(2)+"</td></tr>");
+            $("#transactionTableBody").append("<tr id="+id+"><td id='del' class='delete'><button class='btn btn-danger btn-xs deleteRow' value="+id+">x</button></td><td style='display:none'>"+id+"</td><td class='name' value="+id+">"+itemName+"</td><td id="+id+"A"+id+" class='number' value="+num+">"+num+"</td><td id='price'>"+price+"</td><td id="+id+"B"+id+" class='subtotal' value="+subtotal.toFixed(2)+">"+subtotal.toFixed(2)+"</td></tr>");
         }else{
           var transQty = $("td#"+id+"A"+id+"").text();
           var transSubtotal = $("td#"+id+"B"+id+"").text();
@@ -482,6 +486,7 @@ var Content = React.createClass({
                                           <th><center>ITEM</center></th>
                                           <th><center>QUANTITY</center></th>
                                           <th><center>PRICE</center></th>
+                                          <th><center>SUB TOTAL</center></th>
                                       </tr>
                                   </thead>
                                   <tbody id="transactionTableBody">
@@ -490,7 +495,7 @@ var Content = React.createClass({
                           </div>
                       </div>
                       <div className="col-sm-8" id="boxbodyContent">
-                          <input type="text" id="customer" placeholder="Customer" className="form-control pull-left" onChange={this.formValidation}/>
+                          <input type="text" id="customer" placeholder="Customer" className="form-control pull-left" onChange={this.formValidation} maxLength="100"/>
                       </div>
                       <button className="btn btn-primary btn-block" id="createTransactionButton" onClick={this.checkTransaction}>CREATE TRANSACTION</button>
                   </div>

@@ -103,6 +103,15 @@ var Content = React.createClass({
         userType: snapshot.val().user_type
       });
     });
+    $(document).ready(function () {
+      (function ($) {
+        $("#age").keypress(function(event) {
+          if (event.which == 45 || event.which == 46) {
+            event.preventDefault();
+          }
+        });
+      }(jQuery));
+    });
   },
 
   checkProfile: function(){
@@ -116,10 +125,15 @@ var Content = React.createClass({
       var password = document.getElementById("password").value;
 
       if(firstname != "" && lastname != "" && address != "" && contactnumber != "" && email != "" && age != "" && birthdate != "" && password != ""){
-          $('#editConfirmation').appendTo("body").modal('show');
-      }else{
-          document.getElementById("errorMessage").innerHTML= "Missing input.";
+        if(Number(age) <= 0){
+          document.getElementById("errorMessage").innerHTML= "Invalid age.";
           $('#errorModal').appendTo("body").modal('show');
+        }else{
+          $('#editConfirmation').appendTo("body").modal('show');
+        }     
+      }else{
+        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        $('#errorModal').appendTo("body").modal('show');
       }
   },
 
@@ -170,27 +184,32 @@ var Content = React.createClass({
     if(firstname && lastname && address && contactnumber && email && age && birthdate && password){
       firebase.auth().currentUser.updateEmail(email).then(function() {
         firebase.auth().currentUser.updatePassword(password).then(function() {
-          firebase.database().ref('users/'+uid).update({
-            firstname: firstname,
-            lastname: lastname,
-            user_email: email,
-            address: address,
-            contact_no: contactnumber,
-            age: age,
-            birthday: birthdate,
-            password: password
+          firebase.auth().currentUser.sendEmailVerification().then(function() {
+            firebase.database().ref('users/'+uid).update({
+              firstname: firstname,
+              lastname: lastname,
+              user_email: email,
+              address: address,
+              contact_no: contactnumber,
+              age: age,
+              birthday: birthdate,
+              password: password
+            });
+            firebase.database().ref('users/'+uid+'/activity').push().set({
+              action_performed: "Edited profile.",
+              object_changed: firstname+" "+lastname,
+              quantity: "n/a",
+              date: today
+            });
+            $('#editConfirmation').modal('hide');
+            $('#editInfoModal').modal('hide');
+            $('#informSuccess').appendTo("body").modal('show');
+            setTimeout(function() { $("#informSuccess").modal('hide'); }, 8000);
+          }, function(error) {
+            document.getElementById("errorMessage").innerHTML= error;
+            $('#errorModal').appendTo("body").modal('show');
+            $('#editConfirmation').modal('hide');
           });
-          firebase.database().ref('users/'+uid+'/activity').push().set({
-            action_performed: "Edited profile.",
-            object_changed: firstname+" "+lastname,
-            quantity: "n/a",
-            date: today
-          });
-          $('#editConfirmation').modal('hide');
-          $('#editInfoModal').modal('hide');
-          $('#informSuccess').appendTo("body").modal('show');
-          setTimeout(function() { $("#informSuccess").modal('hide'); }, 1000);
-          
         }, function(error) {
           document.getElementById("errorMessage").innerHTML= error;
           $('#errorModal').appendTo("body").modal('show');
@@ -338,7 +357,7 @@ var Content = React.createClass({
                           <div className="modal-content">
                               <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                   <center>
-                                      <h4><strong>Successfully Updated Profile.</strong></h4>
+                                      <h4><strong>Successfully Updated Profile. <br/>Check email for verification. If you have changed your email, verify it before proceeding.</strong></h4>
                                   </center>
                               </div>
                           </div>
@@ -358,29 +377,29 @@ var Content = React.createClass({
                                   <div className="row">
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>First Name</label>
-                                          <input type="text" id="firstName" className="form-control" onChange={this.formValidation}/>
+                                          <input type="text" id="firstName" className="form-control" onChange={this.formValidation} maxLength="50"/>
                                       </div>
                                   </div>
                                   <div className="row">
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>Last Name</label>
-                                          <input type="text" id="lastName" className="form-control" onChange={this.formValidation}/>
+                                          <input type="text" id="lastName" className="form-control" onChange={this.formValidation} maxLength="50"/>
                                       </div>
                                   </div>
                                   <div className="row">
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>Email</label>
-                                          <input type="email" id="email" className="form-control" onChange={this.formValidation}/>
+                                          <input type="email" id="email" className="form-control" onChange={this.formValidation} maxLength="50"/>
                                       </div>
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>Contact Number</label>
-                                          <input type="text" id="contactNumber" className="form-control" onChange={this.formValidation}/>
+                                          <input type="text" id="contactNumber" className="form-control" onChange={this.formValidation} maxLength="50"/>
                                       </div>
                                   </div>
                                   <div className="row">
                                       <div id="editInfoModalComponents">
                                           <label>Address</label>
-                                          <input type="text" id="address" className="form-control" onChange={this.formValidation}/>
+                                          <input type="text" id="address" className="form-control" onChange={this.formValidation} maxLength="200"/>
                                       </div>
                                   </div>
                                   <div className="row">
@@ -390,13 +409,13 @@ var Content = React.createClass({
                                       </div>
                                       <div className="col-sm-4" id="editInfoModalComponents">
                                           <label>Age</label>
-                                          <input type="number" id="age" className="form-control" onChange={this.formValidation}/>
+                                          <input type="number" id="age" className="form-control" min="1" max="99" onChange={this.formValidation}/>
                                       </div>
                                   </div>
                                   <div className="row">
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>Password</label>
-                                          <input type="password" id="password" className="form-control" onChange={this.formValidation}/>
+                                          <input type="password" id="password" className="form-control" onChange={this.formValidation} maxLength="50"/>
                                       </div>
                                   </div>
                               </div>
@@ -431,12 +450,12 @@ var MainContent = React.createClass({
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
       }else{
-        alert("Email is not verified");
+        /*alert("Email is not verified");
         firebase.auth().signOut().then(function() {
           window.location.replace("http://127.0.0.1:8080/");
         }, function(error) {
           console.log(error);
-        });
+        });*/
       }  
     }, function(error) {
         console.log(error);

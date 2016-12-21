@@ -123,7 +123,12 @@ var Content = React.createClass({
           {
             $('#no-data').show();
           }
-        })
+        });
+        $("#age").keypress(function(event) {
+          if (event.which == 45 || event.which == 46) {
+            event.preventDefault();
+          }
+        });
       }(jQuery));
     });
   },
@@ -144,11 +149,17 @@ var Content = React.createClass({
     var type = document.getElementById("userType").value;  
 
     if(firstName && lastName && contactNumber && address && birthdate && age && type){
-        $('#editConfirmation').appendTo("body").modal('show');
-    }else{
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
+      if(Number(age) <= 0){
+        document.getElementById("errorMessage").innerHTML= "Invalid age.";
         $('#errorModal').appendTo("body").modal('show');
         $('#editConfirmation').modal('hide');
+      }else{
+        $('#editConfirmation').appendTo("body").modal('show');
+      }    
+    }else{
+      document.getElementById("errorMessage").innerHTML= "Missing input.";
+      $('#errorModal').appendTo("body").modal('show');
+      $('#editConfirmation').modal('hide');
     }
   },
 
@@ -378,13 +389,13 @@ var Content = React.createClass({
                                     <div className="row">
                                         <div className="col-sm-6" id="editInfoModalComponents">
                                             <label>First Name</label>
-                                            <input type="text" id="firstName" className="form-control" onChange={this.formValidation}/>
+                                            <input type="text" id="firstName" className="form-control" onChange={this.formValidation} maxLength="50"/>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-6" id="editInfoModalComponents">
                                             <label>Last Name</label>
-                                            <input type="text" id="lastName" className="form-control" onChange={this.formValidation}/>
+                                            <input type="text" id="lastName" className="form-control" onChange={this.formValidation} maxLength="50"/>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -394,13 +405,13 @@ var Content = React.createClass({
                                         </div>
                                         <div className="col-sm-6" id="editInfoModalComponents">
                                             <label>Contact Number</label>
-                                            <input type="text" id="contactNumber" className="form-control" onChange={this.formValidation}/>
+                                            <input type="text" id="contactNumber" className="form-control" onChange={this.formValidation} maxLength="50"/>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div id="editInfoModalComponents">
                                             <label>Address</label>
-                                            <input type="text" id="address" className="form-control" onChange={this.formValidation}/>
+                                            <input type="text" id="address" className="form-control" onChange={this.formValidation} maxLength="200"/>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -410,7 +421,7 @@ var Content = React.createClass({
                                         </div>
                                         <div className="col-sm-4" id="editInfoModalComponents">
                                             <label>Age</label>
-                                            <input type="number" id="age" className="form-control" onChange={this.formValidation} />
+                                            <input type="number" id="age" className="form-control" min="1" max="99" onChange={this.formValidation}/>
                                         </div>
                                     </div>
                                     <div className="row">
