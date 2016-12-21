@@ -70,10 +70,10 @@ var Content = React.createClass({
             </div>
             <div className="login-box-body" id="loginBoxBody">
                 <div className="form-group has-feedback" id="formGroup">
-                    <input type="email" id="email" className="form-control" placeholder="email address"/>
+                    <input type="email" id="email" className="form-control" placeholder="email address" maxLength="50"/>
                 </div>
                 <div className="form-group has-feedback" id="formGroup">
-                    <input type="password" id="password" className="form-control" placeholder="password"/>
+                    <input type="password" id="password" className="form-control" placeholder="password" maxLength="50"/>
                 </div>
                 <div className="col-sm-12" id="loginSubmit">
                     <center><button className="btn btn-primary col-sm-12" id="loginButton" onClick={this.login}>
