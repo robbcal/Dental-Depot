@@ -20,11 +20,23 @@ var Content = React.createClass({
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           var type = snapshot.val().user_type
-          if(type == "admin"){
-            window.location.replace("admin/Inventory.html");
-          }else if(type == "user"){
-            window.location.replace("user/Inventory.html");
+          try {
+            if(type == "admin"){
+              window.location.replace("admin/Inventory.html");
+            }else if(type == "user"){
+              window.location.replace("user/Inventory.html");
+            }
+          } catch(e) {
+            var email = firebase.auth().currentUser.email;
+            firebase.auth().currentUser.delete().then(function() {
+              document.getElementById("errorAlert").innerHTML= "This action confirms the deletion of the account of "+email+".";
+              $('#errorBox').show();
+              document.getElementById("email").value = "";
+              document.getElementById("password").value = "";
+            }, function(error) {
+            });
           }
+
         });
       }).catch(function(error) {
         var errorCode = error.code;
@@ -99,13 +111,24 @@ var Main = React.createClass({
     return { signedIn: false, type: 0, res : null};
   },
 
-  componentWillMount: function(){
+  componentDidMount: function(){
     const self = this;
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
-          self.setState({ signedIn: true, type: snapshot.val().user_type });
+          try {
+            self.setState({ signedIn: true, type: snapshot.val().user_type });
+          } catch(e) {
+            var email = firebase.auth().currentUser.email;
+            firebase.auth().currentUser.delete().then(function() {
+              document.getElementById("errorAlert").innerHTML= "This action confirms the deletion of the account of "+email+".";
+              $('#errorBox').show();
+              document.getElementById("email").value = "";
+              document.getElementById("password").value = "";
+            }, function(error) {
+            });
+          }
         });
       } else {
         self.setState({ signedIn: false });
