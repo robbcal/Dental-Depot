@@ -150,6 +150,20 @@ var Content = React.createClass({
             event.preventDefault();
           }
         });
+        $(function(){
+          var dtToday = new Date();
+          var month = dtToday.getMonth() + 1;
+          var day = dtToday.getDate();
+          var year = dtToday.getFullYear();
+
+          if(month < 10)
+              month = '0' + month.toString();
+          if(day < 10)
+              day = '0' + day.toString();
+
+          var maxDate = year + '-' + month + '-' + day;    
+          $('#birthdate').attr('max', maxDate);
+        });
       }(jQuery));
     });
   },
@@ -181,6 +195,17 @@ var Content = React.createClass({
       document.getElementById("errorMessage").innerHTML= "Missing input.";
       $('#errorModal').appendTo("body").modal('show');
     }
+  },
+
+  ageCalculator: function(){
+    var today = new Date();
+    var birthDate = new Date(document.getElementById("birthdate").value);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    document.getElementById("age").value = age;
   },
 
   addUser: function(){
@@ -250,7 +275,6 @@ var Content = React.createClass({
     document.getElementById("email").style.borderColor = "red";
     document.getElementById("address").style.borderColor = "red";
     document.getElementById("contactNumber").style.borderColor = "red";
-    document.getElementById("age").style.borderColor = "red";
     document.getElementById("birthdate").style.borderColor = "red";
   },
 
@@ -279,11 +303,6 @@ var Content = React.createClass({
       document.getElementById("contactNumber").style.borderColor = "red";
     }else{
       document.getElementById("contactNumber").style.borderColor = "";
-    }
-    if(document.getElementById("age").value == ""){
-      document.getElementById("age").style.borderColor = "red";
-    }else{
-      document.getElementById("age").style.borderColor = "";
     }
     if(document.getElementById("birthdate").value == ""){
       document.getElementById("birthdate").style.borderColor = "red";
@@ -378,11 +397,11 @@ var Content = React.createClass({
                               <div className="row">
                                   <div className="col-sm-8" id="editInfoModalComponents">
                                       <label>Birthdate</label>
-                                      <input type="date" id="birthdate" className="form-control" onChange={this.formValidation}/>
+                                      <input type="date" id="birthdate" className="form-control" onBlur={this.ageCalculator} onChange={this.formValidation}/>
                                   </div>
                                   <div className="col-sm-4" id="editInfoModalComponents">
                                       <label>Age</label>
-                                      <input type="number" id="age" className="form-control" min="1" max="99" onChange={this.formValidation}/>
+                                      <input type="number" id="age" className="form-control" min="1" max="99" readOnly/>
                                   </div>
                               </div>
                               <div className="row">
