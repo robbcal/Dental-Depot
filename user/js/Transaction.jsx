@@ -342,166 +342,169 @@ var Content = React.createClass({
 
   render: function() {
     return (
-      <div className="row" id="mainContent">
-          <div className="col-md-6" id="boxBodyContent">
-              <a id="headerButtons" data-toggle="modal" className="pull-left" data-target="#exitTransaction">
-                  <img src="../bootstrap/icons/left-arrow.png" height="25px"/>
-              </a>
-              <div className="box box-primary" id="transBody">
-                  <div className="box-body table-responsive" id="transWindow">
-                      <input type="hidden" id="ID" className="form-control"/>
-                      <div className="row">
-                          <div className="pull-right">
-                              <label id="userInTrans">{this.state.curUser}</label>
-                          </div>
-                      </div>
-                      <br/>
-                      <div className="row">
-                          <div className="col-sm-6">
-                              <label>Item Name</label>
-                              <select id="item" className="form-control" onChange={this.displayItemOnModal}>
-                                  <option id="header" value="0">- Choose an item -</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div className="row">
-                          <div className="col-sm-6" id="boxbodyContent">
-                              <label>Item Stock</label>
-                              <input type="number" id="stock" readOnly className="form-control"/>
-                          </div>
-                          <div className="col-sm-6" id="boxbodyContent">
-                              <label>Item Price</label>
-                              <input type="number" id="price" readOnly className="form-control"/>
-                          </div>
-                      </div>
-                      <div className="row">
-                          <div className="col-sm-6" id="boxbodyContent">
-                              <label>Quantity</label>
-                              <input type="number" id="number" className="form-control" min="1" onChange={this.formValidation} onBlur={this.checkStock}/>
-                          </div>
-                          <div className="col-sm-6" id="boxbodyContent">
-                              <label>Release Method</label>
-                              <select id="release" className="form-control">
-                                  <option value="Over the Counter">Over the counter</option>
-                                  <option value="Shipping">Shipping</option>
-                                  <option value="Delivery">Delivery</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div className="row">
-                          <div className="col-sm-6" id="boxbodyContent">
-                              <label>Date</label>
-                              <input type="date" id="date" className="form-control" onChange={this.formValidation}/>
-                          </div>
-                      </div>
-                      <div className="row">
-                          <div className="col-sm-6" id="boxbodyContent"></div>
-                          <div className="col-sm-6" id="boxbodyContent">
-                              <button className="btn btn-primary pull-right" id="addItem" onClick={this.addItemToTable}>ADD ITEM</button>
-                          </div>
-                      </div>
-                      <br/>
-                      <div className="row">
-                          <div className="callout callout-info col-sm-12" id="boxbodyContent">
-                              <div className="form-group">
-                                  <h4 className="col-sm-4 control-label">TOTAL</h4>
-                                  <div className="col-sm-8">
-                                      <strong><input className="form-control" type="number" id="total" readOnly min="0"/></strong>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div className="col-md-6">
-              <div className="box box-default" id="transBody">
-                  <div className="box-body" id="transWindow">
-                      <div className="box box-solid">
-                          <div className="box-body" id="transTable">
-                              <table className="table table-hover table-bordered table-responsive" id="transactionTable">
-                                  <thead>
-                                      <tr>
-                                          <th></th>
-                                          <th style={{display:'none'}}></th>
-                                          <th><center>ITEM</center></th>
-                                          <th><center>QUANTITY</center></th>
-                                          <th><center>PRICE</center></th>
-                                          <th><center>SUB TOTAL</center></th>
-                                      </tr>
-                                  </thead>
-                                  <tbody id="transactionTableBody">
-                                  </tbody>
-                              </table>
-                          </div>
-                      </div>
-                      <div className="col-sm-8" id="boxbodyContent">
-                          <input type="text" id="customer" placeholder="Customer" className="form-control pull-left" onChange={this.formValidation} maxLength="100"/>
-                      </div>
-                      <button className="btn btn-primary btn-block" id="createTransactionButton" onClick={this.checkTransaction}>CREATE TRANSACTION</button>
-                  </div>
-              </div>
-          </div>
+        <div className="row" id="mainContent">
+            <div className="col-md-4" id="boxBodyContent">
+                <a id="headerButtons" data-toggle="modal" className="pull-left" data-target="#exitTransaction">
+                    <img src="../bootstrap/icons/left-arrow.png" height="25px"/>
+                </a>
+                <div className="box box-primary" id="transBody">
+                    <div className="box-body table-responsive" id="transWindow">
+                        <input type="hidden" id="ID" className="form-control"/>
+                        <div className="row">
+                            <div className="pull-left">
+                                <label id="userInTrans">{this.state.curUser}</label>
+                            </div>
+                        </div>
+                        <br/>
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <label>Item Name</label>
+                                <select id="item" className="form-control" onChange={this.displayItemOnModal}>
+                                    <option id="header" value="0">- Choose an item -</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-12" id="boxbodyContent">
+                                <label>Item Stock</label>
+                                <input type="number" id="stock" readOnly className="form-control"/>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-12" id="boxbodyContent">
+                                <label>Item Price</label>
+                                <input type="number" id="price" readOnly className="form-control"/>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-12" id="boxbodyContent">
+                                <label>Quantity</label>
+                                <input type="number" id="number" className="form-control" min="1" onChange={this.formValidation} onBlur={this.checkStock}/>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6" id="boxbodyContent"></div>
+                            <div className="col-sm-6" id="boxbodyContent">
+                                <button className="btn btn-primary pull-right" id="addItem" onClick={this.addItemToTable}>ADD ITEM</button>
+                            </div>
+                        </div>
+                        <br/>
+                        <div className="row">
+                            <div className="callout callout-info col-sm-12" id="boxbodyContent">
+                                <div className="form-group">
+                                    <h4 className="col-sm-4 control-label">TOTAL</h4>
+                                    <div className="col-sm-8">
+                                        <strong><input className="form-control" type="number" id="total" readOnly min="0"/></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="col-md-8">
+                <div className="box box-default" id="transBody">
+                    <div className="box-body" id="transWindow">
+                        <div className="box box-solid">
+                            <div className="box-body" id="transTable">
+                                <table className="table table-hover table-bordered table-responsive" id="transactionTable">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th style={{display:'none'}}></th>
+                                            <th><center>ITEM</center></th>
+                                            <th><center>QUANTITY</center></th>
+                                            <th><center>PRICE</center></th>
+                                            <th><center>SUB TOTAL</center></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="transactionTableBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-4" id="boxbodyContent">
+                                <label>Date</label>
+                                <input type="date" id="date" className="form-control" onChange={this.formValidation}/>
+                            </div>
+                            <div className="col-sm-4" id="boxbodyContent">
+                                <label>Release Method</label>
+                                <select id="release" className="form-control">
+                                    <option value="Over the Counter">Over the counter</option>
+                                    <option value="Shipping">Shipping</option>
+                                    <option value="Delivery">Delivery</option>
+                                </select>
+                            </div>
+                            <div className="col-sm-4" id="boxbodyContent">
+                                <label>Customer</label>
+                                <input type="text" id="customer" className="form-control" placeholder="Customer" onChange={this.formValidation} maxLength="100"/>
+                            </div>
+                        </div>
+                        <button className="btn btn-primary btn-block" id="createTransactionButton" onClick={this.checkTransaction}>CREATE TRANSACTION</button>
+                    </div>
+                </div>
+            </div>
 
-          {/* MODALS */}
-          <div className="modal fade bs-example-modal-lg" id="exitTransaction">
-              <div className="modal-dialog modal-sm">
-                  <div className="modal-content">
-                      <div className="modal-body">
-                          <center>
-                              <h5>Stop creating transaction?</h5>
-                              <a role="button" className="btn btn-primary" href="Inventory.html" id="itemButtons">YES</a>
-                              <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                          </center>
-                      </div>
-                  </div>
-              </div>
-          </div>
+            {/* MODALS */}
+            <div className="modal fade bs-example-modal-lg" id="exitTransaction">
+                <div className="modal-dialog modal-sm">
+                    <div className="modal-content">
+                        <div className="modal-body">
+                            <center>
+                                <h5>Stop creating transaction?</h5>
+                                <a role="button" className="btn btn-primary" href="Inventory.html" id="itemButtons">YES</a>
+                                <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-          <div className="modal fade bs-example-modal-lg" id="addConfirmation">
-              <div className="modal-dialog modal-sm">
-                  <div className="modal-content">
-                      <div className="modal-body">
-                          <center>
-                              <h5>Confirm transaction?</h5>
-                              <button type="button" className="btn btn-primary" onClick={this.createTransaction} id="itemButtons">YES</button>
-                              <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                          </center>
-                      </div>
-                  </div>
-              </div>
-          </div>
+            <div className="modal fade bs-example-modal-lg" id="addConfirmation">
+                <div className="modal-dialog modal-sm">
+                    <div className="modal-content">
+                        <div className="modal-body">
+                            <center>
+                                <h5>Confirm transaction?</h5>
+                                <button type="button" className="btn btn-primary" onClick={this.createTransaction} id="itemButtons">YES</button>
+                                <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-          <div className="modal fade modal-success" id="informSuccessAdd">
-              <div className="modal-dialog modal-md">
-                  <div className="modal-content">
-                      <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                          <center>
-                              <h4><strong>Transaction Successful.</strong></h4>
-                          </center>
-                      </div>
-                  </div>
-              </div>
-          </div>
+            <div className="modal fade modal-success" id="informSuccessAdd">
+                <div className="modal-dialog modal-md">
+                    <div className="modal-content">
+                        <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <center>
+                                <h4><strong>Transaction Successful.</strong></h4>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-          <div className="modal fade modal-danger" id="errorModal">
-              <div className="modal-dialog modal-sm">
-                  <div className="modal-content">
-                      <div className="modal-header">
-                          <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                          <center><h5 className="modal-title">ERROR</h5></center>
-                      </div>
-                      <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                          <center>
-                              <h5 id="errorMessage">Error</h5>
-                              <br/>
-                              <button type="button" className="btn btn-default btn-sm pull-right" data-dismiss="modal">OK</button>
-                          </center>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+            <div className="modal fade modal-danger" id="errorModal">
+                <div className="modal-dialog modal-sm">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <center><h5 className="modal-title">ERROR</h5></center>
+                        </div>
+                        <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <center>
+                                <h5 id="errorMessage">Error</h5>
+                                <br/>
+                                <button type="button" className="btn btn-default btn-sm pull-right" data-dismiss="modal">OK</button>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
   }
 });
