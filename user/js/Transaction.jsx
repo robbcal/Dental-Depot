@@ -140,7 +140,7 @@ var Content = React.createClass({
         document.getElementById("item").value="0";
       });
       $(document).ready(function () {
-        (function ($) {    
+        (function ($) {
           $("#number").keypress(function(event) {
             if (event.which == 45 || event.which == 46) {
                 event.preventDefault();
@@ -286,7 +286,7 @@ var Content = React.createClass({
             firebase.database().ref("items/"+transactionItems[a].id).update({
               quantity: newQty
             });
-            
+
             firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
               var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
               firebase.database().ref("items/"+transactionItems[a].id+"/item_history/").push().set({
@@ -530,7 +530,7 @@ var MainContent = React.createClass({
         }, function(error) {
           console.log(error);
         });
-      }  
+      }
     }, function(error) {
         console.log(error);
     });

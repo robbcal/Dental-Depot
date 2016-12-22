@@ -199,7 +199,7 @@ var Content = React.createClass({
         document.getElementById("item").value="0";
       });
       $(document).ready(function () {
-        (function ($) {    
+        (function ($) {
           $("#number").keypress(function(event) {
             if (event.which == 45 || event.which == 46) {
                 event.preventDefault();
@@ -345,7 +345,7 @@ var Content = React.createClass({
             firebase.database().ref("items/"+transactionItems[a].id).update({
               quantity: newQty
             });
-            
+
             firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
               var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
               firebase.database().ref("items/"+transactionItems[a].id+"/item_history/").push().set({
@@ -402,7 +402,7 @@ var Content = React.createClass({
   render: function() {
     return (
       <div className="row" id="mainContent">
-          <div className="col-md-6" id="boxBodyContent">
+          <div className="col-md-4" id="boxBodyContent">
               <a id="headerButtons" data-toggle="modal" className="pull-left" data-target="#exitTransaction">
                   <img src="../bootstrap/icons/left-arrow.png" height="25px"/>
               </a>
@@ -410,13 +410,13 @@ var Content = React.createClass({
                   <div className="box-body table-responsive" id="transWindow">
                       <input type="hidden" id="ID" className="form-control"/>
                       <div className="row">
-                          <div className="pull-right">
+                          <div className="pull-left">
                               <label id="userInTrans">{this.state.curUser}</label>
                           </div>
                       </div>
                       <br/>
                       <div className="row">
-                          <div className="col-sm-6">
+                          <div className="col-sm-12">
                               <label>Item Name</label>
                               <select id="item" className="form-control" onChange={this.displayItemOnModal}>
                                   <option id="header" value="0">- Choose an item -</option>
@@ -424,33 +424,21 @@ var Content = React.createClass({
                           </div>
                       </div>
                       <div className="row">
-                          <div className="col-sm-6" id="boxbodyContent">
+                          <div className="col-sm-12" id="boxbodyContent">
                               <label>Item Stock</label>
                               <input type="number" id="stock" readOnly className="form-control"/>
                           </div>
-                          <div className="col-sm-6" id="boxbodyContent">
+                      </div>
+                      <div className="row">
+                          <div className="col-sm-12" id="boxbodyContent">
                               <label>Item Price</label>
                               <input type="number" id="price" readOnly className="form-control"/>
                           </div>
                       </div>
                       <div className="row">
-                          <div className="col-sm-6" id="boxbodyContent">
+                          <div className="col-sm-12" id="boxbodyContent">
                               <label>Quantity</label>
                               <input type="number" id="number" className="form-control" min="1" onChange={this.formValidation} onBlur={this.checkStock}/>
-                          </div>
-                          <div className="col-sm-6" id="boxbodyContent">
-                              <label>Release Method</label>
-                              <select id="release" className="form-control">
-                                  <option value="Over the Counter">Over the counter</option>
-                                  <option value="Shipping">Shipping</option>
-                                  <option value="Delivery">Delivery</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div className="row">
-                          <div className="col-sm-6" id="boxbodyContent">
-                              <label>Date</label>
-                              <input type="date" id="date" className="form-control" onChange={this.formValidation}/>
                           </div>
                       </div>
                       <div className="row">
@@ -473,7 +461,7 @@ var Content = React.createClass({
                   </div>
               </div>
           </div>
-          <div className="col-md-6">
+          <div className="col-md-8">
               <div className="box box-default" id="transBody">
                   <div className="box-body" id="transWindow">
                       <div className="box box-solid">
@@ -494,8 +482,23 @@ var Content = React.createClass({
                               </table>
                           </div>
                       </div>
-                      <div className="col-sm-8" id="boxbodyContent">
-                          <input type="text" id="customer" placeholder="Customer" className="form-control pull-left" onChange={this.formValidation} maxLength="100"/>
+                      <div className="row">
+                          <div className="col-sm-4" id="boxbodyContent">
+                              <label>Date</label>
+                              <input type="date" id="date" className="form-control" onChange={this.formValidation}/>
+                          </div>
+                          <div className="col-sm-4" id="boxbodyContent">
+                              <label>Release Method</label>
+                              <select id="release" className="form-control">
+                                  <option value="Over the Counter">Over the counter</option>
+                                  <option value="Shipping">Shipping</option>
+                                  <option value="Delivery">Delivery</option>
+                              </select>
+                          </div>
+                          <div className="col-sm-4" id="boxbodyContent">
+                              <label>Customer</label>
+                              <input type="text" id="customer" className="form-control" placeholder="Customer" onChange={this.formValidation} maxLength="100"/>
+                          </div>
                       </div>
                       <button className="btn btn-primary btn-block" id="createTransactionButton" onClick={this.checkTransaction}>CREATE TRANSACTION</button>
                   </div>
@@ -589,7 +592,7 @@ var MainContent = React.createClass({
         }, function(error) {
           console.log(error);
         });
-      }  
+      }
     }, function(error) {
       console.log(error);
     });

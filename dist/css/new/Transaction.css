@@ -15,6 +15,7 @@
 
 #userInTrans{
     color: #b2b4b7;
+    margin-left: 15px;
 }
 
 #boxbodyContent{
@@ -26,15 +27,17 @@
 }
 
 #transTable{
-    height: 350px;
+    height: 310px;
 }
 
 #itemButtons{
     margin: 10px;
 }
 
-#customer{
-    margin-bottom: 10px;
-    margin-top: -7px;
-    margin-left: -15px;
+#createTransactionButton{
+    margin-top: 25px;
+}
+
+#addItem{
+    margin-top: 10px;
 }
