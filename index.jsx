@@ -119,10 +119,15 @@ var Main = React.createClass({
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           try {
             self.setState({ signedIn: true, type: snapshot.val().user_type });
+            if(user.emailVerified) {
+              firebase.database().ref('users/'+uid).update({
+                status:"Verified"
+              });
+            }  
           } catch(e) {
             var email = firebase.auth().currentUser.email;
             firebase.auth().currentUser.delete().then(function() {
-              document.getElementById("errorAlert").innerHTML= "This action confirms the deletion of the account of "+email+".";
+              document.getElementById("errorAlert").innerHTML= "This "+email+" account has been recently deleted.";
               $('#errorBox').show();
               document.getElementById("email").value = "";
               document.getElementById("password").value = "";

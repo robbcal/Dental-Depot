@@ -79,6 +79,8 @@ var Content = React.createClass({
       });
     });
 
+
+
     var ref = firebase.database().ref('users').orderByChild('firstname');
     ref.on('child_added', function(data) {
       var id=data.key
@@ -90,8 +92,9 @@ var Content = React.createClass({
       var age = data.val().age;
       var birthdate = data.val().birthday;
       var userType = data.val().user_type;
+      var status = data.val().status;
 
-      $("#userList").append("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td></tr>");
+      $("#userList").append("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td><td><center>"+status+"</center></td></tr>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("user_id").value = id;
         document.getElementById("submit").click();
@@ -108,8 +111,9 @@ var Content = React.createClass({
       var age = data.val().age;
       var birthdate = data.val().birthday;
       var userType = data.val().user_type;
+      var status = data.val().status;
 
-      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td></tr>");
+      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td><td><center>"+status+"</center></td></tr>");
       $("#"+id+"").dblclick(function() {
         alert(email);
       });
@@ -238,7 +242,8 @@ var Content = React.createClass({
             age: age,
             birthday: birthdate,
             user_type: userType,
-            password: password
+            password: password,
+            status:"Unverified"
           });
           firebase.database().ref("users/"+curUID+"/activity").push().set({
             action_performed: "Added user.",
@@ -344,6 +349,7 @@ var Content = React.createClass({
                               <th><center>USERNAME</center></th>
                               <th><center>EMAIL ADDRESS</center></th>
                               <th><center>USER TYPE</center></th>
+                              <th><center>STATUS</center></th>
                           </tr>
                       </thead>
                       <tbody id="userList">

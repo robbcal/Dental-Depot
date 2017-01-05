@@ -168,6 +168,7 @@ var Content = React.createClass({
       document.getElementById("address").value = snapshot.val().address;
       document.getElementById("age").value = snapshot.val().age;
       document.getElementById("birthdate").value = snapshot.val().birthday;
+      document.getElementById("prevEmail").value = snapshot.val().user_email;
       document.getElementById("email").value = snapshot.val().user_email;
       document.getElementById("contactNumber").value = snapshot.val().contact_no;
       document.getElementById("password").value = atob(snapshot.val().password);
@@ -200,6 +201,7 @@ var Content = React.createClass({
     var lastname = document.getElementById("lastName").value;
     var address = document.getElementById("address").value;
     var contactnumber = document.getElementById("contactNumber").value;
+    var prevEmail = document.getElementById("prevEmail").value;
     var email = document.getElementById("email").value;
     var age = document.getElementById("age").value;
     var birthdate = document.getElementById("birthdate").value;
@@ -225,6 +227,11 @@ var Content = React.createClass({
               quantity: "n/a",
               date: today
             });
+            if(email != prevEmail){
+              firebase.database().ref('users/'+uid).update({
+                status:"Unverified"
+              });
+            }
             $('#editConfirmation').modal('hide');
             $('#editInfoModal').modal('hide');
             $('#informSuccess').appendTo("body").modal('show');
@@ -408,6 +415,7 @@ var Content = React.createClass({
                                   <div className="row">
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>Email</label>
+                                          <input type="hidden" id="prevEmail"/>
                                           <input type="email" id="email" className="form-control" onChange={this.formValidation} maxLength="50"/>
                                       </div>
                                       <div className="col-sm-6" id="editInfoModalComponents">
