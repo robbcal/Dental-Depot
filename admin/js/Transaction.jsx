@@ -315,9 +315,10 @@ var Content = React.createClass({
           var itemID = document.getElementById("transactionTable").rows[y].cells[1].innerHTML;
           var itemName = document.getElementById("transactionTable").rows[y].cells[2].innerHTML;
           var qty = document.getElementById("transactionTable").rows[y].cells[3].innerHTML;
-          var subtotal = document.getElementById("transactionTable").rows[y].cells[4].innerHTML;
+          var price = document.getElementById("transactionTable").rows[y].cells[4].innerHTML;
+          var subtotal = document.getElementById("transactionTable").rows[y].cells[5].innerHTML;
 
-          var itemElement = {id: itemID, name: itemName, qty: qty, subtotal: subtotal};
+          var itemElement = {id: itemID, name: itemName, qty: qty, price: price, subtotal: subtotal};
           transactionItems.push(itemElement);
         }
         var transactionLength = transactionItems.length;
@@ -337,6 +338,7 @@ var Content = React.createClass({
           firebase.database().ref("transactions/"+transactionID+"/items_purchased/"+transactionItems[a].id).set({
             item_name: transactionItems[a].name,
             item_quantity: transactionItems[a].qty,
+            item_price: transactionItems[a].price,
             item_subtotal: transactionItems[a].subtotal
           });
           firebase.database().ref('items/'+transactionItems[a].id).once('value', function(snapshot) {

@@ -93,27 +93,26 @@ var Header = React.createClass({
           var user = data.val().user;
           var release = data.val().release_method;
           var customer = data.val().customer;
-          firebase.database().ref('users/'+userID).once('value', function(dataSnapshot){
-            var name = dataSnapshot.val().firstname+" "+dataSnapshot.val().lastname;
-            $("#transactionList").append("<tr id="+id+"><td><center>"+id+"</center></td><td><center>"+total+"</center></td><td><center>"+date+"</center></td><td><center>"+name+"</center></td></tr>");
-            $("#"+id+"").dblclick(function() {
-              $("#transactionTableBody tr").remove();
-              document.getElementById("transID").value = id;
-              $('#transactionModal').modal('show');
-              document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
-              document.getElementById("transTotal").innerHTML = "Total: "+total;
-              document.getElementById("transDate").innerHTML = "Date: "+date;
-              document.getElementById("transRelease").innerHTML = "Release Method: "+release;
-              document.getElementById("transCustomer").innerHTML = customer;
+          
+          $("#transactionList").append("<tr id="+id+"><td><center>"+id+"</center></td><td><center>"+total+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
+          $("#"+id+"").dblclick(function() {
+            $("#transactionTableBody tr").remove();
+            document.getElementById("transID").value = id;
+            $('#transactionModal').modal('show');
+            document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
+            document.getElementById("transTotal").innerHTML = "Total: "+total;
+            document.getElementById("transDate").innerHTML = "Date: "+date;
+            document.getElementById("transRelease").innerHTML = "Release Method: "+release;
+            document.getElementById("transCustomer").innerHTML = customer;
 
-              var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
-              ref.on('child_added', function(data) {
-                var itemName = data.val().item_name;
-                var itemQuantity = data.val().item_quantity;
-                var subtotal = data.val().item_subtotal;
+            var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
+            ref.on('child_added', function(data) {
+              var itemName = data.val().item_name;
+              var itemQuantity = data.val().item_quantity;
+              var itemPrice = data.val().item_price;
+              var subtotal = data.val().item_subtotal;
 
-                $("#transactionTableBody").append("<tr id="+id+"><td><center>"+itemName+"</center></td><td><center>"+itemQuantity+"</center></td><td><center>"+subtotal+"</center></td></tr>");
-              });
+              $("#transactionTableBody").append("<tr id="+id+"><td><center>"+itemName+"</center></td><td><center>"+itemQuantity+"</center></td><td><center>"+itemPrice+"</center></td></td><td><center>"+subtotal+"</center></td></tr>");
             });
           });
         });
@@ -437,6 +436,7 @@ var Header = React.createClass({
                                                     <th><center>ITEM NAME</center></th>
                                                     <th><center>QUANTITY</center></th>
                                                     <th><center>PRICE</center></th>
+                                                    <th><center>SUBTOTAL</center></th>
                                                 </tr>
                                             </thead>
                                             <tbody id="transactionTableBody">
