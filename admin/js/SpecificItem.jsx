@@ -237,8 +237,9 @@ itemDescription: "null",
     var now = new Date();
     var additionalStock = document.getElementById("addNumber").value;
     var date = document.getElementById("addDate").value;
-    var action = "Restocked item."
+    var action = "Restocked item.";
     var uid = firebase.auth().currentUser.uid;
+    var itemName = this.state.itemName;
 
     var newStock = Number(this.state.itemQty) + Number(additionalStock);
     firebase.database().ref('items/'+itemID).update({
@@ -255,9 +256,19 @@ itemDescription: "null",
     });  
     firebase.database().ref("users/"+uid+"/activity").push().set({
       action_performed: action,
-      object_changed: this.state.itemName,
+      object_changed: itemName,
       quantity: additionalStock,
       date: date
+    });
+    firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+      var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+      firebase.database().ref("activities").push().set({
+        action_performed: action,
+        object_changed: itemName,
+        quantity: additionalStock,
+        date: date,
+        user: fullname
+      });
     });
     $('#addConfirmation').modal('hide');
     $('#addStockModal').modal('hide');
@@ -273,6 +284,7 @@ itemDescription: "null",
     var action = "Released item."
     var uid = firebase.auth().currentUser.uid;
     var curStock = this.state.itemQty;
+    var itemName = this.state.itemName;
 
     
     if(diminishedStock <= curStock){
@@ -291,9 +303,19 @@ itemDescription: "null",
       });
       firebase.database().ref("users/"+uid+"/activity").push().set({
         action_performed: action,
-        object_changed: this.state.itemName,
+        object_changed: itemName,
         quantity: diminishedStock,
         date: date
+      });
+      firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+        var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+        firebase.database().ref("activities").push().set({
+          action_performed: action,
+          object_changed: itemName,
+          quantity: diminishedStock,
+          date: date,
+          user: fullname
+        });
       });
       $('#deleteConfirmation').modal('hide');
       $('#deleteStockModal').modal('hide');
@@ -352,6 +374,16 @@ itemDescription: "null",
           quantity: "n/a",
           date: date
         });
+        firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+          var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+          firebase.database().ref("activities").push().set({
+            action_performed: action,
+            object_changed: itemName,
+            quantity: "n/a",
+            date: date,
+            user: fullname
+          });
+        });
         $('#editConfirmation').modal('hide');
         $('#editItemModal').modal('hide');
         $('#informSuccess').appendTo("body").modal('show');
@@ -366,15 +398,28 @@ itemDescription: "null",
 
   deleteItem: function(){
     var now = new Date();
-    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+    var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+    var today = now.getFullYear()+"-"+month+"-"+day;
     var uid = firebase.auth().currentUser.uid;
     var action = "Deleted item."
+    var itemName = this.state.itemName
 
     firebase.database().ref("users/"+uid+"/activity").push().set({
       action_performed: action,
-      object_changed: this.state.itemName,
+      object_changed: itemName,
       quantity: "n/a",
       date: today
+    });
+    firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+      var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+      firebase.database().ref("activities").push().set({
+        action_performed: action,
+        object_changed: itemName,
+        quantity: "n/a",
+        date: today,
+        user: fullname
+      });
     });
     $('#deleteItemModal').modal('hide');
     $('#informSuccessItemDelete').appendTo("body").modal('show');

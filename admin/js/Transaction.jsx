@@ -365,6 +365,16 @@ var Content = React.createClass({
           quantity: "n/a",
           date: date
         });
+        firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+          var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+          firebase.database().ref("activities").push().set({
+            action_performed: "Add transaction.",
+            object_changed: transactionID,
+            quantity: "n/a",
+            date: date,
+            user: fullname
+          });
+        });
         document.getElementById("total").value = 0;
         document.getElementById("stock").value = "";
         document.getElementById("number").value = "";

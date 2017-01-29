@@ -284,8 +284,18 @@ var Content = React.createClass({
         firebase.database().ref("users/"+uid+"/activity").push().set({
           action_performed: action,
           object_changed: itemName,
-          quantity: qty,
+          quantity: Number(qty),
           date: date
+        });
+        firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+          var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+          firebase.database().ref("activities").push().set({
+            action_performed: action,
+            object_changed: itemName,
+            quantity: Number(qty),
+            date: date,
+            user: fullname
+          });
         });
         document.getElementById("newItem").value="";
         document.getElementById("newNumber").value="";
@@ -353,6 +363,16 @@ var Content = React.createClass({
         object_changed: itemName,
         quantity: addNumber,
         date: date
+      });
+      firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+        var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+        firebase.database().ref("activities").push().set({
+          action_performed: action,
+          object_changed: itemName,
+          quantity: addNumber,
+          date: date,
+          user: fullname
+        });
       });
       $("#item").val("");
       document.getElementById("ID").value = "";

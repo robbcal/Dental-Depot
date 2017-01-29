@@ -80,7 +80,8 @@ var Content = React.createClass({
        birthdate: "null",
            email: "null",
    contactNumber: "null",
-        userType: "null"
+        userType: "null",
+        currentUserName: "null"
       };
   },
 
@@ -101,13 +102,20 @@ var Content = React.createClass({
       });
     });
 
+    var currRef = firebase.database().ref('users/'+firebase.auth().currentUser.uid);
+    currRef.on('value', function(snapshot) {
+      self.setState({
+       currentUserName: snapshot.val().firstname+" "+snapshot.val().lastname
+      });
+    });
+
     firebase.database().ref('users/'+userID+'/activity').orderByKey().on('child_added', function(data){
       var action = data.val().action_performed;
       var object = data.val().object_changed;
       var quantity = data.val().quantity;
       var date = data.val().date;
 
-      $("#activityList").append("<tr><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td></tr>");
+      $("#activityList").prepend("<tr><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td></tr>");
     });  
 
     $(document).ready(function () {
@@ -145,6 +153,10 @@ var Content = React.createClass({
         });
       }(jQuery));
     });
+
+    if(userID == firebase.auth().currentUser.uid){
+      document.getElementById("deleteUserButton").disabled = true;
+    }
   },
 
   showTable: function(){
@@ -221,7 +233,9 @@ var Content = React.createClass({
 
   editUser: function(){
     var now = new Date();
-    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+    var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+    var today = now.getFullYear()+"-"+month+"-"+day;
     var uid = firebase.auth().currentUser.uid;
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
@@ -246,6 +260,13 @@ var Content = React.createClass({
       quantity: "n/a",
       date: today
     });
+    firebase.database().ref("activities").push().set({
+      action_performed: "Edited user.",
+      object_changed: firstName+" "+lastName,
+      quantity: "n/a",
+      date: today,
+      user: this.state.currentUserName
+    });
     $('#editConfirmation').modal('hide');
     $('#editInfoModal').modal('hide');
     $('#informSuccess').appendTo("body").modal('show');
@@ -253,18 +274,26 @@ var Content = React.createClass({
   },
 
   deleteUser: function(){
-    var firstName = document.getElementById("firstName").value;
-    var lastName = document.getElementById("lastName").value;
     var now = new Date();
-    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+    var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+    var today = now.getFullYear()+"-"+month+"-"+day;
     var uid = firebase.auth().currentUser.uid;
     var action = "Deleted user."
+    var object = this.state.fullName
 
-    firebase.database().ref("users/"+uid+"/activity").push().set({
+   firebase.database().ref("users/"+uid+"/activity").push().set({
       action_performed: action,
-      object_changed: firstName+" "+lastName,
+      object_changed: object,
       quantity: "n/a",
       date: today
+    });
+    firebase.database().ref("activities").push().set({
+      action_performed: action,
+      object_changed: object,
+      quantity: "n/a",
+      date: today,
+      user: this.state.currentUserName
     });
     $('#deleteUserModal').modal('hide');
     $('#informSuccessDelete').appendTo("body").modal('show');

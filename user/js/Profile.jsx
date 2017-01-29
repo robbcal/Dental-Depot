@@ -195,7 +195,9 @@ var Content = React.createClass({
 
   editUser: function(){
     var now = new Date();
-    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+    var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+    var today = now.getFullYear()+"-"+month+"-"+day;
     var uid = firebase.auth().currentUser.uid;
     var firstname = document.getElementById("firstName").value;
     var lastname = document.getElementById("lastName").value;
@@ -220,6 +222,13 @@ var Content = React.createClass({
               age: age,
               birthday: birthdate,
               password: password
+            });
+            firebase.database().ref('activities').push().set({
+              action_performed: "Edited profile.",
+              object_changed: firstname+" "+lastname,
+              quantity: "n/a",
+              date: today,
+              user: firstname+" "+lastname
             });
             firebase.database().ref('users/'+uid+'/activity').push().set({
               action_performed: "Edited profile.",

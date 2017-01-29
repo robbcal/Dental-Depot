@@ -215,7 +215,9 @@ var Content = React.createClass({
   addUser: function(){
     var curUID = firebase.auth().currentUser.uid;
     var now = new Date();
-    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+    var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+    var today = now.getFullYear()+"-"+month+"-"+day;
     var cur_email = firebase.auth().currentUser.email;
     var cur_password = this.state.cur_password;
     var firstName = document.getElementById("firstName").value;
@@ -251,6 +253,17 @@ var Content = React.createClass({
             quantity: "n/a",
             date: today
           });
+          firebase.database().ref('users/'+curUID).once('value').then(function(snapshot) {
+            var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+            firebase.database().ref("activities").push().set({
+              action_performed: "Added user.",
+              object_changed: firstName+" "+lastName,
+              quantity: "n/a",
+              date: today,
+              user: fullname
+            });
+          });
+            
           $('#addConfirmation').modal('hide');
           $('#addUserModal').modal('hide');
           $('#informSuccess').appendTo("body").modal('show');

@@ -94,7 +94,7 @@ var Header = React.createClass({
           var release = data.val().release_method;
           var customer = data.val().customer;
           
-          $("#transactionList").append("<tr id="+id+"><td><center>"+id+"</center></td><td><center>"+total+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
+          $("#transactionList").prepend("<tr id="+id+"><td><center>"+id+"</center></td><td><center>"+total+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
           $("#"+id+"").dblclick(function() {
             $("#transactionTableBody tr").remove();
             document.getElementById("transID").value = id;
@@ -122,31 +122,26 @@ var Header = React.createClass({
           $("tr#"+id).remove();
         });
 
-        var ref = firebase.database().ref('users');
-        ref.once('value', function(snapshot) {
-          snapshot.forEach(function(childSnapshot){
-            var childKey = childSnapshot.key
-            var name = childSnapshot.val().firstname+" "+childSnapshot.val().lastname;
-            firebase.database().ref('users/'+childKey+'/activity').on('child_added', function(data){
-              var id = data.key;
+       firebase.database().ref('activities').orderByKey().on('child_added', function(data){
+          var id = data.key;
               var action = data.val().action_performed;
               var object = data.val().object_changed;
               var quantity = data.val().quantity;
               var date = data.val().date;
-              $("#activityList").append("<tr id="+id+"><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td><td><center>"+name+"</center></td></tr>");
-            });
-
-            firebase.database().ref('users/'+childKey+'/activity').on('child_removed', function(data) {
-              var id=data.key
+              var user = data.val().user;
+              $("#activityList").prepend("<tr id="+id+"><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
+        });
+        firebase.database().ref('activities').orderByKey().on('child_removed', function(data){
+          var id=data.key
               $("tr#"+id).remove();
-            });
-          })
         });
 
         // today sales
         var ref = firebase.database().ref('transactions');
         var now = new Date();
-        var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+        var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+        var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+        var today = now.getFullYear()+"-"+month+"-"+day;
         ref.on('value', function(snapshot) {
             var total = 0;
             snapshot.forEach(function(childSnapshot){
@@ -155,15 +150,17 @@ var Header = React.createClass({
                 if(date == today){
                     total = total + parseFloat(childSnapshot.val().total);
                 }
-                document.getElementById("todaySales").innerHTML = total;
-                document.getElementById("dateToday").innerHTML = today;
+                document.getElementById("todaySales").innerHTML = total.toFixed(2);;
             });
         });
+        document.getElementById("dateToday").innerHTML = today;
 
         // yesterday sales
         var ref = firebase.database().ref('transactions');
         var now = new Date();
-        var yesterday = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+(now.getDate()-1);
+        var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+        var day=((now.getDate())>=10)? (now.getDate()-1) : '0' + (now.getDate()-1);
+        var yesterday = now.getFullYear()+"-"+month+"-"+day;
         ref.on('value', function(snapshot) {
             var total = 0;
             snapshot.forEach(function(childSnapshot){
@@ -172,10 +169,10 @@ var Header = React.createClass({
                 if(date == yesterday){
                     total = total + parseFloat(childSnapshot.val().total);
                 }
-                document.getElementById("yesterdaySales").innerHTML = total;
-                document.getElementById("dateYesterday").innerHTML = yesterday;
+                document.getElementById("yesterdaySales").innerHTML = total.toFixed(2);;
             });
         });
+        document.getElementById("dateYesterday").innerHTML = yesterday;
 
         $(document).ready(function () {
           (function ($) {
@@ -232,14 +229,16 @@ var Header = React.createClass({
                 if(date == day){
                     total = total + parseFloat(childSnapshot.val().total);
                 }
-                document.getElementById("dailySale").innerHTML = total;
+                document.getElementById("dailySale").innerHTML = total.toFixed(2);
             });
         });
       },
 
       deleteTransaction: function(){
         var now = new Date();
-        var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+        var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+        var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+        var today = now.getFullYear()+"-"+month+"-"+day;
         var uid = firebase.auth().currentUser.uid;
         var action = "Deleted transaction."
         var idTrans = document.getElementById("transID").value;
@@ -250,6 +249,16 @@ var Header = React.createClass({
           quantity: "n/a",
           date: today
         });
+        firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+            var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+            firebase.database().ref("activities").push().set({
+              action_performed: action,
+              object_changed: idTrans,
+              quantity: "n/a",
+              date: today,
+              user: fullname
+            });
+          });
         $('#deleteTransactionModal').modal('hide');
         $('#transactionModal').modal('hide');
         $('#informSuccessDelete').appendTo("body").modal('show');
