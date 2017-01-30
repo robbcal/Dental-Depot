@@ -426,7 +426,7 @@ var Content = React.createClass({
                                       </div>
                                       <div className="col-sm-6" id="editInfoModalComponents">
                                           <label>Contact Number</label>
-                                          <input type="text" id="contactNumber" className="form-control" onChange={this.formValidation} maxLength="50"/>
+                                          <input type="number" id="contactNumber" className="form-control" onChange={this.formValidation} maxLength="50"/>
                                       </div>
                                   </div>
                                   <div className="row">
