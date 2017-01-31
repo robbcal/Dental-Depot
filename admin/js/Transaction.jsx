@@ -237,9 +237,13 @@ var Content = React.createClass({
     checkTransaction: function(){
         var total = document.getElementById("total").value;
         var customer = document.getElementById("customer").value;
+        var date =  document.getElementById("date").value;
 
         if(total != 0 && customer != ""){
             $('#addConfirmation').appendTo("body").modal('show');
+        }else if(customer == "" || date == ""){
+            document.getElementById("errorMessage").innerHTML= "Missing input";
+            $('#errorModal').appendTo("body").modal('show');
         }else{
             document.getElementById("errorMessage").innerHTML= "No items added";
             $('#errorModal').appendTo("body").modal('show');

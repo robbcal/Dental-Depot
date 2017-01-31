@@ -193,8 +193,9 @@ var Header = React.createClass({
         // yesterday sales
         var ref = firebase.database().ref('transactions');
         var now = new Date();
+        now.setDate(now.getDate() - 1);
         var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
-        var day=((now.getDate())>=10)? (now.getDate()-1) : '0' + (now.getDate()-1);
+        var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
         var yesterday = now.getFullYear()+"-"+month+"-"+day;
         ref.on('value', function(snapshot) {
             var total = 0;
