@@ -126,7 +126,7 @@ var Content = React.createClass({
       });
     });
 
-    firebase.database().ref('users/'+userID+'/activity').orderByKey().on('child_added', function(data){
+    firebase.database().ref('users/'+userID+'/activity').orderByChild("date").on('child_added', function(data){
       var action = data.val().action_performed;
       var object = data.val().object_changed;
       var quantity = data.val().quantity;

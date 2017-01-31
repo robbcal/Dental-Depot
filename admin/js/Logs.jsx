@@ -101,7 +101,7 @@ var Header = React.createClass({
           });
         });
 
-        var ref = firebase.database().ref('transactions').orderByKey();
+        var ref = firebase.database().ref('transactions').orderByChild("date");
         ref.on('child_added', function(data) {
           var id = data.key;
           var total = data.val().total;
@@ -139,7 +139,7 @@ var Header = React.createClass({
           $("tr#"+id).remove();
         });
 
-       firebase.database().ref('activities').orderByKey().on('child_added', function(data){
+       firebase.database().ref('activities').orderByChild("date").on('child_added', function(data){
           var id = data.key;
               var action = data.val().action_performed;
               var object = data.val().object_changed;

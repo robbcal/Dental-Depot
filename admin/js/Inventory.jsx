@@ -490,7 +490,6 @@ var Content = React.createClass({
                               <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
-                              <td><center>No Results Found.</center></td>
                           </tr>
                       </tbody>
                   </table>
