@@ -11,6 +11,10 @@ var Header = React.createClass({
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
   },
 
+  showModal: function(){
+    $('#logoutConfirmation').appendTo("body").modal('show');
+  },
+
   showAddModal: function(){
     $('#addConfirmation').appendTo("body").modal('show');
   },
@@ -30,11 +34,24 @@ var Header = React.createClass({
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li>
-                                <a href="#"><span onClick={this.logout}>
+                                <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
                                     <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
                                 </span></a>
                             </li>
                         </ul>
+                    </div>
+                    <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
+                        <div className="modal-dialog modal-sm">
+                            <div className="modal-content">
+                                <div className="modal-body">
+                                    <center>
+                                        <h5>Logout from Dental Depot?</h5>
+                                        <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
+                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </nav>
             </header>
@@ -225,7 +242,7 @@ var Content = React.createClass({
           document.getElementById("errorMessage").innerHTML= "Invalid quantity.";
           $('#errorModal').appendTo("body").modal('show');
         }else{
-          $('#addExistingConfirmation').appendTo("body").modal('show');  
+          $('#addExistingConfirmation').appendTo("body").modal('show');
         }
       }else{
         document.getElementById("errorMessage").innerHTML= "Missing input.";
@@ -304,7 +321,7 @@ var Content = React.createClass({
         $('#errorModal').appendTo("body").modal('show');
         $('#addConfirmation').modal('hide');
       }
-    });  
+    });
   },
 
   displayItemOnModal: function(){
@@ -693,7 +710,7 @@ var MainContent = React.createClass({
         }, function(error) {
           console.log(error);
         });
-      }  
+      }
     }, function(error) {
       console.log(error);
     });

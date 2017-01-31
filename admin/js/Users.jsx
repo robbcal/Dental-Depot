@@ -7,6 +7,10 @@ var Header = React.createClass({
     });
   },
 
+  showModal: function(){
+    $('#logoutConfirmation').appendTo("body").modal('show');
+  },
+
   componentDidUpdate: function(){
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
   },
@@ -26,11 +30,24 @@ var Header = React.createClass({
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li>
-                                <a href="#"><span onClick={this.logout}>
+                                <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
                                     <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
                                 </span></a>
                             </li>
                         </ul>
+                    </div>
+                    <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
+                        <div className="modal-dialog modal-sm">
+                            <div className="modal-content">
+                                <div className="modal-body">
+                                    <center>
+                                        <h5>Logout from Dental Depot?</h5>
+                                        <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
+                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </nav>
             </header>
@@ -165,7 +182,7 @@ var Content = React.createClass({
           if(day < 10)
               day = '0' + day.toString();
 
-          var maxDate = year + '-' + month + '-' + day;    
+          var maxDate = year + '-' + month + '-' + day;
           $('#birthdate').attr('max', maxDate);
         });
       }(jQuery));
@@ -215,7 +232,7 @@ var Content = React.createClass({
   addUser: function(){
     var curUID = firebase.auth().currentUser.uid;
     var now = new Date();
-    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
     var today = now.getFullYear()+"-"+month+"-"+day;
     var cur_email = firebase.auth().currentUser.email;
@@ -263,7 +280,7 @@ var Content = React.createClass({
               user: fullname
             });
           });
-            
+
           $('#addConfirmation').modal('hide');
           $('#addUserModal').modal('hide');
           $('#informSuccess').appendTo("body").modal('show');
@@ -452,8 +469,8 @@ var Content = React.createClass({
                           <div className="modal-body">
                               <center>
                                   <h5>Are you sure you want to add this user?</h5>
-                                  <button type="button" className="btn btn-primary" onClick={this.addUser} id="confirmProfileEdit">YES</button>&nbsp;
-                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmProfileEdit">NO</button>
+                                  <button type="button" className="btn btn-primary" onClick={this.addUser} id="confirmAddUser">YES</button>&nbsp;
+                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="confirmAddUser">NO</button>
                               </center>
                           </div>
 

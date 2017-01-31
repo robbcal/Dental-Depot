@@ -15,11 +15,15 @@ var Header = React.createClass({
     $('#logoutConfirmation').appendTo("body").modal('show');
   },
 
+  showHeaderModal: function(){
+    $('#headerConfirmation').appendTo("body").modal('show');
+  },
+
   render: function() {
     return (
         <div className="wrapper">
             <header className="main-header">
-                <a href="Inventory.html" className="logo">
+                <a className="logo" data-toggle="modal" onClick={this.showHeaderModal}>
                     <span className="logo-mini"><b>DD</b></span>
                     <span className="logo-lg" id="mainHeader">Dental Depot</span>
                 </a>
@@ -43,6 +47,19 @@ var Header = React.createClass({
                                     <center>
                                         <h5>Logout without continuing transaction?</h5>
                                         <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
+                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal fade bs-example-modal-lg" id="headerConfirmation">
+                        <div className="modal-dialog modal-sm">
+                            <div className="modal-content">
+                                <div className="modal-body">
+                                    <center>
+                                        <h5>Proceed to Inventory without continuing transaction?</h5>
+                                        <a role="button" className="btn btn-primary" href="Inventory.html" id="itemButtons">YES</a>
                                         <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
                                     </center>
                                 </div>
@@ -270,7 +287,7 @@ var Content = React.createClass({
         document.getElementById("number").value = "";
 
         if($('#transactionTable tr > td:contains('+id+')').length == 0){
-            $("#transactionTableBody").append("<tr id="+id+"><td id='del' class='delete'><button class='btn btn-danger btn-xs deleteRow' value="+id+">x</button></td><td style='display:none'>"+id+"</td><td class='name' value="+id+">"+itemName+"</td><td id="+id+"A"+id+" class='number' value="+num+">"+num+"</td><td id='price'>"+price+"</td><td id="+id+"B"+id+" class='subtotal' value="+subtotal.toFixed(2)+">"+subtotal.toFixed(2)+"</td></tr>");
+            $("#transactionTableBody").append("<tr id="+id+"><td id='del' class='delete'><center><button class='btn btn-danger btn-xs deleteRow' value="+id+">x</button></center></td><td style='display:none'>"+id+"</td><td class='name' value="+id+"><center>"+itemName+"</center></td><td id="+id+"A"+id+" class='number' value="+num+"><center>"+num+"</center></td><td id='price'><center>"+price+"</center></td><td id="+id+"B"+id+" class='subtotal' value="+subtotal.toFixed(2)+"><center>"+subtotal.toFixed(2)+"</center></td></tr>");
         }else{
           var transQty = $("td#"+id+"A"+id+"").text();
           var transSubtotal = $("td#"+id+"B"+id+"").text();

@@ -11,6 +11,10 @@ var Header = React.createClass({
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
   },
 
+  showModal: function(){
+    $('#logoutConfirmation').appendTo("body").modal('show');
+  },
+
   showConfirmLogout: function(){
     $('#confirmModal').appendTo("body").modal("show");
     $('[data-toggle="tooltip"]').tooltip();
@@ -31,11 +35,24 @@ var Header = React.createClass({
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li>
-                                <a href="#"><span onClick={this.logout}>
+                                <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
                                     <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
                                 </span></a>
                             </li>
                         </ul>
+                    </div>
+                    <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
+                        <div className="modal-dialog modal-sm">
+                            <div className="modal-content">
+                                <div className="modal-body">
+                                    <center>
+                                        <h5>Logout from Dental Depot?</h5>
+                                        <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
+                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </nav>
             </header>
@@ -116,7 +133,7 @@ var Content = React.createClass({
       var date = data.val().date;
 
       $("#activityList").prepend("<tr><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td></tr>");
-    });  
+    });
 
     $(document).ready(function () {
       (function ($) {
@@ -148,7 +165,7 @@ var Content = React.createClass({
           if(day < 10)
               day = '0' + day.toString();
 
-          var maxDate = year + '-' + month + '-' + day;    
+          var maxDate = year + '-' + month + '-' + day;
           $('#birthdate').attr('max', maxDate);
         });
       }(jQuery));
@@ -172,7 +189,7 @@ var Content = React.createClass({
     var address = document.getElementById("address").value;
     var birthdate = document.getElementById("birthdate").value;
     var age = document.getElementById("age").value;
-    var type = document.getElementById("userType").value;  
+    var type = document.getElementById("userType").value;
 
     if(firstName && lastName && contactNumber && address && birthdate && age && type){
       if(Number(age) <= 0){
@@ -181,7 +198,7 @@ var Content = React.createClass({
         $('#editConfirmation').modal('hide');
       }else{
         $('#editConfirmation').appendTo("body").modal('show');
-      }    
+      }
     }else{
       document.getElementById("errorMessage").innerHTML= "Missing input.";
       $('#errorModal').appendTo("body").modal('show');
@@ -217,7 +234,7 @@ var Content = React.createClass({
     document.getElementById("lastName").style.borderColor = "";
     document.getElementById("contactNumber").style.borderColor = "";
     document.getElementById("address").style.borderColor = "";
-    document.getElementById("birthdate").style.borderColor = ""; 
+    document.getElementById("birthdate").style.borderColor = "";
   },
 
   ageCalculator: function(){
@@ -233,7 +250,7 @@ var Content = React.createClass({
 
   editUser: function(){
     var now = new Date();
-    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
     var today = now.getFullYear()+"-"+month+"-"+day;
     var uid = firebase.auth().currentUser.uid;
@@ -275,7 +292,7 @@ var Content = React.createClass({
 
   deleteUser: function(){
     var now = new Date();
-    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
     var today = now.getFullYear()+"-"+month+"-"+day;
     var uid = firebase.auth().currentUser.uid;
@@ -329,7 +346,7 @@ var Content = React.createClass({
       document.getElementById("birthdate").style.borderColor = "";
     }
   },
-    
+
   render: function() {
     return (
         <div id="mainContent">
@@ -597,7 +614,7 @@ var MainContent = React.createClass({
         }, function(error) {
           console.log(error);
         });
-      }  
+      }
     }, function(error) {
         console.log(error);
     });

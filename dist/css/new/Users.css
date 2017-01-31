@@ -24,3 +24,11 @@
 #usersMainTable{
     height: 430px;
 }
+
+#confirmAddUser{
+    margin: 10px;
+}
+
+#itemButtons{
+    margin: 10px;
+}

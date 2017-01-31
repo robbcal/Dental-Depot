@@ -11,6 +11,10 @@ var Header = React.createClass({
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
   },
 
+  showModal: function(){
+    $('#logoutConfirmation').appendTo("body").modal('show');
+  },
+
   showConfirmLogout: function(){
     $('#confirmModal').appendTo("body").modal("show");
   },
@@ -30,11 +34,24 @@ var Header = React.createClass({
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li>
-                                <a href="#"><span onClick={this.logout}>
+                                <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
                                     <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
                                 </span></a>
                             </li>
                         </ul>
+                    </div>
+                    <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
+                        <div className="modal-dialog modal-sm">
+                            <div className="modal-content">
+                                <div className="modal-body">
+                                    <center>
+                                        <h5>Logout from Dental Depot?</h5>
+                                        <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
+                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </nav>
             </header>
@@ -93,7 +110,7 @@ var Header = React.createClass({
           var user = data.val().user;
           var release = data.val().release_method;
           var customer = data.val().customer;
-          
+
           $("#transactionList").prepend("<tr id="+id+"><td><center>"+id+"</center></td><td><center>"+total+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
           $("#"+id+"").dblclick(function() {
             $("#transactionTableBody tr").remove();
@@ -103,7 +120,7 @@ var Header = React.createClass({
             document.getElementById("transTotal").innerHTML = "Total: "+total;
             document.getElementById("transDate").innerHTML = "Date: "+date;
             document.getElementById("transRelease").innerHTML = "Release Method: "+release;
-            document.getElementById("transCustomer").innerHTML = customer;
+            document.getElementById("transCustomer").innerHTML = "Customer: "+customer;
 
             var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
             ref.on('child_added', function(data) {
@@ -139,7 +156,7 @@ var Header = React.createClass({
         // today sales
         var ref = firebase.database().ref('transactions');
         var now = new Date();
-        var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+        var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
         var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
         var today = now.getFullYear()+"-"+month+"-"+day;
         ref.on('value', function(snapshot) {
@@ -158,7 +175,7 @@ var Header = React.createClass({
         // yesterday sales
         var ref = firebase.database().ref('transactions');
         var now = new Date();
-        var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+        var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
         var day=((now.getDate())>=10)? (now.getDate()-1) : '0' + (now.getDate()-1);
         var yesterday = now.getFullYear()+"-"+month+"-"+day;
         ref.on('value', function(snapshot) {
@@ -236,7 +253,7 @@ var Header = React.createClass({
 
       deleteTransaction: function(){
         var now = new Date();
-        var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+        var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
         var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
         var today = now.getFullYear()+"-"+month+"-"+day;
         var uid = firebase.auth().currentUser.uid;
@@ -304,7 +321,7 @@ var Header = React.createClass({
                                             <i className="ion ion-calendar"></i>
                                         </div>
                                         <p className="small-box-footer" id="dateToday"></p>
-                                </div>
+                                    </div>
                                 </div>
                             </div>
                             <div className="row" id="salesContent2">
@@ -461,21 +478,19 @@ var Header = React.createClass({
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-sm-6">
+                                    <div className="col-sm-4">
                                         <h5 id="transCustomer"></h5>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <h5 id="transDate"></h5>
-                                    </div>
-                                    <div className="col-sm-6">
+                                    <div className="col-sm-4">
                                         <h5 id="transRelease"></h5>
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <h5 id="transDate"></h5>
                                     </div>
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#deleteTransactionModal">DELETE</button>
+                                <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#deleteTransactionModal">DELETE</button>
                             </div>
                         </div>
                     </div>

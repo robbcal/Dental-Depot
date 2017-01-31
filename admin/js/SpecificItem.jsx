@@ -19,6 +19,10 @@ var Header = React.createClass({
     $('#deleteConfirmation').appendTo("body").modal('show');
   },
 
+  showModal: function(){
+    $('#logoutConfirmation').appendTo("body").modal('show');
+  },
+
   showAddModal: function(){
     $('#addConfirmation').appendTo("body").modal('show');
   },
@@ -39,11 +43,24 @@ var Header = React.createClass({
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li>
-                                <a href="#"><span onClick={this.logout}>
+                                <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
                                     <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
                                 </span></a>
                             </li>
                         </ul>
+                    </div>
+                    <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
+                        <div className="modal-dialog modal-sm">
+                            <div className="modal-content">
+                                <div className="modal-body">
+                                    <center>
+                                        <h5>Logout from Dental Depot?</h5>
+                                        <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
+                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </nav>
             </header>
@@ -100,7 +117,7 @@ itemDescription: "null",
     });
     var ref = firebase.database().ref('items/'+itemID);
     ref.on('value', function(snapshot) {
-      document.getElementById("NameOfItem").innerHTML = snapshot.val().item_name; 
+      document.getElementById("NameOfItem").innerHTML = snapshot.val().item_name;
       self.setState({
          itemName: snapshot.val().item_name,
   itemDescription: snapshot.val().description,
@@ -123,12 +140,12 @@ itemDescription: "null",
     $('#editItemModal').on('hidden.bs.modal', function () {
       ref.on('value', function(snapshot) {
         document.getElementById("editItem").value = snapshot.val().item_name;
-        document.getElementById("editDescription").value = snapshot.val().description; 
+        document.getElementById("editDescription").value = snapshot.val().description;
         document.getElementById("editPrice").value = snapshot.val().price;
       });
     });
     $(document).ready(function () {
-      (function ($) {    
+      (function ($) {
         $("#addNumber, #deleteNumber, #editPrice").keypress(function(event) {
           if ( event.which == 45 ) {
             event.preventDefault();
@@ -177,7 +194,7 @@ itemDescription: "null",
           $('#errorModal').appendTo("body").modal('show');
           $('#deleteConfirmation').modal('hide');
         }else{
-          $('#deleteConfirmation').appendTo("body").modal('show');  
+          $('#deleteConfirmation').appendTo("body").modal('show');
         }
       }else{
         document.getElementById("errorMessage").innerHTML= "Missing input.";
@@ -253,7 +270,7 @@ itemDescription: "null",
         action_performed: action,
         quantity: additionalStock
       });
-    });  
+    });
     firebase.database().ref("users/"+uid+"/activity").push().set({
       action_performed: action,
       object_changed: itemName,
@@ -286,7 +303,7 @@ itemDescription: "null",
     var curStock = this.state.itemQty;
     var itemName = this.state.itemName;
 
-    
+
     if(diminishedStock <= curStock){
       var newStock = Number(curStock) - Number(diminishedStock);
       firebase.database().ref('items/'+itemID).update({
@@ -367,7 +384,7 @@ itemDescription: "null",
             action_performed: action,
             quantity: "n/a"
           });
-        });  
+        });
         firebase.database().ref("users/"+uid+"/activity").push().set({
           action_performed: action,
           object_changed: itemName,
@@ -398,7 +415,7 @@ itemDescription: "null",
 
   deleteItem: function(){
     var now = new Date();
-    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);  
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
     var today = now.getFullYear()+"-"+month+"-"+day;
     var uid = firebase.auth().currentUser.uid;
@@ -830,7 +847,7 @@ var MainContent = React.createClass({
         }, function(error) {
           console.log(error);
         });
-      }  
+      }
     }, function(error) {
       console.log(error);
     });

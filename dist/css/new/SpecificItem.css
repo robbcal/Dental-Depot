@@ -50,3 +50,7 @@
 #specificItemLeftContent{
     max-height: 300px;
 }
+
+#itemButtons{
+    margin: 10px;
+}

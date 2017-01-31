@@ -16,29 +16,63 @@ var Header = React.createClass({
     $('[data-toggle="tooltip"]').tooltip();
   },
 
+  showHeaderModal: function(){
+    $('#headerConfirmation').appendTo("body").modal('show');
+  },
+
+  showModal: function(){
+    $('#logoutConfirmation').appendTo("body").modal('show');
+  },
+
   render: function() {
     return (
       <div className="wrapper">
-            <header className="main-header">
-                <a href="Inventory.html" className="logo">
-                    <span className="logo-mini"><b>DD</b></span>
-                    <span className="logo-lg" id="mainHeader">Dental Depot</span>
-                </a>
-                <nav className="navbar navbar-static-top">
-                    <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-                        <span className="sr-only">Toggle navigation</span>
-                    </a>
-                    <div className="navbar-custom-menu">
-                        <ul className="nav navbar-nav">
-                            <li>
-                                <a href="#"><span onClick={this.logout}>
-                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
-                                </span></a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-            </header>
+          <header className="main-header">
+              <a className="logo" data-toggle="modal" onClick={this.showHeaderModal}>
+                  <span className="logo-mini"><b>DD</b></span>
+                  <span className="logo-lg" id="mainHeader">Dental Depot</span>
+              </a>
+              <nav className="navbar navbar-static-top">
+                  <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                      <span className="sr-only">Toggle navigation</span>
+                  </a>
+                  <div className="navbar-custom-menu">
+                      <ul className="nav navbar-nav">
+                          <li>
+                              <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
+                                  <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
+                              </span></a>
+                          </li>
+                      </ul>
+                  </div>
+                  <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
+                      <div className="modal-dialog modal-sm">
+                          <div className="modal-content">
+                              <div className="modal-body">
+                                  <center>
+                                      <h5>Logout without continuing transaction?</h5>
+                                      <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
+                                      <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                                  </center>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="modal fade bs-example-modal-lg" id="headerConfirmation">
+                      <div className="modal-dialog modal-sm">
+                          <div className="modal-content">
+                              <div className="modal-body">
+                                  <center>
+                                      <h5>Proceed to Inventory without continuing transaction?</h5>
+                                      <a role="button" className="btn btn-primary" href="Inventory.html" id="itemButtons">YES</a>
+                                      <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                                  </center>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </nav>
+          </header>
         </div>
     );
   }
@@ -53,21 +87,41 @@ var Body = React.createClass({
                     <ul className="sidebar-menu">
                         <br/>
                         <li className="header">NAVIGATION</li>
-                        <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
-                        <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                        <li className="active"><a data-toggle="modal" data-target="#inventoryConfirmation"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                        <li><a data-toggle="modal" data-target="#profileConfirmation"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                     </ul>
                 </div>
             </div>
 
-            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                        <Content/>
+            <div className="content-wrapper">
+                <section id="content" className="content"><Content/></section>
+            </div>
+            <div className="modal fade bs-example-modal-lg" id="inventoryConfirmation">
+                <div className="modal-dialog modal-sm">
+                    <div className="modal-content">
+                        <div className="modal-body">
+                            <center>
+                                <h5>Proceed to Inventory without continuing transaction?</h5>
+                                <a role="button" className="btn btn-primary" href="Inventory.html" id="itemButtons">YES</a>
+                                <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                            </center>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            {/* LOGOUT MODAL CONTENT */}
+            <div className="modal fade bs-example-modal-lg" id="profileConfirmation">
+                <div className="modal-dialog modal-sm">
+                    <div className="modal-content">
+                        <div className="modal-body">
+                            <center>
+                                <h5>Proceed to Profile without continuing transaction?</h5>
+                                <a role="button" className="btn btn-primary" href="Profile.html" id="itemButtons">YES</a>
+                                <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
       );
     }
