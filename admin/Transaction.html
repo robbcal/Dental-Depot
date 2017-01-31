@@ -47,8 +47,13 @@
     <script src="../firebaseConfig.js"></script>
 
     <script type="text/babel" src="js/Transaction.jsx">
-
-
     </script>
+
+    <script>
+        window.onbeforeunload = function(event) {
+            event.returnValue = ".....";
+        };
+    </script>
+
   </body>
 </html>

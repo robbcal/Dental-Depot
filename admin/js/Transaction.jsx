@@ -1,18 +1,6 @@
 var Header = React.createClass({
-  logout: function(){
-    firebase.auth().signOut().then(function() {
-      window.location.replace("http://127.0.0.1:8080/");
-    }, function(error) {
-      console.log(error);
-    });
-  },
-
   componentDidUpdate: function(){
     $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
-  },
-
-  showModal: function(){
-    $('#logoutConfirmation').appendTo("body").modal('show');
   },
 
   showHeaderModal: function(){
@@ -34,37 +22,9 @@ var Header = React.createClass({
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li>
-                                <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
-                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
-                                </span></a>
+                                
                             </li>
                         </ul>
-                    </div>
-                    <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
-                        <div className="modal-dialog modal-sm">
-                            <div className="modal-content">
-                                <div className="modal-body">
-                                    <center>
-                                        <h5>Logout without continuing transaction?</h5>
-                                        <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
-                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                                    </center>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="modal fade bs-example-modal-lg" id="headerConfirmation">
-                        <div className="modal-dialog modal-sm">
-                            <div className="modal-content">
-                                <div className="modal-body">
-                                    <center>
-                                        <h5>Proceed to Inventory without continuing transaction?</h5>
-                                        <a role="button" className="btn btn-primary" href="Inventory.html" id="itemButtons">YES</a>
-                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                                    </center>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </nav>
             </header>
@@ -82,67 +42,15 @@ var Body = React.createClass({
                       <ul className="sidebar-menu">
                           <br/>
                           <li className="header">NAVIGATION</li>
-                          <li className="active"><a data-toggle="modal" data-target="#inventoryConfirmation"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
-                          <li><a data-toggle="modal" data-target="#usersConfirmation"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
-                          <li><a data-toggle="modal" data-target="#logsConfirmation"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
-                          <li><a data-toggle="modal" data-target="#profileConfirmation"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                          <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                          <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
+                          <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
+                          <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                       </ul>
                   </section>
               </aside>
               <div className="content-wrapper">
                   <section id="content" className="content"><Content/></section>
-              </div>
-              <div className="modal fade bs-example-modal-lg" id="inventoryConfirmation">
-                  <div className="modal-dialog modal-sm">
-                      <div className="modal-content">
-                          <div className="modal-body">
-                              <center>
-                                  <h5>Proceed to Inventory without continuing transaction?</h5>
-                                  <a role="button" className="btn btn-primary" href="Inventory.html" id="itemButtons">YES</a>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                              </center>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div className="modal fade bs-example-modal-lg" id="usersConfirmation">
-                  <div className="modal-dialog modal-sm">
-                      <div className="modal-content">
-                          <div className="modal-body">
-                              <center>
-                                  <h5>Proceed to Users without continuing transaction?</h5>
-                                  <a role="button" className="btn btn-primary" href="Users.html" id="itemButtons">YES</a>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                              </center>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div className="modal fade bs-example-modal-lg" id="logsConfirmation">
-                  <div className="modal-dialog modal-sm">
-                      <div className="modal-content">
-                          <div className="modal-body">
-                              <center>
-                                  <h5>Proceed to Logs without continuing transaction?</h5>
-                                  <a role="button" className="btn btn-primary" href="Logs.html" id="itemButtons">YES</a>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                              </center>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div className="modal fade bs-example-modal-lg" id="profileConfirmation">
-                  <div className="modal-dialog modal-sm">
-                      <div className="modal-content">
-                          <div className="modal-body">
-                              <center>
-                                  <h5>Proceed to Profile without continuing transaction?</h5>
-                                  <a role="button" className="btn btn-primary" href="Profile.html" id="itemButtons">YES</a>
-                                  <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                              </center>
-                          </div>
-                      </div>
-                  </div>
               </div>
           </div>
     );
@@ -159,7 +67,25 @@ var Content = React.createClass({
     componentDidMount: function(){
       const self = this;
       var uid = firebase.auth().currentUser.uid;
-      var ref = firebase.database().ref('users/'+uid);
+      var ref = firebase.database().ref('users/'+uid);     
+
+      ref.on('child_removed', function(data) {
+        firebase.auth().signOut().then(function() {
+          window.location.replace("http://127.0.0.1:8080/");
+        }, function(error) {
+          console.log(error);
+        });
+      });
+
+      ref.on('child_changed', function(data) {
+        var typeRef = firebase.database().ref('users/'+uid +'/user_type');
+        typeRef.on('value', function(snapshot) {
+          if(snapshot.val() == "user"){
+            window.location.reload();
+          }
+        });
+      });
+
       ref.on('value', function(snapshot) {
         self.setState({
           curUser: snapshot.val().firstname+" "+snapshot.val().lastname
@@ -224,6 +150,11 @@ var Content = React.createClass({
           });
         }(jQuery));
       });
+      var now = new Date();
+      var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
+      var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+      var today = now.getFullYear()+"-"+month+"-"+day;
+      document.getElementById("date").value = today;
       document.getElementById("number").style.borderColor = "red";
       document.getElementById("customer").style.borderColor = "red";
     },
@@ -432,7 +363,7 @@ var Content = React.createClass({
     return (
       <div className="row" id="mainContent">
           <div className="col-md-4" id="boxBodyContent">
-              <a id="headerButtons" data-toggle="modal" className="pull-left" data-target="#exitTransaction">
+              <a id="headerButtons" className="pull-left" href="Inventory.html">
                   <img src="../bootstrap/icons/left-arrow.png" height="25px"/>
               </a>
               <div className="box box-primary" id="transBody">
@@ -535,20 +466,6 @@ var Content = React.createClass({
           </div>
 
           {/* MODALS */}
-          <div className="modal fade bs-example-modal-lg" id="exitTransaction">
-              <div className="modal-dialog modal-sm">
-                  <div className="modal-content">
-                      <div className="modal-body">
-                          <center>
-                              <h5>Stop creating transaction?</h5>
-                              <a role="button" className="btn btn-primary" href="Inventory.html" id="itemButtons">YES</a>
-                              <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                          </center>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
           <div className="modal fade bs-example-modal-lg" id="addConfirmation">
               <div className="modal-dialog modal-sm">
                   <div className="modal-content">

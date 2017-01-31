@@ -95,6 +95,24 @@ var Content = React.createClass({
     const self = this;
     var uid = firebase.auth().currentUser.uid;
     var ref = firebase.database().ref('users/'+uid);
+    
+    ref.on('child_removed', function(data) {
+      firebase.auth().signOut().then(function() {
+        window.location.replace("http://127.0.0.1:8080/");
+      }, function(error) {
+        console.log(error);
+      });
+    });
+
+    ref.on('child_changed', function(data) {
+      var typeRef = firebase.database().ref('users/'+uid +'/user_type');
+      typeRef.on('value', function(snapshot) {
+        if(snapshot.val() == "user"){
+          window.location.reload();
+        }
+      });
+    });
+
     ref.on('value', function(snapshot) {
       self.setState({
         curUser: snapshot.val().firstname+" "+snapshot.val().lastname
@@ -192,7 +210,9 @@ var Content = React.createClass({
 
   generateIDandDate: function(){
     var now = new Date();
-    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
+    var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+    var today = now.getFullYear()+"-"+month+"-"+day; 
     var ID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
     document.getElementById("newId").value = ID;
     document.getElementById("newDate").value = today;
@@ -200,15 +220,15 @@ var Content = React.createClass({
     document.getElementById("newDescription").style.borderColor = "red";
     document.getElementById("newNumber").style.borderColor = "red";
     document.getElementById("newPrice").style.borderColor = "red";
-    document.getElementById("newDate").style.borderColor = "";
   },
 
   generateDate: function(){
-    var now = new Date();
-    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+     var now = new Date();
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
+    var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+    var today = now.getFullYear()+"-"+month+"-"+day; 
     document.getElementById("existingDate").value = today;
     document.getElementById("additionalNumber").style.borderColor = "red";
-    document.getElementById("existingDate").style.borderColor = "";
   },
 
   checkNewItem: function(){

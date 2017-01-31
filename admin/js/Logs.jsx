@@ -95,6 +95,24 @@ var Header = React.createClass({
         const self = this;
         var uid = firebase.auth().currentUser.uid;
         var ref = firebase.database().ref('users/'+uid);
+
+        ref.on('child_removed', function(data) {
+          firebase.auth().signOut().then(function() {
+            window.location.replace("http://127.0.0.1:8080/");
+          }, function(error) {
+            console.log(error);
+          });
+        });
+
+        ref.on('child_changed', function(data) {
+          var typeRef = firebase.database().ref('users/'+uid +'/user_type');
+          typeRef.on('value', function(snapshot) {
+            if(snapshot.val() == "user"){
+              window.location.reload();
+            }
+          });
+        });
+
         ref.on('value', function(snapshot) {
           self.setState({
             curUser: snapshot.val().firstname+" "+snapshot.val().lastname

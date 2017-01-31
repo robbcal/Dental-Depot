@@ -90,13 +90,30 @@ var Content = React.createClass({
   componentDidMount: function(){
     const self = this;
     var cur_uid = firebase.auth().currentUser.uid;
+    var ref = firebase.database().ref('users/'+cur_uid);     
+
+    ref.on('child_removed', function(data) {
+      firebase.auth().signOut().then(function() {
+        window.location.replace("http://127.0.0.1:8080/");
+      }, function(error) {
+        console.log(error);
+      });
+    });
+
+    ref.on('child_changed', function(data) {
+      var typeRef = firebase.database().ref('users/'+uid +'/user_type');
+      typeRef.on('value', function(snapshot) {
+        if(snapshot.val() == "user"){
+          window.location.reload();
+        }
+      });
+    });
+
     firebase.database().ref('users/'+cur_uid).once('value').then(function(snapshot) {
       self.setState({
         cur_password: snapshot.val().password
       });
     });
-
-
 
     var ref = firebase.database().ref('users').orderByChild('firstname');
     ref.on('child_added', function(data) {

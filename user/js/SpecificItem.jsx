@@ -107,6 +107,15 @@ itemDescription: "null",
     const self = this;
     var uid = firebase.auth().currentUser.uid;
     var refUser = firebase.database().ref('users/'+uid);
+
+    refUser.on('child_removed', function(data) {
+      firebase.auth().signOut().then(function() {
+        window.location.replace("http://127.0.0.1:8080/");
+      }, function(error) {
+        console.log(error);
+      });
+    });
+
     refUser.on('value', function(snapshot) {
       self.setState({
         curUser: snapshot.val().firstname+" "+snapshot.val().lastname
@@ -159,6 +168,9 @@ itemDescription: "null",
           $(this).val(cleanNum);
         });
       }(jQuery));
+    });
+    ref.on('child_removed', function(data) {
+      window.location.replace("Inventory.html");
     });
   },
 
@@ -222,7 +234,9 @@ itemDescription: "null",
 
   generateDate: function(){
     var now = new Date();
-    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
+    var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+    var today = now.getFullYear()+"-"+month+"-"+day; 
     document.getElementById("addDate").value = today;
     document.getElementById("deleteDate").value = today;
     document.getElementById("editDate").value = today;
@@ -234,7 +248,9 @@ itemDescription: "null",
 
   generateInfo: function(){
     var now = new Date();
-    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
+    var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+    var today = now.getFullYear()+"-"+month+"-"+day; 
     document.getElementById("editDate").value = today;
     firebase.database().ref('items/'+itemID).once('value', function(snapshot) {
       document.getElementById('editItem').value = snapshot.val().item_name;
@@ -242,13 +258,11 @@ itemDescription: "null",
       document.getElementById('editPrice').value = snapshot.val().price;
     })
     document.getElementById("editItem").style.borderColor = "";
-    document.getElementById("editDescription").style.borderColor = "";
     document.getElementById("editPrice").style.borderColor = "";
     document.getElementById("editDate").style.borderColor = "";
   },
 
   restockItem: function(){
-    var now = new Date();
     var additionalStock = document.getElementById("addNumber").value;
     var date = document.getElementById("addDate").value;
     var action = "Restocked item.";
@@ -292,7 +306,6 @@ itemDescription: "null",
   },
 
   releaseStock: function(){
-    var now = new Date();
     var diminishedStock = document.getElementById("deleteNumber").value;
     var date = document.getElementById("deleteDate").value;
     var action = "Released item."
@@ -344,7 +357,6 @@ itemDescription: "null",
   },
 
   editItem: function(){
-    var now = new Date();
     var action = "Edited item."
     var date = document.getElementById("editDate").value;
     var itemName = document.getElementById("editItem").value;
@@ -444,7 +456,9 @@ itemDescription: "null",
 
   generateIDandDate: function(){
     var now = new Date();
-    var today = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
+    var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
+    var today = now.getFullYear()+"-"+month+"-"+day; 
     var ID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
     document.getElementById("newId").value = ID;
     document.getElementById("newDate").value = today;
@@ -476,11 +490,6 @@ itemDescription: "null",
       document.getElementById("editItem").style.borderColor = "red";
     }else{
       document.getElementById("editItem").style.borderColor = "";
-    }
-    if(document.getElementById("editDescription").value == ""){
-      document.getElementById("editDescription").style.borderColor = "red";
-    }else{
-      document.getElementById("editDescription").style.borderColor = "";
     }
     if(document.getElementById("editPrice").value == ""){
       document.getElementById("editPrice").style.borderColor = "red";

@@ -105,6 +105,30 @@ var Content = React.createClass({
   componentDidMount: function(){
     const self = this;
     var ref = firebase.database().ref('users/'+userID);
+    var uid = firebase.auth().currentUser.uid;
+    var refUser = firebase.database().ref('users/'+uid);
+
+    refUser.on('child_removed', function(data) {
+      firebase.auth().signOut().then(function() {
+        window.location.replace("http://127.0.0.1:8080/");
+      }, function(error) {
+        console.log(error);
+      });
+    });
+    
+    ref.on('child_removed', function(data) {
+      window.location.replace("Users.html");
+    });
+
+    refUser.on('child_changed', function(data) {
+      var typeRef = firebase.database().ref('users/'+uid +'/user_type');
+      typeRef.on('value', function(snapshot) {
+        if(snapshot.val() == "user"){
+          window.location.reload();
+        }
+      });
+    });
+
     ref.on('value', function(snapshot) {
       self.setState({
        firstname: snapshot.val().firstname,
