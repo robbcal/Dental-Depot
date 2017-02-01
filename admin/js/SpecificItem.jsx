@@ -248,7 +248,7 @@ itemDescription: "null",
     var now = new Date();
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
-    var today = now.getFullYear()+"-"+month+"-"+day; 
+    var today = now.getFullYear()+"-"+month+"-"+day;
     document.getElementById("addDate").value = today;
     document.getElementById("deleteDate").value = today;
     document.getElementById("editDate").value = today;
@@ -262,7 +262,7 @@ itemDescription: "null",
     var now = new Date();
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
-    var today = now.getFullYear()+"-"+month+"-"+day; 
+    var today = now.getFullYear()+"-"+month+"-"+day;
     document.getElementById("editDate").value = today;
     firebase.database().ref('items/'+itemID).once('value', function(snapshot) {
       document.getElementById('editItem').value = snapshot.val().item_name;
@@ -470,7 +470,7 @@ itemDescription: "null",
     var now = new Date();
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
-    var today = now.getFullYear()+"-"+month+"-"+day; 
+    var today = now.getFullYear()+"-"+month+"-"+day;
     var ID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
     document.getElementById("newId").value = ID;
     document.getElementById("newDate").value = today;
@@ -531,7 +531,7 @@ itemDescription: "null",
                         <p className="text-muted">{this.state.itemDescription}</p>
                         <br/>
                         <center>
-                            <div className="btn-group" id="specificItemButtons">
+                            <div className="btn-group dropup" id="specificItemButtons">
                                 <button className="btn bg-navy">STOCK</button>
                                 <button type="button" className="btn bg-navy dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                     <span className="caret"></span>

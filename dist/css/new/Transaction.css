@@ -41,3 +41,7 @@
 #addItem{
     margin-top: 10px;
 }
+
+#header {
+    max-height: 10px;
+}

@@ -22,7 +22,7 @@ var Header = React.createClass({
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li>
-                                
+
                             </li>
                         </ul>
                     </div>
@@ -67,7 +67,7 @@ var Content = React.createClass({
     componentDidMount: function(){
       const self = this;
       var uid = firebase.auth().currentUser.uid;
-      var ref = firebase.database().ref('users/'+uid);     
+      var ref = firebase.database().ref('users/'+uid);
 
       ref.on('child_removed', function(data) {
         firebase.auth().signOut().then(function() {
