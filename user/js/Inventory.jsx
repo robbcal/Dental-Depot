@@ -217,7 +217,7 @@ var Content = React.createClass({
     var now = new Date();
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
-    var today = now.getFullYear()+"-"+month+"-"+day; 
+    var today = now.getFullYear()+"-"+month+"-"+day;
     var ID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
     document.getElementById("newId").value = ID;
     document.getElementById("newDate").value = today;
@@ -231,7 +231,7 @@ var Content = React.createClass({
      var now = new Date();
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
-    var today = now.getFullYear()+"-"+month+"-"+day; 
+    var today = now.getFullYear()+"-"+month+"-"+day;
     document.getElementById("existingDate").value = today;
     document.getElementById("additionalNumber").style.borderColor = "red";
   },

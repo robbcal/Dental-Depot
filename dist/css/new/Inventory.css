@@ -34,3 +34,7 @@
 #inventoryMainTable{
     height: 440px;
 }
+
+#newDescription {
+    resize: none;
+}
