@@ -95,7 +95,7 @@ var Content = React.createClass({
     const self = this;
     var uid = firebase.auth().currentUser.uid;
     var ref = firebase.database().ref('users/'+uid);
-    
+
     ref.on('child_removed', function(data) {
       firebase.auth().signOut().then(function() {
         window.location.replace("http://127.0.0.1:8080/");
@@ -212,12 +212,12 @@ var Content = React.createClass({
     var now = new Date();
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
-    var today = now.getFullYear()+"-"+month+"-"+day; 
+    var today = now.getFullYear()+"-"+month+"-"+day;
     var ID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
     document.getElementById("newId").value = ID;
     document.getElementById("newDate").value = today;
     document.getElementById("newItem").style.borderColor = "red";
-    document.getElementById("newDescription").style.borderColor = "red";
+    document.getElementById("newDescription").style.borderColor = "";
     document.getElementById("newNumber").style.borderColor = "red";
     document.getElementById("newPrice").style.borderColor = "red";
   },
@@ -226,7 +226,7 @@ var Content = React.createClass({
      var now = new Date();
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
-    var today = now.getFullYear()+"-"+month+"-"+day; 
+    var today = now.getFullYear()+"-"+month+"-"+day;
     document.getElementById("existingDate").value = today;
     document.getElementById("additionalNumber").style.borderColor = "red";
   },
