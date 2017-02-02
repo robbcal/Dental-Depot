@@ -471,13 +471,13 @@ var Content = React.createClass({
           <div className="box">
               <div className="box-header" id="headerContent">
                   <div className="col-sm-4">
-                      <div className="input-group input-group-md">
+                      <div className="input-group stylish-input-group">
                           <input type="text" name="tableSearch" className="form-control pull-right" id="inventorySearch" placeholder="Search" onChange={this.showTable}/>
-                          <div className="input-group-btn">
-                              <button type="submit" className="btn btn-default" id="inventoryButton">
-                                  <i className="fa fa-search"></i>
-                              </button>
-                          </div>
+                          <span className="input-group-addon">
+                              <div>
+                                  <span className="glyphicon glyphicon-search"></span>
+                              </div>
+                          </span>
                       </div>
                   </div>
                   <div className="col-sm-4"></div>

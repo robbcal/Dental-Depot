@@ -378,13 +378,13 @@ var Header = React.createClass({
                                 <div className="col-sm-8"></div>
                                 <div className="col-sm-4 pull-right">
                                     <div className="box-tools pull-right">
-                                        <div className="input-group input-group-md" id="logsTransSearch">
+                                        <div className="input-group stylish-input-group" id="logsTransSearch">
                                             <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="logsSearch" onChange={this.showTable}/>
-                                            <div className="input-group-btn">
-                                                <button type="submit" className="btn btn-default">
-                                                    <i className="fa fa-search"></i>
-                                                </button>
-                                            </div>
+                                            <span className="input-group-addon">
+                                                <div>
+                                                    <span className="glyphicon glyphicon-search"></span>
+                                                </div>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -421,13 +421,13 @@ var Header = React.createClass({
                                 <div className="col-sm-8"></div>
                                 <div className="col-sm-4 pull-right">
                                     <div className="box-tools pull-right">
-                                        <div className="input-group input-group-md" id="logsTransSearch">
+                                        <div className="input-group stylish-input-group" id="logsTransSearch">
                                             <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="activitySearch" onChange={this.showActivityTable}/>
-                                            <div className="input-group-btn">
-                                                <button type="submit" className="btn btn-default">
-                                                    <i className="fa fa-search"></i>
-                                                </button>
-                                            </div>
+                                            <span className="input-group-addon">
+                                                <div>
+                                                    <span className="glyphicon glyphicon-search"></span>
+                                                </div>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -491,25 +491,24 @@ var Header = React.createClass({
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-sm-6"></div>
+                                    <div className="col-sm-6">
+                                        <h5 id="transDate"></h5>
+                                    </div>
                                     <div className="col-sm-6">
                                         <h4 className="pull-right" id="transTotal"></h4>
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-sm-4">
-                                        <h5 id="transCustomer"></h5>
-                                    </div>
-                                    <div className="col-sm-4">
+                                    <div className="col-sm-6">
                                         <h5 id="transRelease"></h5>
                                     </div>
-                                    <div className="col-sm-4">
-                                        <h5 id="transDate"></h5>
+                                    <div className="col-sm-6">
+                                        <h5 id="transCustomer" className="pull-right"></h5>
                                     </div>
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#deleteTransactionModal">DELETE</button>
+                                <button type="button" className="btn btn-danger pull-left" data-toggle="modal" data-target="#deleteTransactionModal">DELETE</button>
                             </div>
                         </div>
                     </div>

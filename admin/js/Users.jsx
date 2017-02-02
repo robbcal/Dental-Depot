@@ -90,7 +90,7 @@ var Content = React.createClass({
   componentDidMount: function(){
     const self = this;
     var cur_uid = firebase.auth().currentUser.uid;
-    var ref = firebase.database().ref('users/'+cur_uid);     
+    var ref = firebase.database().ref('users/'+cur_uid);
 
     ref.on('child_removed', function(data) {
       firebase.auth().signOut().then(function() {
@@ -373,13 +373,13 @@ var Content = React.createClass({
           <div className="box">
               <div className="box-header" id="headerContent">
                   <div className="col-sm-4">
-                      <div className="input-group input-group-md">
+                      <div className="input-group stylish-input-group">
                           <input type="text" name="tableSearch" id="tableSearch" className="form-control pull-right" placeholder="Search"/>
-                          <div className="input-group-btn">
-                              <button type="submit" className="btn btn-default">
-                                  <i className="fa fa-search"></i>
-                              </button>
-                          </div>
+                          <span className="input-group-addon">
+                              <div>
+                                  <span className="glyphicon glyphicon-search"></span>
+                              </div>
+                          </span>
                       </div>
                   </div>
                   <div className="col-sm-2"></div>
