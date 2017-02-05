@@ -115,7 +115,7 @@ var Content = React.createClass({
         console.log(error);
       });
     });
-    
+
     ref.on('child_removed', function(data) {
       window.location.replace("Users.html");
     });
@@ -428,13 +428,13 @@ var Content = React.createClass({
                             <div className="col-sm-8"></div>
                             <div className="col-sm-4 pull-right">
                                 <div className="box-tools pull-right">
-                                    <div className="input-group input-group-md" id="searchField">
+                                    <div className="input-group stylish-input-group" id="searchField">
                                         <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="activitySearch"/>
-                                        <div className="input-group-btn">
-                                            <button type="submit" className="btn btn-default">
-                                                <i className="fa fa-search"></i>
-                                            </button>
-                                        </div>
+                                        <span className="input-group-addon">
+                                            <div>
+                                                <span className="glyphicon glyphicon-search"></span>
+                                            </div>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
