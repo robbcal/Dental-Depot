@@ -222,7 +222,6 @@ var Content = React.createClass({
     document.getElementById("newId").value = ID;
     document.getElementById("newDate").value = today;
     document.getElementById("newItem").style.borderColor = "red";
-    document.getElementById("newDescription").style.borderColor = "red";
     document.getElementById("newNumber").style.borderColor = "red";
     document.getElementById("newPrice").style.borderColor = "red";
   },
@@ -433,11 +432,6 @@ var Content = React.createClass({
       document.getElementById("newItem").style.borderColor = "red";
     }else{
       document.getElementById("newItem").style.borderColor = "";
-    }
-    if(document.getElementById("newDescription").value == ""){
-      document.getElementById("newDescription").style.borderColor = "red";
-    }else{
-      document.getElementById("newDescription").style.borderColor = "";
     }
     if(document.getElementById("newNumber").value == ""){
       document.getElementById("newNumber").style.borderColor = "red";
