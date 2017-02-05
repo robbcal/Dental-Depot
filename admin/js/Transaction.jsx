@@ -225,8 +225,8 @@ var Content = React.createClass({
           var newQty = Number(transQty) + Number(num);
           var newSubtotal = Number(transSubtotal) + Number(subtotal);
 
-          $("td#"+id+"A"+id+"").replaceWith("<td id="+id+"A"+id+" class='number' value="+newQty+">"+newQty+"</td>");
-          $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+">"+newSubtotal.toFixed(2)+"</td>");
+          $("td#"+id+"A"+id+"").replaceWith("<td id="+id+"A"+id+" class='number' value="+newQty+"><center>"+newQty+"</center></td>");
+          $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+"><center>"+newSubtotal.toFixed(2)+"</center></td>");
         }
       }else{
         document.getElementById("errorMessage").innerHTML= "Missing input";

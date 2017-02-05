@@ -28,6 +28,7 @@
 
 #transTable{
     height: 310px;
+    overflow-y: scroll;
 }
 
 #itemButtons{
