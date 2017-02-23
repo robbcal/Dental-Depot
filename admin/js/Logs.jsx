@@ -128,6 +128,8 @@ var Header = React.createClass({
           var user = data.val().user;
           var release = data.val().release_method;
           var customer = data.val().customer;
+          user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+          customer = customer.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
           $("#transactionList").prepend("<tr id="+id+"><td><center>"+id+"</center></td><td><center>"+total+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
           $("#"+id+"").dblclick(function() {
@@ -164,6 +166,9 @@ var Header = React.createClass({
               var quantity = data.val().quantity;
               var date = data.val().date;
               var user = data.val().user;
+              object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
               $("#activityList").prepend("<tr id="+id+"><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
         });
         firebase.database().ref('activities').orderByKey().on('child_removed', function(data){

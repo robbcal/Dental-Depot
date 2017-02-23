@@ -191,10 +191,6 @@ var Content = React.createClass({
         document.getElementById("errorMessage").innerHTML= "Insufficient stock";
         $('#errorModal').appendTo("body").modal('show');
         document.getElementById("number").value = "";
-      }else if(Number(num) == 0){
-        document.getElementById("errorMessage").innerHTML= "Invalid input";
-        $('#errorModal').appendTo("body").modal('show');
-        document.getElementById("number").value = "";
       }
     },
 
@@ -206,7 +202,7 @@ var Content = React.createClass({
       var stock = document.getElementById("stock").value;
       var itemName = $('#item').children("option:selected").text();
 
-      if(id && num){
+      if(id && num > 0){
         var newStock = Number(stock) - Number(num);
         var subtotal = (Number(price) * Number(num))
         var runningTotal = Number(total) + subtotal ;
@@ -228,6 +224,10 @@ var Content = React.createClass({
           $("td#"+id+"A"+id+"").replaceWith("<td id="+id+"A"+id+" class='number' value="+newQty+">"+newQty+"</td>");
           $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+">"+newSubtotal.toFixed(2)+"</td>");
         }
+      }else if(num == 0){
+        document.getElementById("errorMessage").innerHTML= "Invalid input";
+        $('#errorModal').appendTo("body").modal('show');
+        document.getElementById("number").value = "";
       }else{
         document.getElementById("errorMessage").innerHTML= "Missing input";
         $('#errorModal').appendTo("body").modal('show');

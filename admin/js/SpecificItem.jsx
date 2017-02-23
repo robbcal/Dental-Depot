@@ -135,7 +135,9 @@ itemDescription: "null",
     });
     var ref = firebase.database().ref('items/'+itemID);
     ref.on('value', function(snapshot) {
-      document.getElementById("NameOfItem").innerHTML = snapshot.val().item_name;
+      var itemName =  snapshot.val().item_name;
+      itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+      document.getElementById("NameOfItem").innerHTML = itemName;
       self.setState({
          itemName: snapshot.val().item_name,
   itemDescription: snapshot.val().description,
@@ -371,11 +373,13 @@ itemDescription: "null",
   editItem: function(){
     var action = "Edited item."
     var date = document.getElementById("editDate").value;
-    var itemName = document.getElementById("editItem").value;
+    var itemName =document.getElementById("editItem").value;
     var itemPrice = document.getElementById("editPrice").value;
     var itemDescription = document.getElementById("editDescription").value;
     var uid = firebase.auth().currentUser.uid;
     var origName = document.getElementById("NameOfItem").innerHTML;
+    itemName = itemName.substring(0, 50);
+    itemDescription = itemDescription.substring(0, 200);
 
     firebase.database().ref('items').once('value', function(snapshot) {
       var iList = [];
@@ -386,7 +390,7 @@ itemDescription: "null",
         iList.push(itemList);
       });
       for(var x = 0; x < iList.length; x++){
-        if(iList[x].name == itemName && itemName != origName){
+        if(iList[x].name.toUpperCase() == itemName.toUpperCase() && itemName != origName){
           found = true;
           break;
         }

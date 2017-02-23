@@ -285,6 +285,9 @@ var Content = React.createClass({
     var birthdate = document.getElementById("birthdate").value;
     var age = document.getElementById("age").value;
     var type = document.getElementById("userType").value;
+    firstName = firstName.substring(0, 50);
+    lastName = lastName.substring(0, 50);
+    address = address.substring(0, 200);
 
     firebase.database().ref('users/'+userID).update({
         firstname:firstName,

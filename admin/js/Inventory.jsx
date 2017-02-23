@@ -124,6 +124,7 @@ var Content = React.createClass({
       var itemid = id;
       var itemName = data.val().item_name;
       var quantity = data.val().quantity;
+      itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
       $("#itemList").append("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
       $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
@@ -138,6 +139,7 @@ var Content = React.createClass({
       var itemid = id;
       var itemName = data.val().item_name;
       var quantity = data.val().quantity;
+      itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
       $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
       $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
@@ -279,6 +281,8 @@ var Content = React.createClass({
     var date = document.getElementById("newDate").value;
     var description = document.getElementById("newDescription").value;
     var action = "Added item.";
+    itemName = itemName.substring(0, 50);
+    description = description.substring(0, 200);
 
     firebase.database().ref('items').once('value', function(snapshot) {
       var iList = [];
@@ -289,7 +293,7 @@ var Content = React.createClass({
         iList.push(itemList);
       });
       for(var x = 0; x < iList.length; x++){
-        if(iList[x].name == itemName){
+        if(iList[x].name.toUpperCase() == itemName.toUpperCase()){
           found = true;
           break;
         }
@@ -640,7 +644,7 @@ var Content = React.createClass({
                               </div>
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Quantity to Add</label>
-                                  <input type="number" id="additionalNumber" className="form-control" min="1" onChange={this.formValidation}/>
+                                  <input type="number" id="additionalNumber" className="form-control" min="1" onChange={this.formValidation} maxLength="50"/>
                               </div>
                           </div>
                           <div className="row">

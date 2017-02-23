@@ -240,6 +240,11 @@ var Content = React.createClass({
     var age = document.getElementById("age").value;
     var birthdate = document.getElementById("birthdate").value;
     var password = btoa(document.getElementById("password").value);
+    firstname = firstname.substring(0, 50);
+    lastname = lastname.substring(0, 50);
+    email = email.substring(0, 50);
+    address = address.substring(0, 200);
+    password = password.substring(0, 50);
 
     if(firstname && lastname && address && contactnumber && email && age && birthdate && password){
       firebase.auth().currentUser.updateEmail(email).then(function() {
