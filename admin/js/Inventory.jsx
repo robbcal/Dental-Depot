@@ -87,7 +87,8 @@ var Body = React.createClass({
 var Content = React.createClass({
   getInitialState: function() {
       return {
-        curUser: "null"
+        curUser: "null",
+        errorState: 1
       };
   },
 
@@ -115,7 +116,7 @@ var Content = React.createClass({
 
     ref.on('value', function(snapshot) {
       self.setState({
-        curUser: snapshot.val().firstname+" "+snapshot.val().lastname
+        curUser: snapshot.val().firstname+" "+snapshot.val().lastname,
       });
     });
     var ref = firebase.database().ref('items').orderByChild("item_name");
@@ -224,7 +225,7 @@ var Content = React.createClass({
   },
 
   generateDate: function(){
-     var now = new Date();
+    var now = new Date();
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
     var today = now.getFullYear()+"-"+month+"-"+day;
@@ -233,10 +234,10 @@ var Content = React.createClass({
   },
 
   checkNewItem: function(){
-      var itemName = document.getElementById("newItem").value;
-      var stock = document.getElementById("newNumber").value;
-      var price = document.getElementById("newPrice").value;
-      var date = document.getElementById("newDate").value;
+      var itemName = document.getElementById("newItem").value.trim();
+      var stock = document.getElementById("newNumber").value.trim();
+      var price = document.getElementById("newPrice").value.trim();
+      var date = document.getElementById("newDate").value.trim();
 
       if(itemName != "" && stock != "" && price != "" && date != ""){
         if(Number(stock) <= 0 || Number(price) <= 0){
@@ -245,6 +246,11 @@ var Content = React.createClass({
         }else{
           $('#addConfirmation').appendTo("body").modal('show');
         }
+      }else if(itemName == ""){
+        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        $('#errorModal').appendTo("body").modal('show');
+        document.getElementById("newItem").value = "";
+        document.getElementById("newItem").style.borderColor = "red";
       }else{
           document.getElementById("errorMessage").innerHTML= "Missing input.";
           $('#errorModal').appendTo("body").modal('show');
@@ -274,12 +280,12 @@ var Content = React.createClass({
   addItem: function(){
     var now = new Date();
     var itemID = document.getElementById("newId").value;
-    var itemName = document.getElementById("newItem").value;
+    var itemName = document.getElementById("newItem").value.trim();
     var qty = document.getElementById("newNumber").value;
-    var price = document.getElementById("newPrice").value;
+    var price = document.getElementById("newPrice").value+"";
     var uid = firebase.auth().currentUser.uid;
     var date = document.getElementById("newDate").value;
-    var description = document.getElementById("newDescription").value;
+    var description = document.getElementById("newDescription").value.trim();
     var action = "Added item.";
     itemName = itemName.substring(0, 50);
     description = description.substring(0, 200);
@@ -305,8 +311,47 @@ var Content = React.createClass({
           description: description,
           quantity: Number(qty),
           price: price
+        }, function(error) {
+          console.log(error)
+          $('#addConfirmation').modal('hide');
+          $('#newItemModal').modal('hide');
+        }).then(function(error) {
+          firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+            var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
+            firebase.database().ref("items/"+itemID+"/item_history/").push().set({
+              user: userName,
+              date: date,
+              action_performed: action,
+              quantity: qty+""
+            });
+          });
+          firebase.database().ref("users/"+uid+"/activity").push().set({
+            action_performed: action,
+            object_changed: itemName,
+            quantity: qty+"",
+            date: date
+          });
+          firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+            var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+            firebase.database().ref("activities").push().set({
+              action_performed: action,
+              object_changed: itemName,
+              quantity: qty+"",
+              date: date,
+              user: fullname
+            });
+          });
+          document.getElementById("newItem").value="";
+          document.getElementById("newNumber").value="";
+          document.getElementById("newPrice").value="";
+          document.getElementById("newDescription").value="";
+          $('#addConfirmation').modal('hide');
+          $('#newItemModal').modal('hide');
+          $('#informSuccessAdd').appendTo("body").modal('show');
+          setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
         });
-        firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
+
+        /*firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
           var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
           firebase.database().ref("items/"+itemID+"/item_history/").push().set({
             user: userName,
@@ -338,7 +383,7 @@ var Content = React.createClass({
         $('#addConfirmation').modal('hide');
         $('#newItemModal').modal('hide');
         $('#informSuccessAdd').appendTo("body").modal('show');
-        setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
+        setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);*/
       }else{
         document.getElementById("errorMessage").innerHTML= "Duplicate item.";
         $('#errorModal').appendTo("body").modal('show');
@@ -370,7 +415,7 @@ var Content = React.createClass({
   updateItem: function(){
     var itemName = $("#item option:selected").text();
     var id = document.getElementById("ID").value;
-    var price = document.getElementById("existingPrice").value;
+    var price = document.getElementById("existingPrice").value+"";
     var curStock = document.getElementById("existingStock").value;
     var addNumber = document.getElementById("additionalNumber").value;
     var date = document.getElementById("existingDate").value;

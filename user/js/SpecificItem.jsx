@@ -362,7 +362,7 @@ itemDescription: "null",
     var action = "Edited item."
     var date = document.getElementById("editDate").value;
     var itemName = document.getElementById("editItem").value;
-    var itemPrice = document.getElementById("editPrice").value;
+    var itemPrice = document.getElementById("editPrice").value+"";
     var itemDescription = document.getElementById("editDescription").value;
     var uid = firebase.auth().currentUser.uid;
     var origName = document.getElementById("NameOfItem").innerHTML;

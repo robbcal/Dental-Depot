@@ -143,10 +143,23 @@ var Content = React.createClass({
       });
       $(document).ready(function () {
         (function ($) {
+          var ar = new Array(37, 38, 39, 40);
+          $("#stock, #price").keydown(function(e) {
+              var key = e.which;
+              if ($.inArray(key, ar) > -1) {
+                  e.preventDefault();
+                  return false; 
+             }
+              return true;
+          });
           $("#number").keypress(function(event) {
             if (event.which == 45 || event.which == 46) {
                 event.preventDefault();
              }
+          });
+          $("#stock, #price").keydown(function(e) {    
+             e.preventDefault();
+             return false;
           });
         }(jQuery));
       });
@@ -184,46 +197,49 @@ var Content = React.createClass({
 
     checkStock: function(){
       var num = document.getElementById("number").value;
-      var max = document.getElementById("stock").value;
+      var max = document.getElementById("stock").value;  
       num = 0+num;
 
       if(Number(num) > max){
         document.getElementById("errorMessage").innerHTML= "Insufficient stock";
         $('#errorModal').appendTo("body").modal('show');
         document.getElementById("number").value = "";
-      }
+      }  
     },
 
     addItemToTable: function(){
       var id = document.getElementById("ID").value;
       var num = document.getElementById("number").value;
       var total = document.getElementById("total").value;
-      var price = document.getElementById("price").value;
+      //var price = document.getElementById("price").value;
       var stock = document.getElementById("stock").value;
       var itemName = $('#item').children("option:selected").text();
 
       if(id && num > 0){
-        var newStock = Number(stock) - Number(num);
-        var subtotal = (Number(price) * Number(num))
-        var runningTotal = Number(total) + subtotal ;
+        var ref = firebase.database().ref('items/'+id);
+        ref.once('value', function(snapshot) {
+          var newStock = (Number(stock) - Number(num)); 
+          var subtotal = (Number(snapshot.val().price) * Number(num))
+          var runningTotal = Number(total) + subtotal ;
 
-        document.getElementById("total").value = runningTotal.toFixed(2);
-        document.getElementById("stock").value = newStock;
-        document.getElementById("number").max = newStock;
-        document.getElementById(id).value = id+"|"+newStock;
-        document.getElementById("number").value = "";
+          document.getElementById("total").value = runningTotal.toFixed(2);
+          document.getElementById("stock").value = newStock;
+          document.getElementById("number").max = newStock;
+          document.getElementById(id).value = id+"|"+newStock;
+          document.getElementById("number").value = "";
 
-        if($('#transactionTable tr > td:contains('+id+')').length == 0){
-            $("#transactionTableBody").append("<tr id="+id+"><td id='del' class='delete'><button class='btn btn-danger btn-xs deleteRow' value="+id+">x</button></td><td style='display:none'>"+id+"</td><td class='name' value="+id+">"+itemName+"</td><td id="+id+"A"+id+" class='number' value="+num+">"+num+"</td><td id='price'>"+price+"</td><td id="+id+"B"+id+" class='subtotal' value="+subtotal.toFixed(2)+">"+subtotal.toFixed(2)+"</td></tr>");
-        }else{
-          var transQty = $("td#"+id+"A"+id+"").text();
-          var transSubtotal = $("td#"+id+"B"+id+"").text();
-          var newQty = Number(transQty) + Number(num);
-          var newSubtotal = Number(transSubtotal) + Number(subtotal);
+          if($('#transactionTable tr > td:contains('+id+')').length == 0){
+              $("#transactionTableBody").append("<tr id="+id+"><td id='del' class='delete'><button class='btn btn-danger btn-xs deleteRow' value="+id+">x</button></td><td style='display:none'>"+id+"</td><td class='name' value="+id+">"+itemName+"</td><td id="+id+"A"+id+" class='number' value="+num+">"+num+"</td><td id='price'>"+snapshot.val().price+"</td><td id="+id+"B"+id+" class='subtotal' value="+subtotal.toFixed(2)+">"+subtotal.toFixed(2)+"</td></tr>");
+          }else{
+            var transQty = $("td#"+id+"A"+id+"").text();
+            var transSubtotal = $("td#"+id+"B"+id+"").text();
+            var newQty = Number(transQty) + Number(num);
+            var newSubtotal = Number(transSubtotal) + Number(subtotal);
 
-          $("td#"+id+"A"+id+"").replaceWith("<td id="+id+"A"+id+" class='number' value="+newQty+">"+newQty+"</td>");
-          $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+">"+newSubtotal.toFixed(2)+"</td>");
-        }
+            $("td#"+id+"A"+id+"").replaceWith("<td id="+id+"A"+id+" class='number' value="+newQty+">"+newQty+"</td>");
+            $("td#"+id+"B"+id+"").replaceWith("<td id="+id+"B"+id+" class='subtotal' value="+newSubtotal.toFixed(2)+">"+newSubtotal.toFixed(2)+"</td>");
+          }
+        });
       }else if(num == 0){
         document.getElementById("errorMessage").innerHTML= "Invalid input";
         $('#errorModal').appendTo("body").modal('show');
@@ -236,7 +252,7 @@ var Content = React.createClass({
 
     checkTransaction: function(){
         var total = document.getElementById("total").value;
-        var customer = document.getElementById("customer").value;
+        var customer = document.getElementById("customer").value.trim();
         var date =  document.getElementById("date").value;
 
         if(total != 0 && customer != ""){
@@ -244,6 +260,10 @@ var Content = React.createClass({
         }else if(customer == "" || date == ""){
             document.getElementById("errorMessage").innerHTML= "Missing input";
             $('#errorModal').appendTo("body").modal('show');
+            if(customer == ""){
+              document.getElementById("customer").value = "";
+              document.getElementById("customer").style.borderColor = "red";
+            }
         }else{
             document.getElementById("errorMessage").innerHTML= "No items added";
             $('#errorModal').appendTo("body").modal('show');

@@ -150,6 +150,7 @@ var Content = React.createClass({
           var month = dtToday.getMonth() + 1;
           var day = dtToday.getDate();
           var year = dtToday.getFullYear();
+          var minYear = year - 99;  
 
           if(month < 10)
               month = '0' + month.toString();
@@ -157,33 +158,74 @@ var Content = React.createClass({
               day = '0' + day.toString();
 
           var maxDate = year + '-' + month + '-' + day;
+          var minDate = minYear + '-' + month + '-' + day;
           $('#birthdate').attr('max', maxDate);
+          $('#birthdate').attr('min', minDate);
+        });
+        $("#birthdate").focusout(function(){
+          var dtToday = new Date();
+          var yearNow = dtToday.getFullYear();
+          var date = new Date($('#birthdate').val());
+          var year = date.getFullYear();
+          if(yearNow - year > 99 || yearNow - year < 1){
+            $('#birthdate').val("");
+            $('#birthdate').css('border-color','red');
+          }
         });
       }(jQuery));
     });
   },
 
   checkProfile: function(){
-      var firstname = document.getElementById("firstName").value;
-      var lastname = document.getElementById("lastName").value;
-      var address = document.getElementById("address").value;
-      var contactnumber = document.getElementById("contactNumber").value;
-      var email = document.getElementById("email").value;
-      var age = document.getElementById("age").value;
-      var birthdate = document.getElementById("birthdate").value;
-      var password = document.getElementById("password").value;
+    var firstname = document.getElementById("firstName").value.trim();
+    var lastname = document.getElementById("lastName").value.trim();
+    var address = document.getElementById("address").value.trim();
+    var contactnumber = document.getElementById("contactNumber").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var age = document.getElementById("age").value.trim();
+    var birthdate = document.getElementById("birthdate").value.trim();
+    var password = document.getElementById("password").value;
 
-      if(firstname != "" && lastname != "" && address != "" && contactnumber != "" && email != "" && age != "" && birthdate != "" && password != ""){
-        if(Number(age) <= 0){
-          document.getElementById("errorMessage").innerHTML= "Invalid age.";
-          $('#errorModal').appendTo("body").modal('show');
-        }else{
-          $('#editConfirmation').appendTo("body").modal('show');
-        }
-      }else{
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
+    if(firstname != "" && lastname != "" && address != "" && contactnumber != "" && email != "" && age != "" && birthdate != "" && password != ""){
+      if(Number(age) <= 0){
+        document.getElementById("errorMessage").innerHTML= "Invalid age.";
         $('#errorModal').appendTo("body").modal('show');
+      }else{
+        $('#editConfirmation').appendTo("body").modal('show');
       }
+    }else{
+      document.getElementById("errorMessage").innerHTML= "Missing input.";
+      $('#errorModal').appendTo("body").modal('show');
+    }
+
+    if(firstname == ""){
+      document.getElementById("firstName").value = "";
+      document.getElementById("firstName").style.borderColor = "red";
+    }
+    if(lastname == ""){
+      document.getElementById("lastName").value = "";
+      document.getElementById("lastName").style.borderColor = "red";
+    }
+    if(address == ""){
+      document.getElementById("address").value = "";
+      document.getElementById("address").style.borderColor = "red";
+    }
+    if(contactnumber == ""){
+      document.getElementById("contactNumber").value = "";
+      document.getElementById("contactNumber").style.borderColor = "red";
+    }
+    if(email == ""){
+      document.getElementById("email").value = "";
+      document.getElementById("email").style.borderColor = "red";
+    }
+    if(birthdate == ""){
+      document.getElementById("birthdate").value = "";
+      document.getElementById("birthdate").style.borderColor = "red";
+    }
+    if(age == ""){
+      document.getElementById("age").value = "";
+      document.getElementById("age").style.borderColor = "red";
+    }
   },
 
   showModal: function(){

@@ -197,6 +197,7 @@ var Content = React.createClass({
           var month = dtToday.getMonth() + 1;
           var day = dtToday.getDate();
           var year = dtToday.getFullYear();
+          var minYear = year - 99;  
 
           if(month < 10)
               month = '0' + month.toString();
@@ -204,7 +205,19 @@ var Content = React.createClass({
               day = '0' + day.toString();
 
           var maxDate = year + '-' + month + '-' + day;
+          var minDate = minYear + '-' + month + '-' + day;
           $('#birthdate').attr('max', maxDate);
+          $('#birthdate').attr('min', minDate);
+        });
+        $("#birthdate").focusout(function(){
+          var dtToday = new Date();
+          var yearNow = dtToday.getFullYear();
+          var date = new Date($('#birthdate').val());
+          var year = date.getFullYear();
+          if(yearNow - year > 99 || yearNow - year < 1){
+            $('#birthdate').val("");
+            $('#birthdate').css('border-color','red');
+          }
         });
       }(jQuery));
     });
@@ -217,14 +230,14 @@ var Content = React.createClass({
   },
 
   checkInput: function(){
-    var firstName = document.getElementById("firstName").value;
-    var lastName = document.getElementById("lastName").value;
-    var email = document.getElementById("email").value;
-    var address = document.getElementById("address").value;
-    var contactNumber = document.getElementById("contactNumber").value;
-    var age = document.getElementById("age").value;
-    var birthdate = document.getElementById("birthdate").value;
-    var userType = document.getElementById("userType").value;
+    var firstName = document.getElementById("firstName").value.trim();
+    var lastName = document.getElementById("lastName").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var address = document.getElementById("address").value.trim();
+    var contactNumber = document.getElementById("contactNumber").value.trim();
+    var age = document.getElementById("age").value.trim();
+    var birthdate = document.getElementById("birthdate").value.trim();
+    var userType = document.getElementById("userType").value.trim();
 
     if(firstName && lastName && address && contactNumber && email && age && birthdate && userType){
       if(Number(age) <= 0){
@@ -236,6 +249,39 @@ var Content = React.createClass({
     }else{
       document.getElementById("errorMessage").innerHTML= "Missing input.";
       $('#errorModal').appendTo("body").modal('show');
+    }
+
+    if(firstName == ""){
+      document.getElementById("firstName").value = "";
+      document.getElementById("firstName").style.borderColor = "red";
+    }
+    if(lastName == ""){
+      document.getElementById("lastName").value = "";
+      document.getElementById("lastName").style.borderColor = "red";
+    }
+    if(address == ""){
+      document.getElementById("address").value = "";
+      document.getElementById("address").style.borderColor = "red";
+    }
+    if(contactNumber == ""){
+      document.getElementById("contactNumber").value = "";
+      document.getElementById("contactNumber").style.borderColor = "red";
+    }
+    if(email == ""){
+      document.getElementById("email").value = "";
+      document.getElementById("email").style.borderColor = "red";
+    }
+    if(birthdate == ""){
+      document.getElementById("birthdate").value = "";
+      document.getElementById("birthdate").style.borderColor = "red";
+    }
+    if(age == ""){
+      document.getElementById("age").value = "";
+      document.getElementById("age").style.borderColor = "red";
+    }
+    if(userType == ""){
+      document.getElementById("userType").value = "";
+      document.getElementById("userType").style.borderColor = "red";
     }
   },
 
@@ -288,8 +334,42 @@ var Content = React.createClass({
             user_type: userType,
             password: password,
             status:"Unverified"
+          }, function(error) {
+            console.log(error)
+            $('#addConfirmation').modal('hide');
+            $('#addUserModal').modal('hide');
+          }).then(function(error) {
+            firebase.database().ref("users/"+curUID+"/activity").push().set({
+              action_performed: "Added user.",
+              object_changed: firstName+" "+lastName,
+              quantity: "n/a",
+              date: today
+            });
+            firebase.database().ref('users/'+curUID).once('value').then(function(snapshot) {
+              var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+              firebase.database().ref("activities").push().set({
+                action_performed: "Added user.",
+                object_changed: firstName+" "+lastName,
+                quantity: "n/a",
+                date: today,
+                user: fullname
+              });
+            });
+
+            $('#addConfirmation').modal('hide');
+            $('#addUserModal').modal('hide');
+            $('#informSuccess').appendTo("body").modal('show');
+            setTimeout(function() { $("#informSuccess").modal('hide'); }, 3000);
+            document.getElementById("firstName").value="";
+            document.getElementById("lastName").value="";
+            document.getElementById("email").value="";
+            document.getElementById("address").value="";
+            document.getElementById("contactNumber").value="";
+            document.getElementById("age").value="";
+            document.getElementById("birthdate").value="";
+            $("#userType option:eq(0)").attr("selected", "selected");
           });
-          firebase.database().ref("users/"+curUID+"/activity").push().set({
+          /*firebase.database().ref("users/"+curUID+"/activity").push().set({
             action_performed: "Added user.",
             object_changed: firstName+" "+lastName,
             quantity: "n/a",
@@ -317,7 +397,7 @@ var Content = React.createClass({
           document.getElementById("contactNumber").value="";
           document.getElementById("age").value="";
           document.getElementById("birthdate").value="";
-          $("#userType option:eq(0)").attr("selected", "selected");
+          $("#userType option:eq(0)").attr("selected", "selected");*/
         })
       }, function(error) {
         document.getElementById("errorMessage").innerHTML= error;
@@ -397,7 +477,7 @@ var Content = React.createClass({
                       </span>
                   </div>
               </div>
-              <div className="box-body" id="usersMainTable">
+              <div className="box-body table-responsive" id="usersMainTable">
                   <table id="user_table" className="table table-bordered table-hover dataTable">
                       <thead>
                           <tr>
