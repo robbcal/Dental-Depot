@@ -21,77 +21,77 @@ var Header = React.createClass({
 
   render: function() {
     return (
-        <div className="wrapper">
-            <header className="main-header">
-                <a href="Inventory.html" className="logo">
-                    <span className="logo-mini"><b>DD</b></span>
-                    <span className="logo-lg" id="mainHeader">Dental Depot</span>
-                </a>
-                <nav className="navbar navbar-static-top">
-                    <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-                        <span className="sr-only">Toggle navigation</span>
-                    </a>
-                    <div className="navbar-custom-menu">
-                        <ul className="nav navbar-nav">
-                            <li>
-                                <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
-                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
-                                </span></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
-                        <div className="modal-dialog modal-sm">
-                            <div className="modal-content">
-                                <div className="modal-body">
-                                    <center>
-                                        <h5>Logout from Dental Depot?</h5>
-                                        <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
-                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                                    </center>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-            </header>
-        </div>
+      <div className="wrapper">
+          <header className="main-header">
+              <a href="Inventory.html" className="logo">
+                  <span className="logo-mini"><b>DD</b></span>
+                  <span className="logo-lg" id="mainHeader">Dental Depot</span>
+              </a>
+              <nav className="navbar navbar-static-top">
+                  <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                      <span className="sr-only">Toggle navigation</span>
+                  </a>
+                  <div className="navbar-custom-menu">
+                      <ul className="nav navbar-nav">
+                          <li>
+                              <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
+                                  <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
+                              </span></a>
+                          </li>
+                      </ul>
+                  </div>
+                  <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
+                      <div className="modal-dialog modal-sm">
+                          <div className="modal-content">
+                              <div className="modal-body">
+                                  <center>
+                                      <h5>Logout from Dental Depot?</h5>
+                                      <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
+                                      <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                                  </center>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </nav>
+          </header>
+      </div>
     );
   }
 });
 
 var Body = React.createClass({
   render: function() {
-      return (
-          <div>
-              <aside className="main-sidebar">
-                  <section className="sidebar">
-                      <ul className="sidebar-menu">
-                          <br/>
-                          <li className="header">NAVIGATION</li>
-                          <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
-                          <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
-                          <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
-                          <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
-                      </ul>
-                  </section>
-              </aside>
-              <div className="content-wrapper">
-                  <section id="content" className="content"><Content/></section>
-              </div>
+    return (
+      <div>
+          <aside className="main-sidebar">
+              <section className="sidebar">
+                  <ul className="sidebar-menu">
+                      <br/>
+                      <li className="header">NAVIGATION</li>
+                      <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                      <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
+                      <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
+                      <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                  </ul>
+              </section>
+          </aside>
+          <div className="content-wrapper">
+              <section id="content" className="content"><Content/></section>
           </div>
+      </div>
     );
   }
 });
 
 var Content = React.createClass({
   getInitialState: function() {
-      return {
-        curUser: "null",
-        errorState: 1
-      };
+    return {
+      curUser: "null"
+    };
   },
 
+  //display items to table and initialization of fields
   componentDidMount: function(){
     const self = this;
     var uid = firebase.auth().currentUser.uid;
@@ -122,12 +122,12 @@ var Content = React.createClass({
     var ref = firebase.database().ref('items').orderByChild("item_name");
     ref.on('child_added', function(data) {
       var id = data.key;
-      var itemid = id;
+      var itemID = id;
       var itemName = data.val().item_name;
       var quantity = data.val().quantity;
       itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
-      $("#itemList").append("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
+      $("#itemList").append("<tr id="+id+"><td><center>"+itemID+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
       $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
@@ -137,12 +137,12 @@ var Content = React.createClass({
 
     ref.on('child_changed', function(data) {
       var id = data.key;
-      var itemid = id;
+      var itemID = id;
       var itemName = data.val().item_name;
       var quantity = data.val().quantity;
       itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
-      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
+      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemID+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
       $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
@@ -181,20 +181,19 @@ var Content = React.createClass({
               return rex.test($(this).text());
           }).show();
           $('#no-data').hide();
-          if($('#itemList tr:visible').length == 0)
-          {
+          if($('#itemList tr:visible').length == 0){
             $('#no-data').show();
           }
         });
         $("#newNumber, #newPrice, #additionalNumber").keypress(function(event) {
-          if ( event.which == 45 ) {
-              event.preventDefault();
-           }
+          if ( event.which == 45 ){
+            event.preventDefault();
+          }
         });
         $("#newNumber, #additionalNumber").keypress(function(event) {
-          if ( event.which == 46 ) {
-              event.preventDefault();
-           }
+          if ( event.which == 46 ){
+            event.preventDefault();
+          }
         });
         $('#newPrice').blur(function(){
           var num = parseFloat($(this).val());
@@ -234,47 +233,47 @@ var Content = React.createClass({
   },
 
   checkNewItem: function(){
-      var itemName = document.getElementById("newItem").value.trim();
-      var stock = document.getElementById("newNumber").value.trim();
-      var price = document.getElementById("newPrice").value.trim();
-      var date = document.getElementById("newDate").value.trim();
+    var itemName = document.getElementById("newItem").value.trim();
+    var stock = document.getElementById("newNumber").value.trim();
+    var price = document.getElementById("newPrice").value.trim();
+    var date = document.getElementById("newDate").value.trim();
 
-      if(itemName != "" && stock != "" && price != "" && date != ""){
-        if(Number(stock) <= 0 || Number(price) <= 0){
-          document.getElementById("errorMessage").innerHTML= "Invalid quantity/price.";
-          $('#errorModal').appendTo("body").modal('show');
-        }else{
-          $('#addConfirmation').appendTo("body").modal('show');
-        }
-      }else if(itemName == ""){
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
+    if(itemName != "" && stock != "" && price != "" && date != ""){
+      if(Number(stock) <= 0 || Number(price) <= 0){
+        document.getElementById("errorMessage").innerHTML= "Invalid quantity/price.";
         $('#errorModal').appendTo("body").modal('show');
-        document.getElementById("newItem").value = "";
-        document.getElementById("newItem").style.borderColor = "red";
       }else{
-          document.getElementById("errorMessage").innerHTML= "Missing input.";
-          $('#errorModal').appendTo("body").modal('show');
+        $('#addConfirmation').appendTo("body").modal('show');
       }
+    }else if(itemName == ""){
+      document.getElementById("errorMessage").innerHTML= "Missing input.";
+      $('#errorModal').appendTo("body").modal('show');
+      document.getElementById("newItem").value = "";
+      document.getElementById("newItem").style.borderColor = "red";
+    }else{
+      document.getElementById("errorMessage").innerHTML= "Missing input.";
+      $('#errorModal').appendTo("body").modal('show');
+    }
   },
 
   checkExistingItem: function(){
-      var id = document.getElementById("ID").value;
-      var price = document.getElementById("existingPrice").value;
-      var curStock = document.getElementById("existingStock").value;
-      var addNumber = document.getElementById("additionalNumber").value;
-      var date = document.getElementById("existingDate").value;
+    var id = document.getElementById("ID").value;
+    var price = document.getElementById("existingPrice").value;
+    var curStock = document.getElementById("existingStock").value;
+    var addNumber = document.getElementById("additionalNumber").value;
+    var date = document.getElementById("existingDate").value;
 
-      if(id != "" && price != "" && curStock != "" && addNumber != "" && date != ""){
-        if(Number(addNumber) <= 0){
-          document.getElementById("errorMessage").innerHTML= "Invalid quantity.";
-          $('#errorModal').appendTo("body").modal('show');
-        }else{
-          $('#addExistingConfirmation').appendTo("body").modal('show');
-        }
-      }else{
-        document.getElementById("errorMessage").innerHTML= "Missing input.";
+    if(id != "" && price != "" && curStock != "" && addNumber != "" && date != ""){
+      if(Number(addNumber) <= 0){
+        document.getElementById("errorMessage").innerHTML= "Invalid quantity.";
         $('#errorModal').appendTo("body").modal('show');
+      }else{
+        $('#addExistingConfirmation').appendTo("body").modal('show');
       }
+    }else{
+      document.getElementById("errorMessage").innerHTML= "Missing input.";
+      $('#errorModal').appendTo("body").modal('show');
+    }
   },
 
   addItem: function(){
@@ -350,40 +349,6 @@ var Content = React.createClass({
           $('#informSuccessAdd').appendTo("body").modal('show');
           setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
         });
-
-        /*firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
-          var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
-          firebase.database().ref("items/"+itemID+"/item_history/").push().set({
-            user: userName,
-            date: date,
-            action_performed: action,
-            quantity: Number(qty)
-          });
-        });
-        firebase.database().ref("users/"+uid+"/activity").push().set({
-          action_performed: action,
-          object_changed: itemName,
-          quantity: Number(qty),
-          date: date
-        });
-        firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-          var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
-          firebase.database().ref("activities").push().set({
-            action_performed: action,
-            object_changed: itemName,
-            quantity: Number(qty),
-            date: date,
-            user: fullname
-          });
-        });
-        document.getElementById("newItem").value="";
-        document.getElementById("newNumber").value="";
-        document.getElementById("newPrice").value="";
-        document.getElementById("newDescription").value="";
-        $('#addConfirmation').modal('hide');
-        $('#newItemModal').modal('hide');
-        $('#informSuccessAdd').appendTo("body").modal('show');
-        setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);*/
       }else{
         document.getElementById("errorMessage").innerHTML= "Duplicate item.";
         $('#errorModal').appendTo("body").modal('show');
@@ -401,10 +366,10 @@ var Content = React.createClass({
       document.getElementById("existingPrice").value = "";
       document.getElementById("existingStock").value = "";
     }else{
-      var itemId = $("#item").val();
-      var ref = firebase.database().ref('items/'+itemId);
+      var itemID = $("#item").val();
+      var ref = firebase.database().ref('items/'+itemID);
       ref.once('value', function(snapshot) {
-        document.getElementById("ID").value = itemId;
+        document.getElementById("ID").value = itemID;
         document.getElementById("existingDescription").value = snapshot.val().description;
         document.getElementById("existingPrice").value = snapshot.val().price;
         document.getElementById("existingStock").value = snapshot.val().quantity;
@@ -742,7 +707,6 @@ var Content = React.createClass({
                   </div>
               </div>
           </div>
-
       </div>
     );
   }
@@ -750,7 +714,7 @@ var Content = React.createClass({
 
 var MainContent = React.createClass({
   getInitialState: function() {
-      return { signedIn: false, type: 0 };
+    return { signedIn: false, type: 0 };
   },
 
   componentDidMount: function(){
@@ -794,7 +758,7 @@ var MainContent = React.createClass({
     }else{
       res = (
         <div>
-          <div className="se-pre-con"></div>
+            <div className="se-pre-con"></div>
         </div>
       );
     }

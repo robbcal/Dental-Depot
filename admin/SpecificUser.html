@@ -46,11 +46,11 @@
     <script src="../firebaseConfig.js"></script>
 
     <script language="javascript">
-        var userID;
+        var USERID;
         function processForm(){
             var parameters = location.search.substring(1).split("&");
             var temp = parameters[0].split("=");
-            userID = unescape(temp[1]);
+            USERID = unescape(temp[1]);
         }
         processForm();
     </script>

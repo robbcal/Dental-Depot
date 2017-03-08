@@ -54,48 +54,48 @@ var Header = React.createClass({
                           </div>
                       </div>
                   </div>
-                </nav>
-            </header>
-        </div>
+              </nav>
+          </header>
+      </div>
     );
   }
 });
 
 var Body = React.createClass({
-    render: function() {
-      return (
-        <div>
-            <div className="main-sidebar">
-                <div className="sidebar">
-                    <ul className="sidebar-menu">
-                        <br/>
-                        <li className="header">NAVIGATION</li>
-                        <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
-                        <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
-                    </ul>
-                </div>
-            </div>
+  render: function() {
+    return (
+      <div>
+          <div className="main-sidebar">
+              <div className="sidebar">
+                  <ul className="sidebar-menu">
+                      <br/>
+                      <li className="header">NAVIGATION</li>
+                      <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                      <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                  </ul>
+              </div>
+          </div>
 
-            <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
-                    <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
-                        <Content/>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-      );
-    }
+          <div style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+              <div className="content-wrapper" style={{height: '588px', backgroundColor: '#e1e1e1'}}>
+                  <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
+                      <Content/>
+                  </div>
+              </div>
+          </div>
+      </div>
+    );
+  }
 });
 
 var Content = React.createClass({
   getInitialState: function() {
-      return {
-        curUser: "null"
-      };
+    return {
+      curUser: "null"
+    };
   },
 
+  //display items to table and initialization of fields
   componentDidMount: function(){
     const self = this;
     var uid = firebase.auth().currentUser.uid;
@@ -126,12 +126,12 @@ var Content = React.createClass({
     var ref = firebase.database().ref('items').orderByChild("item_name");
     ref.on('child_added', function(data) {
       var id = data.key;
-      var itemid = id;
+      var itemId = id;
       var itemName = data.val().item_name;
       var quantity = data.val().quantity;
       itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
-      $("#itemList").append("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
+      $("#itemList").append("<tr id="+id+"><td><center>"+itemId+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
       $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
@@ -141,12 +141,12 @@ var Content = React.createClass({
 
     ref.on('child_changed', function(data) {
       var id = data.key;
-      var itemid = id;
+      var itemId = id;
       var itemName = data.val().item_name;
       var quantity = data.val().quantity;
       itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
-      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemid+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
+      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemId+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
       $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
       $("#"+id+"").dblclick(function() {
         document.getElementById("item_id").value = id;
@@ -182,23 +182,22 @@ var Content = React.createClass({
           var rex = new RegExp($(this).val(), 'i');
           $('#itemList tr').hide();
           $('#itemList tr').filter(function () {
-              return rex.test($(this).text());
+            return rex.test($(this).text());
           }).show();
           $('#no-data').hide();
-          if($('#itemList tr:visible').length == 0)
-          {
+          if($('#itemList tr:visible').length == 0){
             $('#no-data').show();
           }
         });
         $("#newNumber, #newPrice, #additionalNumber").keypress(function(event) {
-          if ( event.which == 45 ) {
-              event.preventDefault();
-           }
+          if ( event.which == 45 ){
+            event.preventDefault();
+          }
         });
         $("#newNumber, #additionalNumber").keypress(function(event) {
-          if ( event.which == 46 ) {
-              event.preventDefault();
-           }
+          if ( event.which == 46 ){
+            event.preventDefault();
+          }
         });
         $('#newPrice').blur(function(){
           var num = parseFloat($(this).val());
@@ -229,7 +228,7 @@ var Content = React.createClass({
   },
 
   generateDate: function(){
-     var now = new Date();
+    var now = new Date();
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
     var today = now.getFullYear()+"-"+month+"-"+day;
@@ -256,8 +255,8 @@ var Content = React.createClass({
         document.getElementById("newItem").value = "";
         document.getElementById("newItem").style.borderColor = "red";
       }else{
-          document.getElementById("errorMessage").innerHTML= "Missing input.";
-          $('#errorModal').appendTo("body").modal('show');
+        document.getElementById("errorMessage").innerHTML= "Missing input.";
+        $('#errorModal').appendTo("body").modal('show');
       }
   },
 
@@ -336,13 +335,13 @@ var Content = React.createClass({
             date: date
           });
           firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-            var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+            var fullName = snapshot.val().firstname+" "+snapshot.val().lastname;
             firebase.database().ref("activities").push().set({
               action_performed: action,
               object_changed: itemName,
               quantity: qty+"",
               date: date,
-              user: fullname
+              user: fullName
             });
           });
           document.getElementById("newItem").value="";
@@ -354,40 +353,6 @@ var Content = React.createClass({
           $('#informSuccessAdd').appendTo("body").modal('show');
           setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);
         });
-
-        /*firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
-          var userName = snapshot.val().firstname+" "+snapshot.val().lastname;
-          firebase.database().ref("items/"+itemID+"/item_history/").push().set({
-            user: userName,
-            date: date,
-            action_performed: action,
-            quantity: Number(qty)
-          });
-        });
-        firebase.database().ref("users/"+uid+"/activity").push().set({
-          action_performed: action,
-          object_changed: itemName,
-          quantity: Number(qty),
-          date: date
-        });
-        firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-          var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
-          firebase.database().ref("activities").push().set({
-            action_performed: action,
-            object_changed: itemName,
-            quantity: Number(qty),
-            date: date,
-            user: fullname
-          });
-        });
-        document.getElementById("newItem").value="";
-        document.getElementById("newNumber").value="";
-        document.getElementById("newPrice").value="";
-        document.getElementById("newDescription").value="";
-        $('#addConfirmation').modal('hide');
-        $('#newItemModal').modal('hide');
-        $('#informSuccessAdd').appendTo("body").modal('show');
-        setTimeout(function() { $("#informSuccessAdd").modal('hide'); }, 1000);*/
       }else{
         document.getElementById("errorMessage").innerHTML= "Duplicate item.";
         $('#errorModal').appendTo("body").modal('show');
@@ -448,13 +413,13 @@ var Content = React.createClass({
         date: date
       });
       firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-        var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
+        var fullName = snapshot.val().firstname+" "+snapshot.val().lastname;
         firebase.database().ref("activities").push().set({
           action_performed: action,
           object_changed: itemName,
           quantity: addNumber,
           date: date,
-          user: fullname
+          user: fullName
         });
       });
       $("#item").val("");
@@ -746,7 +711,6 @@ var Content = React.createClass({
                   </div>
               </div>
           </div>
-
       </div>
     );
   }
@@ -754,7 +718,7 @@ var Content = React.createClass({
 
 var MainContent = React.createClass({
   getInitialState: function() {
-      return { signedIn: false, type: 0 };
+    return { signedIn: false, type: 0 };
   },
 
   componentDidMount: function(){
@@ -778,7 +742,7 @@ var MainContent = React.createClass({
         });
       }
     }, function(error) {
-        console.log(error);
+      console.log(error);
     });
   },
 
@@ -798,7 +762,7 @@ var MainContent = React.createClass({
     }else{
       res = (
         <div>
-          <div className="se-pre-con"></div>
+            <div className="se-pre-con"></div>
         </div>
       );
     }

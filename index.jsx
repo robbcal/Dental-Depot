@@ -19,7 +19,7 @@ var Content = React.createClass({
       firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
-          var type = snapshot.val().user_type
+          var type = snapshot.val().user_type;
           try {
             if(type == "admin"){
               window.location.replace("admin/Inventory.html");
@@ -34,6 +34,7 @@ var Content = React.createClass({
               document.getElementById("email").value = "";
               document.getElementById("password").value = "";
             }, function(error) {
+              console.log(error);
             });
           }
 
@@ -50,19 +51,6 @@ var Content = React.createClass({
       document.getElementById("errorAlert").innerHTML= "Input required data";
       $('#errorBox').show();
     }
-  },
-
-  reset: function(){
-    var auth = firebase.auth();
-    var emailAddress = document.getElementById("fg_email").value;
-
-    auth.sendPasswordResetEmail(emailAddress).then(function() {
-      alert("Email sent.");
-      document.getElementById("fg_email").value = "";
-      $('#forgotPassModal').modal('hide');
-    }, function(error) {
-      alert(error);
-    });
   },
 
   render: function() {

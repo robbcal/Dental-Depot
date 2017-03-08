@@ -17,41 +17,41 @@ var Header = React.createClass({
 
   render: function() {
     return (
-        <div className="wrapper">
-            <header className="main-header">
-                <a href="Inventory.html" className="logo">
-                    <span className="logo-mini"><b>DD</b></span>
-                    <span className="logo-lg" id="mainHeader">Dental Depot</span>
-                </a>
-                <nav className="navbar navbar-static-top">
-                    <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-                        <span className="sr-only">Toggle navigation</span>
-                    </a>
-                    <div className="navbar-custom-menu">
-                        <ul className="nav navbar-nav">
-                            <li>
-                                <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
-                                    <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
-                                </span></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
-                        <div className="modal-dialog modal-sm">
-                            <div className="modal-content">
-                                <div className="modal-body">
-                                    <center>
-                                        <h5>Logout from Dental Depot?</h5>
-                                        <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
-                                        <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
-                                    </center>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-            </header>
-        </div>
+      <div className="wrapper">
+          <header className="main-header">
+              <a href="Inventory.html" className="logo">
+                  <span className="logo-mini"><b>DD</b></span>
+                  <span className="logo-lg" id="mainHeader">Dental Depot</span>
+              </a>
+              <nav className="navbar navbar-static-top">
+                  <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                      <span className="sr-only">Toggle navigation</span>
+                  </a>
+                  <div className="navbar-custom-menu">
+                      <ul className="nav navbar-nav">
+                          <li>
+                              <a href="#"><span data-target="#logoutConfirmation" data-toggle="modal" onClick={this.showModal}>
+                                  <img className="profileDropdown" src="../bootstrap/icons/tooth.png" data-toggle="tooltip" title="Logout" data-placement="left"/>
+                              </span></a>
+                          </li>
+                      </ul>
+                  </div>
+                  <div className="modal fade bs-example-modal-lg" id="logoutConfirmation">
+                      <div className="modal-dialog modal-sm">
+                          <div className="modal-content">
+                              <div className="modal-body">
+                                  <center>
+                                      <h5>Logout from Dental Depot?</h5>
+                                      <button type="button" className="btn btn-primary" onClick={this.logout} id="itemButtons">YES</button>
+                                      <button type="button" className="btn btn-default" data-dismiss="modal" id="itemButtons">NO</button>
+                                  </center>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </nav>
+          </header>
+      </div>
     );
   }
 });
@@ -59,34 +59,35 @@ var Header = React.createClass({
 var Body = React.createClass({
   render: function() {
     return (
-        <div>
-            <aside className="main-sidebar">
-                <section className="sidebar">
-                    <ul className="sidebar-menu">
-                        <br/>
-                        <li className="header">NAVIGATION</li>
-                        <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
-                        <li className="active"><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
-                        <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
-                        <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
-                    </ul>
-                </section>
-            </aside>
-            <div className="content-wrapper">
-                <section id="content" className="content"><Content/></section>
-            </div>
-        </div>
+      <div>
+          <aside className="main-sidebar">
+              <section className="sidebar">
+                  <ul className="sidebar-menu">
+                      <br/>
+                      <li className="header">NAVIGATION</li>
+                      <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                      <li className="active"><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
+                      <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
+                      <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
+                  </ul>
+              </section>
+          </aside>
+          <div className="content-wrapper">
+              <section id="content" className="content"><Content/></section>
+          </div>
+      </div>
     );
   }
 });
 
 var Content = React.createClass({
   getInitialState: function() {
-      return {
-       cur_password: "null"
-      };
+    return {
+      cur_password: "null"
+    };
   },
 
+  //display users to table and initialization of fields
   componentDidMount: function(){
     const self = this;
     var cur_uid = firebase.auth().currentUser.uid;
@@ -124,7 +125,7 @@ var Content = React.createClass({
       var address = data.val().address;
       var contactNumber = data.val().contact_no;
       var age = data.val().age;
-      var birthdate = data.val().birthday;
+      var birthDate = data.val().birthday;
       var userType = data.val().user_type;
       var status = data.val().status;
       firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
@@ -145,7 +146,7 @@ var Content = React.createClass({
       var address = data.val().address;
       var contactNumber = data.val().contact_no;
       var age = data.val().age;
-      var birthdate = data.val().birthday;
+      var birthDate = data.val().birthday;
       var userType = data.val().user_type;
       var status = data.val().status;
       firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
@@ -153,7 +154,8 @@ var Content = React.createClass({
 
       $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td><td><center>"+status+"</center></td></tr>");
       $("#"+id+"").dblclick(function() {
-        alert(email);
+        document.getElementById("user_id").value = id;
+        document.getElementById("submit").click();
       });
     });
 
@@ -169,7 +171,7 @@ var Content = React.createClass({
       document.getElementById("address").value="";
       document.getElementById("contactNumber").value="";
       document.getElementById("age").value="";
-      document.getElementById("birthdate").value="";
+      document.getElementById("birthDate").value="";
       $("#userType option:eq(0)").attr("selected", "selected");
     });
 
@@ -179,11 +181,10 @@ var Content = React.createClass({
           var rex = new RegExp($(this).val(), 'i');
           $('#userList tr').hide();
           $('#userList tr').filter(function () {
-              return rex.test($(this).text());
+            return rex.test($(this).text());
           }).show();
           $('#no-data').hide();
-          if($('#userList tr:visible').length == 0)
-          {
+          if($('#userList tr:visible').length == 0){
             $('#no-data').show();
           }
         });
@@ -199,24 +200,26 @@ var Content = React.createClass({
           var year = dtToday.getFullYear();
           var minYear = year - 99;  
 
-          if(month < 10)
-              month = '0' + month.toString();
-          if(day < 10)
-              day = '0' + day.toString();
-
+          if(month < 10){
+            month = '0' + month.toString();
+          }
+          if(day < 10){
+            day = '0' + day.toString();
+          }    
+              
           var maxDate = year + '-' + month + '-' + day;
           var minDate = minYear + '-' + month + '-' + day;
-          $('#birthdate').attr('max', maxDate);
-          $('#birthdate').attr('min', minDate);
+          $('#birthDate').attr('max', maxDate);
+          $('#birthDate').attr('min', minDate);
         });
-        $("#birthdate").focusout(function(){
+        $("#birthDate").focusout(function(){
           var dtToday = new Date();
           var yearNow = dtToday.getFullYear();
-          var date = new Date($('#birthdate').val());
+          var date = new Date($('#birthDate').val());
           var year = date.getFullYear();
           if(yearNow - year > 99 || yearNow - year < 1){
-            $('#birthdate').val("");
-            $('#birthdate').css('border-color','red');
+            $('#birthDate').val("");
+            $('#birthDate').css('border-color','red');
           }
         });
       }(jQuery));
@@ -236,10 +239,10 @@ var Content = React.createClass({
     var address = document.getElementById("address").value.trim();
     var contactNumber = document.getElementById("contactNumber").value.trim();
     var age = document.getElementById("age").value.trim();
-    var birthdate = document.getElementById("birthdate").value.trim();
+    var birthDate = document.getElementById("birthDate").value.trim();
     var userType = document.getElementById("userType").value.trim();
 
-    if(firstName && lastName && address && contactNumber && email && age && birthdate && userType){
+    if(firstName && lastName && address && contactNumber && email && age && birthDate && userType){
       if(Number(age) <= 0){
         document.getElementById("errorMessage").innerHTML= "Invalid age.";
         $('#errorModal').appendTo("body").modal('show');
@@ -271,9 +274,9 @@ var Content = React.createClass({
       document.getElementById("email").value = "";
       document.getElementById("email").style.borderColor = "red";
     }
-    if(birthdate == ""){
-      document.getElementById("birthdate").value = "";
-      document.getElementById("birthdate").style.borderColor = "red";
+    if(birthDate == ""){
+      document.getElementById("birthDate").value = "";
+      document.getElementById("birthDate").style.borderColor = "red";
     }
     if(age == ""){
       document.getElementById("age").value = "";
@@ -287,11 +290,11 @@ var Content = React.createClass({
 
   ageCalculator: function(){
     var today = new Date();
-    var birthDate = new Date(document.getElementById("birthdate").value);
+    var birthDate = new Date(document.getElementById("birthDate").value);
     var age = today.getFullYear() - birthDate.getFullYear();
     var m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
+      age--;
     }
     document.getElementById("age").value = age;
   },
@@ -310,7 +313,7 @@ var Content = React.createClass({
     var address = document.getElementById("address").value;
     var contactNumber = document.getElementById("contactNumber").value;
     var age = document.getElementById("age").value;
-    var birthdate = document.getElementById("birthdate").value;
+    var birthDate = document.getElementById("birthDate").value;
     var userType = document.getElementById("userType").value;
     var password = btoa("123456");
     firstName = firstName.substring(0, 50);
@@ -330,7 +333,7 @@ var Content = React.createClass({
             address: address,
             contact_no: contactNumber,
             age: age,
-            birthday: birthdate,
+            birthday: birthDate,
             user_type: userType,
             password: password,
             status:"Unverified"
@@ -366,38 +369,9 @@ var Content = React.createClass({
             document.getElementById("address").value="";
             document.getElementById("contactNumber").value="";
             document.getElementById("age").value="";
-            document.getElementById("birthdate").value="";
+            document.getElementById("birthDate").value="";
             $("#userType option:eq(0)").attr("selected", "selected");
           });
-          /*firebase.database().ref("users/"+curUID+"/activity").push().set({
-            action_performed: "Added user.",
-            object_changed: firstName+" "+lastName,
-            quantity: "n/a",
-            date: today
-          });
-          firebase.database().ref('users/'+curUID).once('value').then(function(snapshot) {
-            var fullname = snapshot.val().firstname+" "+snapshot.val().lastname;
-            firebase.database().ref("activities").push().set({
-              action_performed: "Added user.",
-              object_changed: firstName+" "+lastName,
-              quantity: "n/a",
-              date: today,
-              user: fullname
-            });
-          });
-
-          $('#addConfirmation').modal('hide');
-          $('#addUserModal').modal('hide');
-          $('#informSuccess').appendTo("body").modal('show');
-          setTimeout(function() { $("#informSuccess").modal('hide'); }, 3000);
-          document.getElementById("firstName").value="";
-          document.getElementById("lastName").value="";
-          document.getElementById("email").value="";
-          document.getElementById("address").value="";
-          document.getElementById("contactNumber").value="";
-          document.getElementById("age").value="";
-          document.getElementById("birthdate").value="";
-          $("#userType option:eq(0)").attr("selected", "selected");*/
         })
       }, function(error) {
         document.getElementById("errorMessage").innerHTML= error;
@@ -415,7 +389,7 @@ var Content = React.createClass({
     document.getElementById("email").style.borderColor = "red";
     document.getElementById("address").style.borderColor = "red";
     document.getElementById("contactNumber").style.borderColor = "red";
-    document.getElementById("birthdate").style.borderColor = "red";
+    document.getElementById("birthDate").style.borderColor = "red";
   },
 
   formValidation: function(){
@@ -444,10 +418,10 @@ var Content = React.createClass({
     }else{
       document.getElementById("contactNumber").style.borderColor = "";
     }
-    if(document.getElementById("birthdate").value == ""){
-      document.getElementById("birthdate").style.borderColor = "red";
+    if(document.getElementById("birthDate").value == ""){
+      document.getElementById("birthDate").style.borderColor = "red";
     }else{
-      document.getElementById("birthdate").style.borderColor = "";
+      document.getElementById("birthDate").style.borderColor = "";
     }
   },
 
@@ -539,7 +513,7 @@ var Content = React.createClass({
                               <div className="row">
                                   <div className="col-sm-8" id="editInfoModalComponents">
                                       <label>Birthdate</label>
-                                      <input type="date" id="birthdate" className="form-control" onBlur={this.ageCalculator} onChange={this.formValidation}/>
+                                      <input type="date" id="birthDate" className="form-control" onBlur={this.ageCalculator} onChange={this.formValidation}/>
                                   </div>
                                   <div className="col-sm-4" id="editInfoModalComponents">
                                       <label>Age</label>
@@ -564,8 +538,6 @@ var Content = React.createClass({
                   </div>
               </div>
           </div>
-
-          {/*MODAL CONTENT*/}
 
           <div className="example-modal">
               <div className="modal fade bs-example-modal-lg" id="addConfirmation">
@@ -620,7 +592,7 @@ var Content = React.createClass({
 
 var MainContent = React.createClass({
   getInitialState: function() {
-      return { signedIn: false, type: 0 };
+    return { signedIn: false, type: 0 };
   },
 
   componentDidMount: function(){
@@ -635,16 +607,9 @@ var MainContent = React.createClass({
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
         });
-      }else{
-        /*alert("Email is not verified");
-        firebase.auth().signOut().then(function() {
-          window.location.replace("http://127.0.0.1:8080/");
-        }, function(error) {
-          console.log(error);
-        });*/
       }
     }, function(error) {
-        console.log(error);
+      console.log(error);
     });
   },
 
@@ -664,7 +629,7 @@ var MainContent = React.createClass({
     }else{
       res = (
         <div>
-          <div className="se-pre-con"></div>
+            <div className="se-pre-con"></div>
         </div>
       );
     }

@@ -47,12 +47,12 @@
     <script src="../firebaseConfig.js"></script>
 
     <script language="javascript">
-        var itemID;
+        var ITEMID;
         function processForm()
         {
             var parameters = location.search.substring(1).split("&");
             var temp = parameters[0].split("=");
-            itemID = unescape(temp[1]);
+            ITEMID = unescape(temp[1]);
         }
         processForm();
     </script>
