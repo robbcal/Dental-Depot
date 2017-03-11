@@ -66,6 +66,7 @@ var Body = React.createClass({
                       <br/>
                       <li className="header">NAVIGATION</li>
                       <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                      <li><a href="Transaction.html"><i className="fa fa-shopping-cart" id="sidebarImage"></i><span>Transaction</span></a></li>
                       <li className="active"><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
                       <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
                       <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
@@ -128,14 +129,17 @@ var Content = React.createClass({
       var birthDate = data.val().birthday;
       var userType = data.val().user_type;
       var status = data.val().status;
+      var isDeleted = data.val().isDeleted;
       firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
       lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
-      $("#userList").append("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td><td><center>"+status+"</center></td></tr>");
-      $("#"+id+"").dblclick(function() {
-        document.getElementById("user_id").value = id;
-        document.getElementById("submit").click();
-      });
+      if(isDeleted == false){
+        $("#userList").append("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td><td><center>"+status+"</center></td></tr>");
+        $("#"+id+"").dblclick(function() {
+          document.getElementById("user_id").value = id;
+          document.getElementById("submit").click();
+        });
+      }
     });
 
     ref.on('child_changed', function(data) {
@@ -149,14 +153,19 @@ var Content = React.createClass({
       var birthDate = data.val().birthday;
       var userType = data.val().user_type;
       var status = data.val().status;
+      var isDeleted = data.val().isDeleted;
       firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
       lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
-      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td><td><center>"+status+"</center></td></tr>");
-      $("#"+id+"").dblclick(function() {
-        document.getElementById("user_id").value = id;
-        document.getElementById("submit").click();
-      });
+      if(isDeleted == true){
+        $("tr#"+id).remove();
+      }else{
+        $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td><td><center>"+status+"</center></td></tr>");
+        $("#"+id+"").dblclick(function() {
+          document.getElementById("user_id").value = id;
+          document.getElementById("submit").click();
+        });
+      }  
     });
 
     ref.on('child_removed', function(data) {
@@ -219,7 +228,6 @@ var Content = React.createClass({
           var year = date.getFullYear();
           if(yearNow - year > 99 || yearNow - year < 1){
             $('#birthDate').val("");
-            $('#birthDate').css('border-color','red');
           }
         });
       }(jQuery));
@@ -256,35 +264,27 @@ var Content = React.createClass({
 
     if(firstName == ""){
       document.getElementById("firstName").value = "";
-      document.getElementById("firstName").style.borderColor = "red";
     }
     if(lastName == ""){
       document.getElementById("lastName").value = "";
-      document.getElementById("lastName").style.borderColor = "red";
     }
     if(address == ""){
       document.getElementById("address").value = "";
-      document.getElementById("address").style.borderColor = "red";
     }
     if(contactNumber == ""){
       document.getElementById("contactNumber").value = "";
-      document.getElementById("contactNumber").style.borderColor = "red";
     }
     if(email == ""){
       document.getElementById("email").value = "";
-      document.getElementById("email").style.borderColor = "red";
     }
     if(birthDate == ""){
       document.getElementById("birthDate").value = "";
-      document.getElementById("birthDate").style.borderColor = "red";
     }
     if(age == ""){
       document.getElementById("age").value = "";
-      document.getElementById("age").style.borderColor = "red";
     }
     if(userType == ""){
       document.getElementById("userType").value = "";
-      document.getElementById("userType").style.borderColor = "red";
     }
   },
 
@@ -336,7 +336,8 @@ var Content = React.createClass({
             birthday: birthDate,
             user_type: userType,
             password: password,
-            status:"Unverified"
+            status:"Unverified",
+            isDeleted: false
           }, function(error) {
             console.log(error)
             $('#addConfirmation').modal('hide');
@@ -383,49 +384,10 @@ var Content = React.createClass({
     });
   },
 
-  forValidation: function(){
-    document.getElementById("firstName").style.borderColor = "red";
-    document.getElementById("lastName").style.borderColor = "red";
-    document.getElementById("email").style.borderColor = "red";
-    document.getElementById("address").style.borderColor = "red";
-    document.getElementById("contactNumber").style.borderColor = "red";
-    document.getElementById("birthDate").style.borderColor = "red";
-  },
-
-  formValidation: function(){
-    if(document.getElementById("firstName").value == ""){
-      document.getElementById("firstName").style.borderColor = "red";
-    }else{
-      document.getElementById("firstName").style.borderColor = "";
-    }
-    if(document.getElementById("lastName").value == ""){
-      document.getElementById("lastName").style.borderColor = "red";
-    }else{
-      document.getElementById("lastName").style.borderColor = "";
-    }
-    if(document.getElementById("email").value == ""){
-      document.getElementById("email").style.borderColor = "red";
-    }else{
-      document.getElementById("email").style.borderColor = "";
-    }
-    if(document.getElementById("address").value == ""){
-      document.getElementById("address").style.borderColor = "red";
-    }else{
-      document.getElementById("address").style.borderColor = "";
-    }
-    if(document.getElementById("contactNumber").value == ""){
-      document.getElementById("contactNumber").style.borderColor = "red";
-    }else{
-      document.getElementById("contactNumber").style.borderColor = "";
-    }
-    if(document.getElementById("birthDate").value == ""){
-      document.getElementById("birthDate").style.borderColor = "red";
-    }else{
-      document.getElementById("birthDate").style.borderColor = "";
-    }
-  },
-
   render: function() {
+    var style={
+      color: 'red'
+    }
     return (
       <div id="mainContent">
           <form id="UserIDForm" type="get" action="SpecificUser.html">
@@ -447,7 +409,7 @@ var Content = React.createClass({
                   <div className="col-sm-2"></div>
                   <div className="col-sm-6">
                       <span className="pull-right">
-                          <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal" onClick={this.forValidation}>ADD USER</a>
+                          <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal">ADD USER</a>
                       </span>
                   </div>
               </div>
@@ -484,36 +446,36 @@ var Content = React.createClass({
                           <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                               <div className="row">
                                   <div className="col-sm-6" id="editInfoModalComponents">
-                                      <label>First Name</label>
-                                      <input type="text" id="firstName" className="form-control" onChange={this.formValidation} maxLength="50"/>
+                                      <label><span style={style}>* </span>First Name</label>
+                                      <input type="text" id="firstName" className="form-control" maxLength="50"/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div className="col-sm-6" id="editInfoModalComponents">
-                                      <label>Last Name</label>
-                                      <input type="text" id="lastName" className="form-control" onChange={this.formValidation} maxLength="50"/>
+                                      <label><span style={style}>* </span>Last Name</label>
+                                      <input type="text" id="lastName" className="form-control" maxLength="50"/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div className="col-sm-6" id="editInfoModalComponents">
-                                      <label>Email</label>
-                                      <input type="email" id="email" className="form-control" onChange={this.formValidation} maxLength="50"/>
+                                      <label><span style={style}>* </span>Email</label>
+                                      <input type="email" id="email" className="form-control" maxLength="50"/>
                                   </div>
                                   <div className="col-sm-6" id="editInfoModalComponents">
-                                      <label>Contact Number</label>
-                                      <input type="number" id="contactNumber" className="form-control" onChange={this.formValidation} maxLength="50"/>
+                                      <label><span style={style}>* </span>Contact Number</label>
+                                      <input type="number" id="contactNumber" className="form-control" maxLength="50"/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div id="editInfoModalComponents">
-                                      <label>Address</label>
-                                      <input type="text" id="address" className="form-control" onChange={this.formValidation} maxLength="200"/>
+                                      <label><span style={style}>* </span>Address</label>
+                                      <input type="text" id="address" className="form-control" maxLength="200"/>
                                   </div>
                               </div>
                               <div className="row">
                                   <div className="col-sm-8" id="editInfoModalComponents">
-                                      <label>Birthdate</label>
-                                      <input type="date" id="birthDate" className="form-control" onBlur={this.ageCalculator} onChange={this.formValidation}/>
+                                      <label><span style={style}>* </span>Birthdate</label>
+                                      <input type="date" id="birthDate" className="form-control" onBlur={this.ageCalculator}/>
                                   </div>
                                   <div className="col-sm-4" id="editInfoModalComponents">
                                       <label>Age</label>
@@ -606,6 +568,16 @@ var MainContent = React.createClass({
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+        });
+        firebase.database().ref("/users/"+uid).on('value', function(snapshot) {
+            var isDeleted = snapshot.val().isDeleted;
+            if(isDeleted == true){
+              firebase.auth().signOut().then(function() {
+                window.location.replace("http://127.0.0.1:8080/");
+              }, function(error) {
+                console.log(error);
+              });
+            }
         });
       }
     }, function(error) {

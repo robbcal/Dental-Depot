@@ -71,6 +71,7 @@ var Body = React.createClass({
                       <br/>
                       <li className="header">NAVIGATION</li>
                       <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                      <li><a href="Transaction.html"><i className="fa fa-shopping-cart" id="sidebarImage"></i><span>Transaction</span></a></li>
                       <li className="active"><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
                       <li><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
                       <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
@@ -131,17 +132,22 @@ var Content = React.createClass({
     });
 
     ref.on('value', function(snapshot) {
-      self.setState({
-        firstName: snapshot.val().firstname,
-        lastName: snapshot.val().lastname,
-        fullName: snapshot.val().firstname+" "+snapshot.val().lastname,
-        address: snapshot.val().address,
-        age: snapshot.val().age,
-        birthDate: snapshot.val().birthday,
-        email: snapshot.val().user_email,
-        contactNumber: snapshot.val().contact_no,
-        userType: snapshot.val().user_type
-      });
+      var isDeleted = snapshot.val().isDeleted;
+      if(isDeleted == false){
+        self.setState({
+          firstName: snapshot.val().firstname,
+          lastName: snapshot.val().lastname,
+          fullName: snapshot.val().firstname+" "+snapshot.val().lastname,
+          address: snapshot.val().address,
+          age: snapshot.val().age,
+          birthDate: snapshot.val().birthday,
+          email: snapshot.val().user_email,
+          contactNumber: snapshot.val().contact_no,
+          userType: snapshot.val().user_type
+        });
+      }else if(isDeleted == true){
+        window.location.replace("../admin/Users.html");  
+      }
     });
 
     var currRef = firebase.database().ref('users/'+firebase.auth().currentUser.uid);
@@ -204,7 +210,6 @@ var Content = React.createClass({
           var year = date.getFullYear();
           if(yearNow - year > 99 || yearNow - year < 1){
             $('#birthDate').val("");
-            $('#birthDate').css('border-color','red');
           }
         });
       }(jQuery));
@@ -246,31 +251,24 @@ var Content = React.createClass({
 
     if(firstName == ""){
       document.getElementById("firstName").value = "";
-      document.getElementById("firstName").style.borderColor = "red";
     }
     if(lastName == ""){
       document.getElementById("lastName").value = "";
-      document.getElementById("lastName").style.borderColor = "red";
     }
     if(address == ""){
       document.getElementById("address").value = "";
-      document.getElementById("address").style.borderColor = "red";
     }
     if(contactNumber == ""){
       document.getElementById("contactNumber").value = "";
-      document.getElementById("contactNumber").style.borderColor = "red";
     }
     if(birthDate == ""){
       document.getElementById("birthDate").value = "";
-      document.getElementById("birthDate").style.borderColor = "red";
     }
     if(age == ""){
       document.getElementById("age").value = "";
-      document.getElementById("age").style.borderColor = "red";
     }
     if(type == ""){
       document.getElementById("userType").value = "";
-      document.getElementById("userType").style.borderColor = "red";
     }
   },
 
@@ -383,42 +381,19 @@ var Content = React.createClass({
       date: today,
       user: this.state.currentUserName
     });
+    firebase.database().ref('users/'+USERID).update({
+      isDeleted: true
+    });
     $('#deleteUserModal').modal('hide');
     $('#informSuccessDelete').appendTo("body").modal('show');
     setTimeout(function() { $("#informSuccessDelete").modal('hide'); }, 3000);
-    firebase.database().ref('users/'+USERID).remove();
     window.location.replace("Users.html");
   },
 
-  formValidation: function(){
-    if(document.getElementById("firstName").value == ""){
-      document.getElementById("firstName").style.borderColor = "red";
-    }else{
-      document.getElementById("firstName").style.borderColor = "";
-    }
-    if(document.getElementById("lastName").value == ""){
-      document.getElementById("lastName").style.borderColor = "red";
-    }else{
-      document.getElementById("lastName").style.borderColor = "";
-    }
-    if(document.getElementById("contactNumber").value == ""){
-      document.getElementById("contactNumber").style.borderColor = "red";
-    }else{
-      document.getElementById("contactNumber").style.borderColor = "";
-    }
-    if(document.getElementById("address").value == ""){
-      document.getElementById("address").style.borderColor = "red";
-    }else{
-      document.getElementById("address").style.borderColor = "";
-    }
-    if(document.getElementById("birthDate").value == ""){
-      document.getElementById("birthDate").style.borderColor = "red";
-    }else{
-      document.getElementById("birthDate").style.borderColor = "";
-    }
-  },
-
   render: function() {
+    var style={
+      color: 'red'
+    }
     return (
         <div id="mainContent">
             <input type="hidden" id="transID" name="transID"/>
@@ -523,14 +498,14 @@ var Content = React.createClass({
                                 <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div className="row">
                                         <div className="col-sm-6" id="editInfoModalComponents">
-                                            <label>First Name</label>
-                                            <input type="text" id="firstName" className="form-control" onChange={this.formValidation} maxLength="50"/>
+                                            <label><span style={style}>* </span>First Name</label>
+                                            <input type="text" id="firstName" className="form-control" maxLength="50"/>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-6" id="editInfoModalComponents">
-                                            <label>Last Name</label>
-                                            <input type="text" id="lastName" className="form-control" onChange={this.formValidation} maxLength="50"/>
+                                            <label><span style={style}>* </span>Last Name</label>
+                                            <input type="text" id="lastName" className="form-control" maxLength="50"/>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -539,20 +514,20 @@ var Content = React.createClass({
                                             <input type="email" id="email" className="form-control" readOnly value={this.state.email}/>
                                         </div>
                                         <div className="col-sm-6" id="editInfoModalComponents">
-                                            <label>Contact Number</label>
-                                            <input type="number" id="contactNumber" className="form-control" onChange={this.formValidation} maxLength="50"/>
+                                            <label><span style={style}>* </span>Contact Number</label>
+                                            <input type="number" id="contactNumber" className="form-control" maxLength="50"/>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div id="editInfoModalComponents">
-                                            <label>Address</label>
-                                            <input type="text" id="address" className="form-control" onChange={this.formValidation} maxLength="200"/>
+                                            <label><span style={style}>* </span>Address</label>
+                                            <input type="text" id="address" className="form-control" maxLength="200"/>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-8" id="editInfoModalComponents">
-                                            <label>Birthdate</label>
-                                            <input type="date" id="birthDate" className="form-control" onBlur={this.ageCalculator} onChange={this.formValidation}/>
+                                            <label><span style={style}>* </span>Birthdate</label>
+                                            <input type="date" id="birthDate" className="form-control" onBlur={this.ageCalculator}/>
                                         </div>
                                         <div className="col-sm-4" id="editInfoModalComponents">
                                             <label>Age</label>
@@ -675,6 +650,16 @@ var MainContent = React.createClass({
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+        });
+        firebase.database().ref("/users/"+uid).on('value', function(snapshot) {
+            var isDeleted = snapshot.val().isDeleted;
+            if(isDeleted == true){
+              firebase.auth().signOut().then(function() {
+                window.location.replace("http://127.0.0.1:8080/");
+              }, function(error) {
+                console.log(error);
+              });
+            }
         });
       }else{
         alert("Email is not verified");

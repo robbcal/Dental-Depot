@@ -42,7 +42,8 @@ var Body = React.createClass({
                   <ul className="sidebar-menu">
                       <br/>
                       <li className="header">NAVIGATION</li>
-                      <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                      <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                      <li className="active"><a href="Transaction.html"><i className="fa fa-shopping-cart" id="sidebarImage"></i><span>Transaction</span></a></li>
                       <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                   </ul>
               </div>
@@ -101,16 +102,24 @@ var Content = React.createClass({
       var id=data.key
       var itemName = data.val().item_name;
       var itemStock = data.val().quantity;
+      var isDeleted = data.val().isDeleted;
 
-      $("#item").append("<option id="+id+" value="+id+"|"+itemStock+">"+itemName+"</option>");
+      if(isDeleted == false){
+        $("#item").append("<option id="+id+" value="+id+"|"+itemStock+">"+itemName+"</option>");
+      }
     });
 
     ref.on('child_changed', function(data) {
       var id=data.key
       var itemName = data.val().item_name;
       var itemStock = data.val().quantity;
+      var isDeleted = data.val().isDeleted;
 
-      $("option#"+id).replaceWith("<option id="+id+" value="+id+"|"+itemStock+">"+itemName+"</option>");
+      if(isDeleted == true){
+        $("option#"+id).remove();
+      }else{
+        $("option#"+id).replaceWith("<option id="+id+" value="+id+"|"+itemStock+">"+itemName+"</option>");
+      }
     });
 
     ref.on('child_removed', function(data) {
@@ -171,8 +180,6 @@ var Content = React.createClass({
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
     var today = now.getFullYear()+"-"+month+"-"+day;
     document.getElementById("date").value = today;
-    document.getElementById("number").style.borderColor = "red";
-    document.getElementById("customer").style.borderColor = "red";
   },
 
   displayItemOnModal: function(){
@@ -264,7 +271,6 @@ var Content = React.createClass({
       $('#errorModal').appendTo("body").modal('show');
       if(customer == ""){
         document.getElementById("customer").value = "";
-        document.getElementById("customer").style.borderColor = "red";
       }
     }else{
       document.getElementById("errorMessage").innerHTML= "No items added";
@@ -367,31 +373,13 @@ var Content = React.createClass({
     }
   },
 
-  formValidation: function(){
-    if(document.getElementById("number").value == ""){
-      document.getElementById("number").style.borderColor = "red";
-    }else{
-      document.getElementById("number").style.borderColor = "";
-    }
-    if(document.getElementById("customer").value == ""){
-      document.getElementById("customer").style.borderColor = "red";
-    }else{
-      document.getElementById("customer").style.borderColor = "";
-    }
-    if(document.getElementById("date").value == ""){
-      document.getElementById("date").style.borderColor = "red";
-    }else{
-      document.getElementById("date").style.borderColor = "";
-    }
-  },
-
   render: function() {
+    var style={
+      color: 'red'
+    }
     return (
       <div className="row" id="mainContent">
           <div className="col-md-4" id="boxBodyContent">
-              <a id="headerButtons" className="pull-left" href="Inventory.html">
-                  <img src="../bootstrap/icons/left-arrow.png" height="25px"/>
-              </a>
               <div className="box box-primary" id="transBody">
                   <div className="box-body table-responsive" id="transWindow">
                       <input type="hidden" id="ID" className="form-control"/>
@@ -423,8 +411,8 @@ var Content = React.createClass({
                       </div>
                       <div className="row">
                           <div className="col-sm-12" id="boxbodyContent">
-                              <label>Quantity</label>
-                              <input type="number" id="number" className="form-control" min="1" onChange={this.formValidation} onBlur={this.checkStock}/>
+                              <label><span style={style}>* </span>Quantity</label>
+                              <input type="number" id="number" className="form-control" min="1" onBlur={this.checkStock}/>
                           </div>
                       </div>
                       <div className="row">
@@ -470,8 +458,8 @@ var Content = React.createClass({
                       </div>
                       <div className="row">
                           <div className="col-sm-4" id="boxbodyContent">
-                              <label>Date</label>
-                              <input type="date" id="date" className="form-control" onChange={this.formValidation}/>
+                              <label><span style={style}>* </span>Date</label>
+                              <input type="date" id="date" className="form-control"/>
                           </div>
                           <div className="col-sm-4" id="boxbodyContent">
                               <label>Release Method</label>
@@ -482,8 +470,8 @@ var Content = React.createClass({
                               </select>
                           </div>
                           <div className="col-sm-4" id="boxbodyContent">
-                              <label>Customer</label>
-                              <input type="text" id="customer" className="form-control" placeholder="Customer" onChange={this.formValidation} maxLength="100"/>
+                              <label><span style={style}>* </span>Customer</label>
+                              <input type="text" id="customer" className="form-control" placeholder="Customer" maxLength="100"/>
                           </div>
                       </div>
                       <button className="btn btn-primary btn-block" id="createTransactionButton" onClick={this.checkTransaction}>CREATE TRANSACTION</button>
@@ -555,6 +543,16 @@ var MainContent = React.createClass({
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+        });
+        firebase.database().ref("/users/"+uid).on('value', function(snapshot) {
+            var isDeleted = snapshot.val().isDeleted;
+            if(isDeleted == true){
+              firebase.auth().signOut().then(function() {
+                window.location.replace("http://127.0.0.1:8080/");
+              }, function(error) {
+                console.log(error);
+              });
+            }
         });
       }else{
         alert("Email is not verified");

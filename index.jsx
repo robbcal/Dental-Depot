@@ -20,24 +20,34 @@ var Content = React.createClass({
         var uid = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           var type = snapshot.val().user_type;
-          try {
-            if(type == "admin"){
-              window.location.replace("admin/Inventory.html");
-            }else if(type == "user"){
-              window.location.replace("user/Inventory.html");
+          var isDeleted = snapshot.val().isDeleted;
+
+          if(isDeleted == false){
+            try {
+              if(type == "admin"){
+                window.location.replace("admin/Inventory.html");
+              }else if(type == "user"){
+                window.location.replace("user/Inventory.html");
+              }
+            } catch(e) {
+              var email = firebase.auth().currentUser.email;
+              firebase.auth().currentUser.delete().then(function() {
+                document.getElementById("errorAlert").innerHTML= "This action confirms the deletion of the account of "+email+".";
+                $('#errorBox').show();
+                document.getElementById("email").value = "";
+                document.getElementById("password").value = "";
+              }, function(error) {
+                console.log(error);
+              });
             }
-          } catch(e) {
-            var email = firebase.auth().currentUser.email;
-            firebase.auth().currentUser.delete().then(function() {
-              document.getElementById("errorAlert").innerHTML= "This action confirms the deletion of the account of "+email+".";
-              $('#errorBox').show();
-              document.getElementById("email").value = "";
-              document.getElementById("password").value = "";
+          }else if(isDeleted == true){
+            firebase.auth().signOut().then(function() {
+              window.location.replace("http://127.0.0.1:8080/");
             }, function(error) {
               console.log(error);
             });
-          }
-
+            alert("This account has been recently deleted");
+          }  
         });
       }).catch(function(error) {
         var errorCode = error.code;

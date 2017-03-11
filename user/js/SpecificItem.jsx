@@ -71,6 +71,7 @@ var Body = React.createClass({
                       <br/>
                       <li className="header">NAVIGATION</li>
                       <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                      <li><a href="Transaction.html"><i className="fa fa-shopping-cart" id="sidebarImage"></i><span>Transaction</span></a></li>
                       <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                   </ul>
               </div>
@@ -122,14 +123,19 @@ var Content = React.createClass({
     var ref = firebase.database().ref('items/'+ITEMID);
     ref.on('value', function(snapshot) {
       var itemName =  snapshot.val().item_name;
-      itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-      document.getElementById("NameOfItem").innerHTML = itemName;
-      self.setState({
-        itemName: snapshot.val().item_name,
-        itemDescription: snapshot.val().description,
-        itemPrice: snapshot.val().price,
-        itemQty: snapshot.val().quantity
-      });
+      var isDeleted = snapshot.val().isDeleted;
+      if(isDeleted == false){ 
+        itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+        document.getElementById("NameOfItem").innerHTML = itemName;
+        self.setState({
+          itemName: snapshot.val().item_name,
+          itemDescription: snapshot.val().description,
+          itemPrice: snapshot.val().price,
+          itemQty: snapshot.val().quantity
+        });
+      }else if(isDeleted == true){
+        window.location.replace("../admin/Inventory.html");  
+      }
     });
     var refHistory = firebase.database().ref('items/'+ITEMID+'/item_history');
     refHistory.on('child_added', function(data) {
@@ -240,9 +246,7 @@ var Content = React.createClass({
     document.getElementById("addDate").value = today;
     document.getElementById("deleteDate").value = today;
     document.getElementById("editDate").value = today;
-    document.getElementById("addNumber").style.borderColor = "red";
     document.getElementById("addDate").style.borderColor = "";
-    document.getElementById("deleteNumber").style.borderColor = "red";
     document.getElementById("deleteDate").style.borderColor = "";
   },
 
@@ -372,8 +376,11 @@ var Content = React.createClass({
       var found = false;
       snapshot.forEach(function(childSnapshot) {
         var item = childSnapshot.val().item_name;
+        var isDeleted = childSnapshot.val().isDeleted;
         var itemList = {name: item};
-        iList.push(itemList);
+        if(isDeleted == false){
+          iList.push(itemList);
+        }
       });
       for(var x = 0; x < iList.length; x++){
         if(iList[x].name.toUpperCase() == itemName.toUpperCase() && itemName != origName){
@@ -449,10 +456,12 @@ var Content = React.createClass({
         user: fullName
       });
     });
+    firebase.database().ref('items/'+ITEMID).update({
+      isDeleted: true
+    })
     $('#deleteItemModal').modal('hide');
     $('#informSuccessItemDelete').appendTo("body").modal('show');
     setTimeout(function() { $("#informSuccessItemDelete").modal('hide'); }, 3000);
-    firebase.database().ref('items/'+ITEMID).remove();
     window.location.replace("Inventory.html");
   },
 
@@ -467,45 +476,10 @@ var Content = React.createClass({
     document.getElementById("existingDate").value = today;
   },
 
-  formValidation: function(){
-    if(document.getElementById("addNumber").value == ""){
-      document.getElementById("addNumber").style.borderColor = "red";
-    }else{
-      document.getElementById("addNumber").style.borderColor = "";
-    }
-    if(document.getElementById("addDate").value == ""){
-      document.getElementById("addDate").style.borderColor = "red";
-    }else{
-      document.getElementById("addDate").style.borderColor = "";
-    }
-    if(document.getElementById("deleteNumber").value == ""){
-      document.getElementById("deleteNumber").style.borderColor = "red";
-    }else{
-      document.getElementById("deleteNumber").style.borderColor = "";
-    }
-    if(document.getElementById("deleteDate").value == ""){
-      document.getElementById("deleteDate").style.borderColor = "red";
-    }else{
-      document.getElementById("deleteDate").style.borderColor = "";
-    }
-    if(document.getElementById("editItem").value == ""){
-      document.getElementById("editItem").style.borderColor = "red";
-    }else{
-      document.getElementById("editItem").style.borderColor = "";
-    }
-    if(document.getElementById("editPrice").value == ""){
-      document.getElementById("editPrice").style.borderColor = "red";
-    }else{
-      document.getElementById("editPrice").style.borderColor = "";
-    }
-    if(document.getElementById("editDate").value == ""){
-      document.getElementById("editDate").style.borderColor = "red";
-    }else{
-      document.getElementById("editDate").style.borderColor = "";
-    }
-  },
-
   render: function() {
+    var style={
+      color: 'red'
+    }
     return (
       <div id="mainContent">
           <div className="col-sm-4 pull-left">
@@ -580,8 +554,8 @@ var Content = React.createClass({
                                       <input type="number" readOnly className="form-control" value={this.state.itemQty}/>
                                   </div>
                                   <div className="col-sm-6" id="addStockModalComponents">
-                                      <label>Quantity to Add</label>
-                                      <input type="number" id="addNumber" className="form-control" min="1" onChange={this.formValidation}/>
+                                      <label><span style={style}>* </span>Quantity to Add</label>
+                                      <input type="number" id="addNumber" className="form-control" min="1"/>
                                   </div>
                               </div>
                               <div className="row">
@@ -590,8 +564,8 @@ var Content = React.createClass({
                                       <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
                                   </div>
                                   <div className="col-sm-6" id="addStockModalComponents">
-                                      <label>Date</label>
-                                      <input type="date" id="addDate" className="form-control" onChange={this.formValidation}/>
+                                      <label><span style={style}>* </span>Date</label>
+                                      <input type="date" id="addDate" className="form-control"/>
                                   </div>
                               </div>
                           </div>
@@ -623,8 +597,8 @@ var Content = React.createClass({
                                       <input type="number" readOnly className="form-control" value={this.state.itemQty}/>
                                   </div>
                                   <div className="col-sm-6" id="delStockModalComponents">
-                                      <label>Quantity to Delete</label>
-                                      <input type="number" id="deleteNumber" className="form-control" min="1" onChange={this.formValidation}/>
+                                      <label><span style={style}>* </span>Quantity to Delete</label>
+                                      <input type="number" id="deleteNumber" className="form-control" min="1"/>
                                   </div>
                               </div>
                               <div className="row">
@@ -633,8 +607,8 @@ var Content = React.createClass({
                                       <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
                                   </div>
                                   <div className="col-sm-6" id="delStockModalComponents">
-                                      <label>Date</label>
-                                      <input type="date" id="deleteDate" className="form-control" onChange={this.formValidation}/>
+                                      <label><span style={style}>* </span>Date</label>
+                                      <input type="date" id="deleteDate" className="form-control"/>
                                   </div>
                               </div>
                           </div>
@@ -662,12 +636,12 @@ var Content = React.createClass({
                               </div>
                               <div className="row">
                                   <div className="col-sm-6" id="editItemModalComponents">
-                                      <label>Item Name</label>
-                                      <input type="text" id="editItem" className="form-control" onChange={this.formValidation} maxLength="50"/>
+                                      <label><span style={style}>* </span>Item Name</label>
+                                      <input type="text" id="editItem" className="form-control" maxLength="50"/>
                                   </div>
                                   <div className="col-sm-6" id="editItemModalComponents">
                                       <label>Item Description</label>
-                                      <textarea id="editDescription" className="form-control" onChange={this.formValidation} maxLength="200"></textarea>
+                                      <textarea id="editDescription" className="form-control" maxLength="200"></textarea>
                                   </div>
                               </div>
                               <div className="row">
@@ -676,8 +650,8 @@ var Content = React.createClass({
                                       <input type="number" readOnly className="form-control" value={this.state.itemQty}/>
                                   </div>
                                   <div className="col-sm-6" id="editItemModalComponents">
-                                      <label>Item Price</label>
-                                      <input type="number" id="editPrice" className="form-control" min="0.01" onChange={this.formValidation}/>
+                                      <label><span style={style}>* </span>Item Price</label>
+                                      <input type="number" id="editPrice" className="form-control" min="0.01"/>
                                   </div>
                               </div>
                               <div className="row">
@@ -686,8 +660,8 @@ var Content = React.createClass({
                                       <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
                                   </div>
                                   <div className="col-sm-6" id="editItemModalComponents">
-                                      <label>Date</label>
-                                      <input type="date" id="editDate" className="form-control" onChange={this.formValidation}/>
+                                      <label><span style={style}>* </span>Date</label>
+                                      <input type="date" id="editDate" className="form-control"/>
                                   </div>
                               </div>
                           </div>
@@ -847,6 +821,16 @@ var MainContent = React.createClass({
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+        });
+        firebase.database().ref("/users/"+uid).on('value', function(snapshot) {
+            var isDeleted = snapshot.val().isDeleted;
+            if(isDeleted == true){
+              firebase.auth().signOut().then(function() {
+                window.location.replace("http://127.0.0.1:8080/");
+              }, function(error) {
+                console.log(error);
+              });
+            }
         });
       }else{
         alert("Email is not verified");

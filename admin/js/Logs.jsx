@@ -70,6 +70,7 @@ var Body = React.createClass({
                       <br/>
                       <li className="header">NAVIGATION</li>
                       <li><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                      <li><a href="Transaction.html"><i className="fa fa-shopping-cart" id="sidebarImage"></i><span>Transaction</span></a></li>
                       <li><a href="Users.html"><i className="fa fa-users" id="sidebarImage"></i><span>Users</span></a></li>
                       <li className="active"><a href="Logs.html"><i className="fa fa-line-chart" id="sidebarImage"></i><span>Logs</span></a></li>
                       <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
@@ -568,6 +569,16 @@ var MainContent = React.createClass({
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+        });
+        firebase.database().ref("/users/"+uid).on('value', function(snapshot) {
+            var isDeleted = snapshot.val().isDeleted;
+            if(isDeleted == true){
+              firebase.auth().signOut().then(function() {
+                window.location.replace("http://127.0.0.1:8080/");
+              }, function(error) {
+                console.log(error);
+              });
+            }
         });
       }else{
         alert("Email is not verified");

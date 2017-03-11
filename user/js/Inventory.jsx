@@ -71,6 +71,7 @@ var Body = React.createClass({
                       <br/>
                       <li className="header">NAVIGATION</li>
                       <li className="active"><a href="Inventory.html"><i className="fa fa-archive" id="sidebarImage"></i><span>Inventory</span></a></li>
+                      <li><a href="Transaction.html"><i className="fa fa-shopping-cart" id="sidebarImage"></i><span>Transaction</span></a></li>
                       <li><a href="Profile.html"><i className="fa fa-user" id="sidebarImage"></i><span>Profile</span></a></li>
                   </ul>
               </div>
@@ -126,32 +127,41 @@ var Content = React.createClass({
     var ref = firebase.database().ref('items').orderByChild("item_name");
     ref.on('child_added', function(data) {
       var id = data.key;
-      var itemId = id;
+      var itemID = id;
       var itemName = data.val().item_name;
       var quantity = data.val().quantity;
+      var isDeleted = data.val().isDeleted;
       itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
-      $("#itemList").append("<tr id="+id+"><td><center>"+itemId+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
-      $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
-      $("#"+id+"").dblclick(function() {
-        document.getElementById("item_id").value = id;
-        document.getElementById("submit").click();
-      });
+      if(isDeleted == false){
+        $("#itemList").append("<tr id="+id+"><td><center>"+itemID+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
+        $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
+        $("#"+id+"").dblclick(function() {
+          document.getElementById("item_id").value = id;
+          document.getElementById("submit").click();
+        });
+      }  
     });
 
     ref.on('child_changed', function(data) {
       var id = data.key;
-      var itemId = id;
+      var itemID = id;
       var itemName = data.val().item_name;
       var quantity = data.val().quantity;
+      var isDeleted = data.val().isDeleted;
       itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
-      $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemId+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
-      $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
-      $("#"+id+"").dblclick(function() {
-        document.getElementById("item_id").value = id;
-        document.getElementById("submit").click();
-      });
+      if(isDeleted == true){
+        $("tr#"+id).remove();
+        $("option#"+id).remove();
+      }else{
+        $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemID+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
+        $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
+        $("#"+id+"").dblclick(function() {
+          document.getElementById("item_id").value = id;
+          document.getElementById("submit").click();
+        });  
+      }
     });
 
     ref.on('child_removed', function(data) {
@@ -222,9 +232,6 @@ var Content = React.createClass({
     var ID = now.getFullYear()+""+(now.getMonth()+1)+""+now.getDate()+""+now.getHours()+""+now.getMinutes()+""+now.getSeconds()+""+now.getMilliseconds();
     document.getElementById("newId").value = ID;
     document.getElementById("newDate").value = today;
-    document.getElementById("newItem").style.borderColor = "red";
-    document.getElementById("newNumber").style.borderColor = "red";
-    document.getElementById("newPrice").style.borderColor = "red";
   },
 
   generateDate: function(){
@@ -233,7 +240,6 @@ var Content = React.createClass({
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
     var today = now.getFullYear()+"-"+month+"-"+day;
     document.getElementById("existingDate").value = today;
-    document.getElementById("additionalNumber").style.borderColor = "red";
   },
 
   checkNewItem: function(){
@@ -298,8 +304,11 @@ var Content = React.createClass({
       var found = false;
       snapshot.forEach(function(childSnapshot) {
         var item = childSnapshot.val().item_name;
+        var isDeleted = childSnapshot.val().isDeleted;
         var itemList = {name: item};
-        iList.push(itemList);
+        if(isDeleted == false){
+          iList.push(itemList);
+        }
       });
       for(var x = 0; x < iList.length; x++){
         if(iList[x].name.toUpperCase() == itemName.toUpperCase()){
@@ -313,7 +322,8 @@ var Content = React.createClass({
           item_name: itemName,
           description: description,
           quantity: Number(qty),
-          price: price
+          price: price,
+          isDeleted: false
         }, function(error) {
           console.log(error)
           $('#addConfirmation').modal('hide');
@@ -440,40 +450,10 @@ var Content = React.createClass({
     }
   },
 
-  formValidation: function(){
-    if(document.getElementById("newItem").value == ""){
-      document.getElementById("newItem").style.borderColor = "red";
-    }else{
-      document.getElementById("newItem").style.borderColor = "";
-    }
-    if(document.getElementById("newNumber").value == ""){
-      document.getElementById("newNumber").style.borderColor = "red";
-    }else{
-      document.getElementById("newNumber").style.borderColor = "";
-    }
-    if(document.getElementById("newPrice").value == ""){
-      document.getElementById("newPrice").style.borderColor = "red";
-    }else{
-      document.getElementById("newPrice").style.borderColor = "";
-    }
-    if(document.getElementById("newDate").value == ""){
-      document.getElementById("newDate").style.borderColor = "red";
-    }else{
-      document.getElementById("newDate").style.borderColor = "";
-    }
-    if(document.getElementById("additionalNumber").value == ""){
-      document.getElementById("additionalNumber").style.borderColor = "red";
-    }else{
-      document.getElementById("additionalNumber").style.borderColor = "";
-    }
-    if(document.getElementById("existingDate").value == ""){
-      document.getElementById("existingDate").style.borderColor = "red";
-    }else{
-      document.getElementById("existingDate").style.borderColor = "";
-    }
-  },
-
   render: function() {
+    var style={
+      color: 'red'
+    }
     return (
       <div id="mainContent">
           <form id="itemIDForm" type="get" action="SpecificItem.html">
@@ -493,6 +473,7 @@ var Content = React.createClass({
                       </div>
                   </div>
                   <div className="col-sm-4"></div>
+                  <div className="col-sm-2"></div>
                   <div className="btn-group col-sm-2">
                       <button className="btn btn-primary">ADD ITEM</button>
                       <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -503,9 +484,6 @@ var Content = React.createClass({
                           <li><a data-toggle="modal" data-target="#newItemModal" onClick={this.generateIDandDate}>New Item</a></li>
                           <li><a data-toggle="modal" data-target="#existingItemModal" onClick={this.generateDate}>Existing Item</a></li>
                       </ul>
-                  </div>
-                  <div className="col-sm-2">
-                      <a className="btn btn-primary pull-right" id="addTransaction" href="Transaction.html">ADD TRANSACTION</a>
                   </div>
               </div>
               <div className="box-body table-responsive" id="inventoryMainTable">
@@ -544,22 +522,22 @@ var Content = React.createClass({
                           </div>
                           <div className="row">
                               <div className="col-sm-6" id="modalComponents">
-                                  <label>Item Name</label>
-                                  <input type="text" id="newItem" className="form-control" onChange={this.formValidation} maxLength="50"/>
+                                  <label><span style={style}>* </span>Item Name</label>
+                                  <input type="text" id="newItem" className="form-control" maxLength="50"/>
                               </div>
                               <div className="col-sm-6" id="modalComponents">
                                   <label>Item Description</label>
-                                  <textarea id="newDescription" className="form-control" onChange={this.formValidation} maxLength="200"></textarea>
+                                  <textarea id="newDescription" className="form-control" maxLength="200"></textarea>
                               </div>
                           </div>
                           <div className="row">
                               <div className="col-sm-6" id="modalComponents">
-                                  <label>Quantity</label>
-                                  <input type="number" id="newNumber" className="form-control" min="1" onChange={this.formValidation}/>
+                                  <label><span style={style}>* </span>Quantity</label>
+                                  <input type="number" id="newNumber" className="form-control" min="1"/>
                               </div>
                               <div className="col-sm-6" id="modalComponents">
-                                  <label>Item Price</label>
-                                  <input type="number" id="newPrice" className="form-control" min="0.01" onChange={this.formValidation}/>
+                                  <label><span style={style}>* </span>Item Price</label>
+                                  <input type="number" id="newPrice" className="form-control" min="0.01"/>
                               </div>
                           </div>
                           <div className="row">
@@ -568,8 +546,8 @@ var Content = React.createClass({
                                   <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
                               </div>
                               <div className="col-sm-6" id="modalComponents">
-                                  <label>Date</label>
-                                  <input type="date" id="newDate" className="form-control" onChange={this.formValidation}/>
+                                  <label><span style={style}>* </span>Date</label>
+                                  <input type="date" id="newDate" className="form-control"/>
                               </div>
                           </div>
                       </div>
@@ -657,8 +635,8 @@ var Content = React.createClass({
                                   <input type="text" id="existingStock" readOnly className="form-control"/>
                               </div>
                               <div className="col-sm-6" id="modalComponents">
-                                  <label>Quantity to Add</label>
-                                  <input type="number" id="additionalNumber" className="form-control" min="1" onChange={this.formValidation}/>
+                                  <label><span style={style}>* </span>Quantity to Add</label>
+                                  <input type="number" id="additionalNumber" className="form-control" min="1"/>
                               </div>
                           </div>
                           <div className="row">
@@ -673,8 +651,8 @@ var Content = React.createClass({
                                   <input type="text" id="user" readOnly className="form-control" value={this.state.curUser}/>
                               </div>
                               <div className="col-sm-6" id="modalComponents">
-                                  <label>Date</label>
-                                  <input type="date" id="existingDate" className="form-control" onChange={this.formValidation}/>
+                                  <label><span style={style}>* </span>Date</label>
+                                  <input type="date" id="existingDate" className="form-control"/>
                               </div>
                           </div>
                       </div>
@@ -732,6 +710,16 @@ var MainContent = React.createClass({
         firebase.database().ref('/users/'+uid).once('value').then(function(snapshot) {
           self.setState({ signedIn: true, type: snapshot.val().user_type });
           $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+        });
+        firebase.database().ref("/users/"+uid).on('value', function(snapshot) {
+            var isDeleted = snapshot.val().isDeleted;
+            if(isDeleted == true){
+              firebase.auth().signOut().then(function() {
+                window.location.replace("http://127.0.0.1:8080/");
+              }, function(error) {
+                console.log(error);
+              });
+            }
         });
       }else{
         alert("Email is not verified");
