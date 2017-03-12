@@ -265,9 +265,16 @@ var Content = React.createClass({
 
   editUser: function(){
     var now = new Date();
+    var hh = ((now.getHours())>=10)? (now.getHours()) : '0' + (now.getHours());
+    var mm = ((now.getMinutes())>=10)? (now.getMinutes()) : '0' + (now.getMinutes());
+    var ss = ((now.getSeconds())>=10)? (now.getSeconds()) : '0' + (now.getSeconds());
+    var time = hh+":"+mm+":"+ss;
+
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
     var today = now.getFullYear()+"-"+month+"-"+day;
+    today = today+" "+time;
+
     var uid = firebase.auth().currentUser.uid;
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;

@@ -277,7 +277,15 @@ var Content = React.createClass({
   },
 
   createTransaction: function(){
+    var now = new Date();
+    var hh = ((now.getHours())>=10)? (now.getHours()) : '0' + (now.getHours());
+    var mm = ((now.getMinutes())>=10)? (now.getMinutes()) : '0' + (now.getMinutes());
+    var ss = ((now.getSeconds())>=10)? (now.getSeconds()) : '0' + (now.getSeconds());
+    var time = hh+":"+mm+":"+ss;
+
     var date = document.getElementById("date").value;
+    date = date+" "+time;
+    
     var release = document.getElementById("release").value;
     var total = document.getElementById("total").value;
     var tableLength = document.getElementById("transactionTable").rows.length - 1;
