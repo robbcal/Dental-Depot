@@ -140,24 +140,19 @@ var Content = React.createClass({
           document.getElementById("item_id").value = id;
           document.getElementById("submit").click();
         });
-        var content = {id: itemID, name: itemName, qty: quantity};
+        var content = [itemID, itemName, quantity];
         inventoryItems.push(content);
       }
     });
+
     console.log(inventoryItems);
     $('#itemTable').dataTable({
         "data": inventoryItems,
-        "columns": [
-            {title: "ITEM ID"},
-            {title: "ITEM NAME"},
-            {title: "STOCK"}
-        ],
         "paging": true,
         "lengthChange": false,
         "searching": false,
         "ordering": true,
         "info": true,
-        "retrieve": true,
         "autoWidth": false
     });
 
