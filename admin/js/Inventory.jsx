@@ -97,6 +97,7 @@ var Content = React.createClass({
     const self = this;
     var uid = firebase.auth().currentUser.uid;
     var ref = firebase.database().ref('users/'+uid);
+    var inventoryItems = [];
 
     ref.on('child_removed', function(data) {
       firebase.auth().signOut().then(function() {
@@ -120,6 +121,7 @@ var Content = React.createClass({
         curUser: snapshot.val().firstname+" "+snapshot.val().lastname,
       });
     });
+
     var ref = firebase.database().ref('items').orderByChild("item_name");
     ref.on('child_added', function(data) {
       var id = data.key;
@@ -127,16 +129,36 @@ var Content = React.createClass({
       var itemName = data.val().item_name;
       var quantity = data.val().quantity;
       var isDeleted = data.val().isDeleted;
+
       itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
       if(isDeleted == false){
-        $("#itemList").append("<tr id="+id+"><td><center>"+itemID+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
-        $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
+        // $("#itemList").append("<tr id="+id+"><td>"+itemID+"</td><td>"+itemName+"</td><td>"+quantity+"</td></tr>");
+        // $("#item").append("<option id="+id+" value="+id+">"+itemName+"</option>");
+
         $("#"+id+"").dblclick(function() {
           document.getElementById("item_id").value = id;
           document.getElementById("submit").click();
         });
-      }  
+        var content = {id: itemID, name: itemName, qty: quantity};
+        inventoryItems.push(content);
+      }
+    });
+    console.log(inventoryItems);
+    $('#itemTable').dataTable({
+        "data": inventoryItems,
+        "columns": [
+            {title: "ITEM ID"},
+            {title: "ITEM NAME"},
+            {title: "STOCK"}
+        ],
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "retrieve": true,
+        "autoWidth": false
     });
 
     ref.on('child_changed', function(data) {
@@ -151,12 +173,12 @@ var Content = React.createClass({
         $("tr#"+id).remove();
         $("option#"+id).remove();
       }else{
-        $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemID+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
-        $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
+        $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemID+"</td><td>"+itemName+"</td><td>"+quantity+"</td></tr>");
+        $("option#"+id).replaceWith("<option id="+id+" value="+id+">"+itemName+"</option>");
         $("#"+id+"").dblclick(function() {
           document.getElementById("item_id").value = id;
           document.getElementById("submit").click();
-        });  
+        });
       }
     });
 
@@ -483,7 +505,7 @@ var Content = React.createClass({
                   </div>
               </div>
               <div className="box-body table-responsive" id="inventoryMainTable">
-                  <table id="itemTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                  <table id="itemTable" className="table table-bordered table-hover display">
                       <thead>
                           <tr>
                               <th><center>ITEM ID</center></th>
@@ -493,9 +515,9 @@ var Content = React.createClass({
                       </thead>
                       <tbody id="itemList">
                           <tr id="no-data" style={{display:'none'}}>
+                              <td><center></center></td>
                               <td><center>No Results Found.</center></td>
-                              <td><center>No Results Found.</center></td>
-                              <td><center>No Results Found.</center></td>
+                              <td><center></center></td>
                           </tr>
                       </tbody>
                   </table>
