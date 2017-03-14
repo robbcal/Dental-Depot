@@ -191,7 +191,7 @@ var Content = React.createClass({
         snapshot.forEach(function(childSnapshot){
             var childKey = childSnapshot.key;
             var date = childSnapshot.val().date;
-            if(date == today){
+            if(date.includes(today)){
               total = total + parseFloat(childSnapshot.val().total);
             }
             document.getElementById("todaySales").innerHTML = total.toFixed(2);;
@@ -211,7 +211,7 @@ var Content = React.createClass({
         snapshot.forEach(function(childSnapshot){
             var childKey = childSnapshot.key;
             var date = childSnapshot.val().date;
-            if(date == yesterday){
+            if(date.includes(yesterday)){
               total = total + parseFloat(childSnapshot.val().total);
             }
             document.getElementById("yesterdaySales").innerHTML = total.toFixed(2);;
@@ -269,44 +269,12 @@ var Content = React.createClass({
       snapshot.forEach(function(childSnapshot){
         var childKey = childSnapshot.key;
         var date = childSnapshot.val().date;
-        if(date == day){
+        if(date.includes(day)){
           total = total + parseFloat(childSnapshot.val().total);
         }
         document.getElementById("dailySale").innerHTML = total.toFixed(2);
       });
     });
-  },
-
-  deleteTransaction: function(){
-    var now = new Date();
-    var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
-    var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
-    var today = now.getFullYear()+"-"+month+"-"+day;
-    var uid = firebase.auth().currentUser.uid;
-    var action = "Deleted transaction."
-    var idTrans = document.getElementById("transID").value;
-
-    firebase.database().ref("users/"+uid+"/activity").push().set({
-      action_performed: action,
-      object_changed: idTrans,
-      quantity: "n/a",
-      date: today
-    });
-    firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-        var fullName = snapshot.val().firstname+" "+snapshot.val().lastname;
-        firebase.database().ref("activities").push().set({
-          action_performed: action,
-          object_changed: idTrans,
-          quantity: "n/a",
-          date: today,
-          user: fullName
-        });
-      });
-    $('#deleteTransactionModal').modal('hide');
-    $('#transactionModal').modal('hide');
-    $('#informSuccessDelete').appendTo("body").modal('show');
-    setTimeout(function() { $("#informSuccessDelete").modal('hide'); }, 3000);
-    firebase.database().ref('transactions/'+idTrans).remove();
   },
 
   render: function() {
@@ -514,7 +482,6 @@ var Content = React.createClass({
                           </div>
                       </div>
                       <div className="modal-footer">
-                          <button type="button" className="btn btn-danger pull-left" data-toggle="modal" data-target="#deleteTransactionModal">DELETE</button>
                       </div>
                   </div>
               </div>

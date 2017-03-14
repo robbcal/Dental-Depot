@@ -288,12 +288,19 @@ var Content = React.createClass({
 
   addItem: function(){
     var now = new Date();
+    var hh = ((now.getHours())>=10)? (now.getHours()) : '0' + (now.getHours());
+    var mm = ((now.getMinutes())>=10)? (now.getMinutes()) : '0' + (now.getMinutes());
+    var ss = ((now.getSeconds())>=10)? (now.getSeconds()) : '0' + (now.getSeconds());
+    var time = hh+":"+mm+":"+ss;
+
     var itemID = document.getElementById("newId").value;
     var itemName = document.getElementById("newItem").value;
     var qty = document.getElementById("newNumber").value;
     var price = document.getElementById("newPrice").value+"";
     var uid = firebase.auth().currentUser.uid;
     var date = document.getElementById("newDate").value;
+    date = date+" "+time;
+
     var description = document.getElementById("newDescription").value;
     var action = "Added item.";
     itemName = itemName.substring(0, 50);
@@ -392,12 +399,20 @@ var Content = React.createClass({
   },
 
   updateItem: function(){
+    var now = new Date();
+    var hh = ((now.getHours())>=10)? (now.getHours()) : '0' + (now.getHours());
+    var mm = ((now.getMinutes())>=10)? (now.getMinutes()) : '0' + (now.getMinutes());
+    var ss = ((now.getSeconds())>=10)? (now.getSeconds()) : '0' + (now.getSeconds());
+    var time = hh+":"+mm+":"+ss;
+
     var itemName = $("#item option:selected").text();
     var id = document.getElementById("ID").value;
     var price = document.getElementById("existingPrice").value+"";
     var curStock = document.getElementById("existingStock").value;
     var addNumber = document.getElementById("additionalNumber").value;
     var date = document.getElementById("existingDate").value;
+    date = date+" "+time;
+    
     var uid = firebase.auth().currentUser.uid;
     var action = "Restocked item."
 

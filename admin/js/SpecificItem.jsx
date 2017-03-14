@@ -283,8 +283,16 @@ var Content = React.createClass({
   },
 
   restockItem: function(){
+    var now = new Date();
+    var hh = ((now.getHours())>=10)? (now.getHours()) : '0' + (now.getHours());
+    var mm = ((now.getMinutes())>=10)? (now.getMinutes()) : '0' + (now.getMinutes());
+    var ss = ((now.getSeconds())>=10)? (now.getSeconds()) : '0' + (now.getSeconds());
+    var time = hh+":"+mm+":"+ss;
+
     var additionalStock = document.getElementById("addNumber").value;
     var date = document.getElementById("addDate").value;
+    date = date+" "+time;
+
     var action = "Restocked item.";
     var uid = firebase.auth().currentUser.uid;
     var itemName = this.state.itemName;
@@ -326,8 +334,16 @@ var Content = React.createClass({
   },
 
   releaseStock: function(){
+    var now = new Date();
+    var hh = ((now.getHours())>=10)? (now.getHours()) : '0' + (now.getHours());
+    var mm = ((now.getMinutes())>=10)? (now.getMinutes()) : '0' + (now.getMinutes());
+    var ss = ((now.getSeconds())>=10)? (now.getSeconds()) : '0' + (now.getSeconds());
+    var time = hh+":"+mm+":"+ss;
+
     var diminishedStock = document.getElementById("deleteNumber").value;
     var date = document.getElementById("deleteDate").value;
+    date = date+" "+time;
+
     var action = "Released item."
     var uid = firebase.auth().currentUser.uid;
     var curStock = this.state.itemQty;
@@ -377,9 +393,17 @@ var Content = React.createClass({
   },
 
   editItem: function(){
+    var now = new Date();
+    var hh = ((now.getHours())>=10)? (now.getHours()) : '0' + (now.getHours());
+    var mm = ((now.getMinutes())>=10)? (now.getMinutes()) : '0' + (now.getMinutes());
+    var ss = ((now.getSeconds())>=10)? (now.getSeconds()) : '0' + (now.getSeconds());
+    var time = hh+":"+mm+":"+ss;
+
     var action = "Edited item."
     var date = document.getElementById("editDate").value;
-    var itemName =document.getElementById("editItem").value;
+    date = date+" "+time;
+
+    var itemName = document.getElementById("editItem").value;
     var itemPrice = document.getElementById("editPrice").value+"";
     var itemDescription = document.getElementById("editDescription").value;
     var uid = firebase.auth().currentUser.uid;
@@ -449,9 +473,16 @@ var Content = React.createClass({
 
   deleteItem: function(){
     var now = new Date();
+    var hh = ((now.getHours())>=10)? (now.getHours()) : '0' + (now.getHours());
+    var mm = ((now.getMinutes())>=10)? (now.getMinutes()) : '0' + (now.getMinutes());
+    var ss = ((now.getSeconds())>=10)? (now.getSeconds()) : '0' + (now.getSeconds());
+    var time = hh+":"+mm+":"+ss;
+    
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
     var today = now.getFullYear()+"-"+month+"-"+day;
+    today = today+" "+time;
+
     var uid = firebase.auth().currentUser.uid;
     var action = "Deleted item."
     var itemName = this.state.itemName
