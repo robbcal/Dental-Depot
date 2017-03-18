@@ -118,59 +118,41 @@ var Content = React.createClass({
     });
 
     var ref = firebase.database().ref('users').orderByChild('firstname');
-    ref.on('child_added', function(data) {
-      var id=data.key
-      var firstName = data.val().firstname;
-      var lastName = data.val().lastname;
-      var email = data.val().user_email;
-      var address = data.val().address;
-      var contactNumber = data.val().contact_no;
-      var age = data.val().age;
-      var birthDate = data.val().birthday;
-      var userType = data.val().user_type;
-      var status = data.val().status;
-      var isDeleted = data.val().isDeleted;
-      firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-      lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-
-      if(isDeleted == false){
-        $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
-        $("#"+id+"").dblclick(function() {
-          document.getElementById("user_id").value = id;
-          document.getElementById("submit").click();
-        });
-      }
-    });
-
-    ref.on('child_changed', function(data) {
-      var id=data.key
-      var firstName = data.val().firstname;
-      var lastName = data.val().lastname;
-      var email = data.val().user_email;
-      var address = data.val().address;
-      var contactNumber = data.val().contact_no;
-      var age = data.val().age;
-      var birthDate = data.val().birthday;
-      var userType = data.val().user_type;
-      var status = data.val().status;
-      var isDeleted = data.val().isDeleted;
-      firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-      lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-
-      if(isDeleted == true){
-        $("tr#"+id).remove();
-      }else{
-        $("tr#"+id).replaceWith("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
-        $("#"+id+"").dblclick(function() {
-          document.getElementById("user_id").value = id;
-          document.getElementById("submit").click();
-        });
-      }  
-    });
-
-    ref.on('child_removed', function(data) {
-      var id=data.key
-      $("tr#"+id).remove();
+    ref.on('value', function(snapshot) {
+      $('#user_table').DataTable().clear().draw().destroy();
+      snapshot.forEach(function(data) {
+        var id=data.key
+        var firstName = data.val().firstname;
+        var lastName = data.val().lastname;
+        var email = data.val().user_email;
+        var address = data.val().address;
+        var contactNumber = data.val().contact_no;
+        var age = data.val().age;
+        var birthDate = data.val().birthday;
+        var userType = data.val().user_type;
+        var status = data.val().status;
+        var isDeleted = data.val().isDeleted;
+        firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+        lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+        
+        if(isDeleted == false){
+          $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
+          $("#"+id+"").dblclick(function() {
+            document.getElementById("user_id").value = id;
+            document.getElementById("submit").click();
+          });
+        }
+      });
+      $('#user_table').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "retrieve": true,
+        "autoWidth": false,
+        "order": [[0, "asc"]]
+      });
     });
 
     $('#addUserModal').on('hidden.bs.modal', function () {
@@ -186,7 +168,7 @@ var Content = React.createClass({
 
     $(document).ready(function () {
       (function ($) {
-        $('#tableSearch').keyup(function () {
+        /*$('#tableSearch').keyup(function () {
           var rex = new RegExp($(this).val(), 'i');
           $('#userList tr').hide();
           $('#userList tr').filter(function () {
@@ -196,7 +178,7 @@ var Content = React.createClass({
           if($('#userList tr:visible').length == 0){
             $('#no-data').show();
           }
-        });
+        });*/
         $("#age").keypress(function(event) {
           if (event.which == 45 || event.which == 46) {
             event.preventDefault();
@@ -229,230 +211,6 @@ var Content = React.createClass({
           if(yearNow - year > 99 || yearNow - year < 1){
             $('#birthDate').val("");
           }
-        });
-        $('#btnUsername').on('click',function(){
-          $("#userList").empty();
-          var clicksName = $(this).data('clicks');
-          if (clicksName) {// odd clicks
-            var ref = firebase.database().ref('users').orderByChild('firstname');
-            ref.on('child_added', function(data) {
-              var id=data.key
-              var firstName = data.val().firstname;
-              var lastName = data.val().lastname;
-              var email = data.val().user_email;
-              var address = data.val().address;
-              var contactNumber = data.val().contact_no;
-              var age = data.val().age;
-              var birthDate = data.val().birthday;
-              var userType = data.val().user_type;
-              var status = data.val().status;
-              var isDeleted = data.val().isDeleted;
-              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-
-              if(isDeleted == false){
-                $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
-                $("#"+id+"").dblclick(function() {
-                  document.getElementById("user_id").value = id;
-                  document.getElementById("submit").click();
-                });
-              }
-            });
-          }else{
-            var ref = firebase.database().ref('users').orderByChild('firstname');
-            ref.on('child_added', function(data) {
-              var id=data.key
-              var firstName = data.val().firstname;
-              var lastName = data.val().lastname;
-              var email = data.val().user_email;
-              var address = data.val().address;
-              var contactNumber = data.val().contact_no;
-              var age = data.val().age;
-              var birthDate = data.val().birthday;
-              var userType = data.val().user_type;
-              var status = data.val().status;
-              var isDeleted = data.val().isDeleted;
-              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-
-              if(isDeleted == false){
-                $("#userList").prepend("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
-                $("#"+id+"").dblclick(function() {
-                  document.getElementById("user_id").value = id;
-                  document.getElementById("submit").click();
-                });
-              }
-            });
-          }
-          $(this).data("clicks", !clicksName);    
-        });
-        $('#btnEmail').on('click',function(){
-          $("#userList").empty();
-          var clicksEmail = $(this).data('clicks');
-          if (clicksEmail) {// odd clicks
-            var ref = firebase.database().ref('users').orderByChild('user_email');
-            ref.on('child_added', function(data) {
-              var id=data.key
-              var firstName = data.val().firstname;
-              var lastName = data.val().lastname;
-              var email = data.val().user_email;
-              var address = data.val().address;
-              var contactNumber = data.val().contact_no;
-              var age = data.val().age;
-              var birthDate = data.val().birthday;
-              var userType = data.val().user_type;
-              var status = data.val().status;
-              var isDeleted = data.val().isDeleted;
-              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-
-              if(isDeleted == false){
-                $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
-                $("#"+id+"").dblclick(function() {
-                  document.getElementById("user_id").value = id;
-                  document.getElementById("submit").click();
-                });
-              }
-            });
-          }else{
-            var ref = firebase.database().ref('users').orderByChild('user_email');
-            ref.on('child_added', function(data) {
-              var id=data.key
-              var firstName = data.val().firstname;
-              var lastName = data.val().lastname;
-              var email = data.val().user_email;
-              var address = data.val().address;
-              var contactNumber = data.val().contact_no;
-              var age = data.val().age;
-              var birthDate = data.val().birthday;
-              var userType = data.val().user_type;
-              var status = data.val().status;
-              var isDeleted = data.val().isDeleted;
-              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-
-              if(isDeleted == false){
-                $("#userList").prepend("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
-                $("#"+id+"").dblclick(function() {
-                  document.getElementById("user_id").value = id;
-                  document.getElementById("submit").click();
-                });
-              }
-            });
-          }
-          $(this).data("clicks", !clicksEmail);    
-        });
-        $('#btnType').on('click',function(){
-          $("#userList").empty();
-          var clicksType = $(this).data('clicks');
-          if (clicksType) {// odd clicks
-            var ref = firebase.database().ref('users').orderByChild('user_type');
-            ref.on('child_added', function(data) {
-              var id=data.key
-              var firstName = data.val().firstname;
-              var lastName = data.val().lastname;
-              var email = data.val().user_email;
-              var address = data.val().address;
-              var contactNumber = data.val().contact_no;
-              var age = data.val().age;
-              var birthDate = data.val().birthday;
-              var userType = data.val().user_type;
-              var status = data.val().status;
-              var isDeleted = data.val().isDeleted;
-              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-
-              if(isDeleted == false){
-                $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
-                $("#"+id+"").dblclick(function() {
-                  document.getElementById("user_id").value = id;
-                  document.getElementById("submit").click();
-                });
-              }
-            });
-          }else{
-            var ref = firebase.database().ref('users').orderByChild('user_type');
-            ref.on('child_added', function(data) {
-              var id=data.key
-              var firstName = data.val().firstname;
-              var lastName = data.val().lastname;
-              var email = data.val().user_email;
-              var address = data.val().address;
-              var contactNumber = data.val().contact_no;
-              var age = data.val().age;
-              var birthDate = data.val().birthday;
-              var userType = data.val().user_type;
-              var status = data.val().status;
-              var isDeleted = data.val().isDeleted;
-              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-
-              if(isDeleted == false){
-                $("#userList").prepend("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
-                $("#"+id+"").dblclick(function() {
-                  document.getElementById("user_id").value = id;
-                  document.getElementById("submit").click();
-                });
-              }
-            });
-          }
-          $(this).data("clicks", !clicksType);    
-        });
-        $('#btnStatus').on('click',function(){
-          $("#userList").empty();
-          var clicksStatus = $(this).data('clicks');
-          if (clicksStatus) {// odd clicks
-            var ref = firebase.database().ref('users').orderByChild('status');
-            ref.on('child_added', function(data) {
-              var id=data.key
-              var firstName = data.val().firstname;
-              var lastName = data.val().lastname;
-              var email = data.val().user_email;
-              var address = data.val().address;
-              var contactNumber = data.val().contact_no;
-              var age = data.val().age;
-              var birthDate = data.val().birthday;
-              var userType = data.val().user_type;
-              var status = data.val().status;
-              var isDeleted = data.val().isDeleted;
-              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-
-              if(isDeleted == false){
-                $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
-                $("#"+id+"").dblclick(function() {
-                  document.getElementById("user_id").value = id;
-                  document.getElementById("submit").click();
-                });
-              }
-            });
-          }else{
-            var ref = firebase.database().ref('users').orderByChild('status');
-            ref.on('child_added', function(data) {
-              var id=data.key
-              var firstName = data.val().firstname;
-              var lastName = data.val().lastname;
-              var email = data.val().user_email;
-              var address = data.val().address;
-              var contactNumber = data.val().contact_no;
-              var age = data.val().age;
-              var birthDate = data.val().birthday;
-              var userType = data.val().user_type;
-              var status = data.val().status;
-              var isDeleted = data.val().isDeleted;
-              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-
-              if(isDeleted == false){
-                $("#userList").prepend("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
-                $("#"+id+"").dblclick(function() {
-                  document.getElementById("user_id").value = id;
-                  document.getElementById("submit").click();
-                });
-              }
-            });
-          }
-          $(this).data("clicks", !clicksStatus);    
         });
       }(jQuery));
     });
@@ -628,14 +386,14 @@ var Content = React.createClass({
           <div className="box">
               <div className="box-header" id="headerContent">
                   <div className="col-sm-4">
-                      <div className="input-group stylish-input-group">
+                      {/*<div className="input-group stylish-input-group">
                           <input type="text" name="tableSearch" id="tableSearch" className="form-control pull-right" placeholder="Search"/>
                           <span className="input-group-addon">
                               <div>
                                   <span className="glyphicon glyphicon-search"></span>
                               </div>
                           </span>
-                      </div>
+                      </div>*/}
                   </div>
                   <div className="col-sm-2"></div>
                   <div className="col-sm-6">
@@ -645,22 +403,22 @@ var Content = React.createClass({
                   </div>
               </div>
               <div className="box-body table-responsive" id="usersMainTable">
-                  <table id="user_table" className="table table-bordered table-hover dataTable">
+                  <table id="user_table" className="table table-bordered table-hover">
                       <thead>
                           <tr>
-                              <th><center>USERNAME <button id="btnUsername" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
-                              <th><center>EMAIL ADDRESS <button id="btnEmail" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
-                              <th><center>USER TYPE <button id="btnType" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
-                              <th><center>STATUS <button id="btnStatus" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                              <th><center>USERNAME</center></th>
+                              <th><center>EMAIL ADDRESS</center></th>
+                              <th><center>USER TYPE</center></th>
+                              <th><center>STATUS</center></th>
                           </tr>
                       </thead>
                       <tbody id="userList">
-                          <tr id="no-data" style={{display:'none'}}>
+                          {/*<tr id="no-data" style={{display:'none'}}>
                               <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
                               <td><center>No Results Found.</center></td>
-                          </tr>
+                          </tr>*/}
                       </tbody>
                   </table>
               </div>

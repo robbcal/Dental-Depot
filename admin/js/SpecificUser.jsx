@@ -157,18 +157,32 @@ var Content = React.createClass({
       });
     });
 
-    firebase.database().ref('users/'+USERID+'/activity').orderByChild("date").on('child_added', function(data){
-      var action = data.val().action_performed;
-      var object = data.val().object_changed;
-      var quantity = data.val().quantity;
-      var date = data.val().date;
-
-      $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
+    var actRef = firebase.database().ref('users/'+USERID+'/activity').orderByChild("date");
+    actRef.on('value', function(snapshot) {
+      $('#userAct').DataTable().clear().draw().destroy();
+      snapshot.forEach(function(data) {
+        var action = data.val().action_performed;
+        var object = data.val().object_changed;
+        var quantity = data.val().quantity;
+        var date = data.val().date;
+        
+        $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>")
+      });
+      $('#userAct').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "retrieve": true,
+        "autoWidth": false,
+        "order": [[3, "desc"]]
+      });
     });
 
     $(document).ready(function () {
       (function ($) {
-        $('#activitySearch').keyup(function () {
+        /*$('#activitySearch').keyup(function () {
           var rex = new RegExp($(this).val(), 'i');
           $('#activityList tr').hide();
           $('#activityList tr').filter(function () {
@@ -178,7 +192,7 @@ var Content = React.createClass({
           if($('#activityList tr:visible').length == 0){
             $('#no-data').show();
           }
-        });
+        });*/
         $("#age").keypress(function(event) {
           if (event.which == 45 || event.which == 46){
             event.preventDefault();
@@ -211,102 +225,6 @@ var Content = React.createClass({
           if(yearNow - year > 99 || yearNow - year < 1){
             $('#birthDate').val("");
           }
-        });
-        $('#btnAction').on('click',function(){
-          $("#activityList").empty();
-          var clicksAction = $(this).data('clicks');
-          if (clicksAction) {// odd clicks
-            firebase.database().ref('users/'+USERID+'/activity').orderByChild("action_performed").on('child_added', function(data){
-              var action = data.val().action_performed;
-              var object = data.val().object_changed;
-              var quantity = data.val().quantity;
-              var date = data.val().date;
-
-              $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
-            });
-          }else{
-            firebase.database().ref('users/'+USERID+'/activity').orderByChild("action_performed").on('child_added', function(data){
-              var action = data.val().action_performed;
-              var object = data.val().object_changed;
-              var quantity = data.val().quantity;
-              var date = data.val().date;
-
-              $("#activityList").append("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
-            });
-          }
-          $(this).data("clicks", !clicksAction);    
-        });
-        $('#btnObject').on('click',function(){
-          $("#activityList").empty();
-          var clicksObject = $(this).data('clicks');
-          if (clicksObject) {// odd clicks
-            firebase.database().ref('users/'+USERID+'/activity').orderByChild("object_changed").on('child_added', function(data){
-              var action = data.val().action_performed;
-              var object = data.val().object_changed;
-              var quantity = data.val().quantity;
-              var date = data.val().date;
-
-              $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
-            });
-          }else{
-            firebase.database().ref('users/'+USERID+'/activity').orderByChild("object_changed").on('child_added', function(data){
-              var action = data.val().action_performed;
-              var object = data.val().object_changed;
-              var quantity = data.val().quantity;
-              var date = data.val().date;
-
-              $("#activityList").append("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
-            });
-          }
-          $(this).data("clicks", !clicksObject);    
-        });
-        $('#btnQty').on('click',function(){
-          $("#activityList").empty();
-          var clicksQty = $(this).data('clicks');
-          if (clicksQty) {// odd clicks
-            firebase.database().ref('users/'+USERID+'/activity').orderByChild("quantity").on('child_added', function(data){
-              var action = data.val().action_performed;
-              var object = data.val().object_changed;
-              var quantity = data.val().quantity;
-              var date = data.val().date;
-
-              $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
-            });
-          }else{
-            firebase.database().ref('users/'+USERID+'/activity').orderByChild("quantity").on('child_added', function(data){
-              var action = data.val().action_performed;
-              var object = data.val().object_changed;
-              var quantity = data.val().quantity;
-              var date = data.val().date;
-
-              $("#activityList").append("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
-            });
-          }
-          $(this).data("clicks", !clicksQty);    
-        });
-        $('#btnDate').on('click',function(){
-          $("#activityList").empty();
-          var clicksDate = $(this).data('clicks');
-          if (clicksDate) {// odd clicks
-            firebase.database().ref('users/'+USERID+'/activity').orderByChild("date").on('child_added', function(data){
-              var action = data.val().action_performed;
-              var object = data.val().object_changed;
-              var quantity = data.val().quantity;
-              var date = data.val().date;
-
-              $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
-            });
-          }else{
-            firebase.database().ref('users/'+USERID+'/activity').orderByChild("date").on('child_added', function(data){
-              var action = data.val().action_performed;
-              var object = data.val().object_changed;
-              var quantity = data.val().quantity;
-              var date = data.val().date;
-
-              $("#activityList").append("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
-            });
-          }
-          $(this).data("clicks", !clicksDate);    
         });
       }(jQuery));
     });
@@ -559,7 +477,7 @@ var Content = React.createClass({
                         <div className="row">
                             <div className="col-sm-8"></div>
                             <div className="col-sm-4 pull-right">
-                                <div className="box-tools pull-right">
+                                {/*<div className="box-tools pull-right">
                                     <div className="input-group stylish-input-group" id="searchField">
                                         <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="activitySearch"/>
                                         <span className="input-group-addon">
@@ -568,29 +486,29 @@ var Content = React.createClass({
                                             </div>
                                         </span>
                                     </div>
-                                </div>
+                                </div>*/}
                             </div>
                         </div>
                         <div className="table-responsive">
                             <div className="col-sm-12">
                                 <br/>
                                 <div className="box-body">
-                                    <table id="example1" className="table table-bordered table-striped dataTable">
+                                    <table id="userAct" className="table table-bordered table-hover">
                                         <thead>
                                           <tr>
-                                            <th><center>ACTION <button id="btnAction" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
-                                            <th><center>OBJECT <button id="btnObject" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
-                                            <th><center>QUANTITY <button id="btnQty" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
-                                            <th><center>DATE <button id="btnDate" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                                            <th><center>ACTION</center></th>
+                                            <th><center>OBJECT</center></th>
+                                            <th><center>QUANTITY</center></th>
+                                            <th><center>DATE</center></th>
                                           </tr>
                                         </thead>
                                         <tbody id="activityList">
-                                          <tr id="no-data" style={{display:'none'}}>
+                                          {/*<tr id="no-data" style={{display:'none'}}>
                                             <td><center>No Results Found.</center></td>
                                             <td><center>No Results Found.</center></td>
                                             <td><center>No Results Found.</center></td>
                                             <td><center>No Results Found.</center></td>
-                                          </tr>
+                                          </tr>*/}
                                         </tbody>
                                     </table>
                                 </div>
