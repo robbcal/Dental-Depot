@@ -134,7 +134,7 @@ var Content = React.createClass({
       lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
       if(isDeleted == false){
-        $("#userList").append("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td><td><center>"+status+"</center></td></tr>");
+        $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
         $("#"+id+"").dblclick(function() {
           document.getElementById("user_id").value = id;
           document.getElementById("submit").click();
@@ -160,7 +160,7 @@ var Content = React.createClass({
       if(isDeleted == true){
         $("tr#"+id).remove();
       }else{
-        $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+firstName+" "+lastName+"</center></td><td><center>"+email+"</center></td><td><center>"+userType+"</center></td><td><center>"+status+"</center></td></tr>");
+        $("tr#"+id).replaceWith("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
         $("#"+id+"").dblclick(function() {
           document.getElementById("user_id").value = id;
           document.getElementById("submit").click();
@@ -229,6 +229,230 @@ var Content = React.createClass({
           if(yearNow - year > 99 || yearNow - year < 1){
             $('#birthDate').val("");
           }
+        });
+        $('#btnUsername').on('click',function(){
+          $("#userList").empty();
+          var clicksName = $(this).data('clicks');
+          if (clicksName) {// odd clicks
+            var ref = firebase.database().ref('users').orderByChild('firstname');
+            ref.on('child_added', function(data) {
+              var id=data.key
+              var firstName = data.val().firstname;
+              var lastName = data.val().lastname;
+              var email = data.val().user_email;
+              var address = data.val().address;
+              var contactNumber = data.val().contact_no;
+              var age = data.val().age;
+              var birthDate = data.val().birthday;
+              var userType = data.val().user_type;
+              var status = data.val().status;
+              var isDeleted = data.val().isDeleted;
+              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("user_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }else{
+            var ref = firebase.database().ref('users').orderByChild('firstname');
+            ref.on('child_added', function(data) {
+              var id=data.key
+              var firstName = data.val().firstname;
+              var lastName = data.val().lastname;
+              var email = data.val().user_email;
+              var address = data.val().address;
+              var contactNumber = data.val().contact_no;
+              var age = data.val().age;
+              var birthDate = data.val().birthday;
+              var userType = data.val().user_type;
+              var status = data.val().status;
+              var isDeleted = data.val().isDeleted;
+              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#userList").prepend("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("user_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }
+          $(this).data("clicks", !clicksName);    
+        });
+        $('#btnEmail').on('click',function(){
+          $("#userList").empty();
+          var clicksEmail = $(this).data('clicks');
+          if (clicksEmail) {// odd clicks
+            var ref = firebase.database().ref('users').orderByChild('user_email');
+            ref.on('child_added', function(data) {
+              var id=data.key
+              var firstName = data.val().firstname;
+              var lastName = data.val().lastname;
+              var email = data.val().user_email;
+              var address = data.val().address;
+              var contactNumber = data.val().contact_no;
+              var age = data.val().age;
+              var birthDate = data.val().birthday;
+              var userType = data.val().user_type;
+              var status = data.val().status;
+              var isDeleted = data.val().isDeleted;
+              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("user_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }else{
+            var ref = firebase.database().ref('users').orderByChild('user_email');
+            ref.on('child_added', function(data) {
+              var id=data.key
+              var firstName = data.val().firstname;
+              var lastName = data.val().lastname;
+              var email = data.val().user_email;
+              var address = data.val().address;
+              var contactNumber = data.val().contact_no;
+              var age = data.val().age;
+              var birthDate = data.val().birthday;
+              var userType = data.val().user_type;
+              var status = data.val().status;
+              var isDeleted = data.val().isDeleted;
+              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#userList").prepend("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("user_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }
+          $(this).data("clicks", !clicksEmail);    
+        });
+        $('#btnType').on('click',function(){
+          $("#userList").empty();
+          var clicksType = $(this).data('clicks');
+          if (clicksType) {// odd clicks
+            var ref = firebase.database().ref('users').orderByChild('user_type');
+            ref.on('child_added', function(data) {
+              var id=data.key
+              var firstName = data.val().firstname;
+              var lastName = data.val().lastname;
+              var email = data.val().user_email;
+              var address = data.val().address;
+              var contactNumber = data.val().contact_no;
+              var age = data.val().age;
+              var birthDate = data.val().birthday;
+              var userType = data.val().user_type;
+              var status = data.val().status;
+              var isDeleted = data.val().isDeleted;
+              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("user_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }else{
+            var ref = firebase.database().ref('users').orderByChild('user_type');
+            ref.on('child_added', function(data) {
+              var id=data.key
+              var firstName = data.val().firstname;
+              var lastName = data.val().lastname;
+              var email = data.val().user_email;
+              var address = data.val().address;
+              var contactNumber = data.val().contact_no;
+              var age = data.val().age;
+              var birthDate = data.val().birthday;
+              var userType = data.val().user_type;
+              var status = data.val().status;
+              var isDeleted = data.val().isDeleted;
+              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#userList").prepend("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("user_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }
+          $(this).data("clicks", !clicksType);    
+        });
+        $('#btnStatus').on('click',function(){
+          $("#userList").empty();
+          var clicksStatus = $(this).data('clicks');
+          if (clicksStatus) {// odd clicks
+            var ref = firebase.database().ref('users').orderByChild('status');
+            ref.on('child_added', function(data) {
+              var id=data.key
+              var firstName = data.val().firstname;
+              var lastName = data.val().lastname;
+              var email = data.val().user_email;
+              var address = data.val().address;
+              var contactNumber = data.val().contact_no;
+              var age = data.val().age;
+              var birthDate = data.val().birthday;
+              var userType = data.val().user_type;
+              var status = data.val().status;
+              var isDeleted = data.val().isDeleted;
+              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("user_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }else{
+            var ref = firebase.database().ref('users').orderByChild('status');
+            ref.on('child_added', function(data) {
+              var id=data.key
+              var firstName = data.val().firstname;
+              var lastName = data.val().lastname;
+              var email = data.val().user_email;
+              var address = data.val().address;
+              var contactNumber = data.val().contact_no;
+              var age = data.val().age;
+              var birthDate = data.val().birthday;
+              var userType = data.val().user_type;
+              var status = data.val().status;
+              var isDeleted = data.val().isDeleted;
+              firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#userList").prepend("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("user_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }
+          $(this).data("clicks", !clicksStatus);    
         });
       }(jQuery));
     });
@@ -424,10 +648,10 @@ var Content = React.createClass({
                   <table id="user_table" className="table table-bordered table-hover dataTable">
                       <thead>
                           <tr>
-                              <th><center>USERNAME</center></th>
-                              <th><center>EMAIL ADDRESS</center></th>
-                              <th><center>USER TYPE</center></th>
-                              <th><center>STATUS</center></th>
+                              <th><center>USERNAME <button id="btnUsername" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                              <th><center>EMAIL ADDRESS <button id="btnEmail" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                              <th><center>USER TYPE <button id="btnType" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                              <th><center>STATUS <button id="btnStatus" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
                           </tr>
                       </thead>
                       <tbody id="userList">

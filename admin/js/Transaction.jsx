@@ -307,6 +307,7 @@ var Content = React.createClass({
         var itemElement = {id: itemID, name: itemName, qty: qty, price: price, subtotal: subtotal};
         transactionItems.push(itemElement);
       }
+      console.log(transactionItems);
       var transactionLength = transactionItems.length;
       firebase.database().ref('users/'+uid).once('value', function(snapshot) {;
         var userName = snapshot.val().firstname+" "+snapshot.val().lastname;

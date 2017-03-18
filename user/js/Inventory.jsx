@@ -134,13 +134,13 @@ var Content = React.createClass({
       itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
       if(isDeleted == false){
-        $("#itemList").append("<tr id="+id+"><td><center>"+itemID+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
-        $("#item").append("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
+        $("#itemList").append("<tr id="+id+"><td>"+itemID+"</td><td>"+itemName+"</td><td>"+quantity+"</td></tr>");
+        $("#item").append("<option id="+id+" value="+id+">"+itemName+"</option>");
         $("#"+id+"").dblclick(function() {
           document.getElementById("item_id").value = id;
           document.getElementById("submit").click();
         });
-      }  
+      }
     });
 
     ref.on('child_changed', function(data) {
@@ -155,8 +155,8 @@ var Content = React.createClass({
         $("tr#"+id).remove();
         $("option#"+id).remove();
       }else{
-        $("tr#"+id).replaceWith("<tr id="+id+"><td><center>"+itemID+"</center></td><td><center>"+itemName+"</center></td><td><center>"+quantity+"</center></td></tr>");
-        $("option#"+id).replaceWith("<option id="+id+" value="+id+"><center>"+itemName+"</center></option>");
+        $("tr#"+id).replaceWith("<tr id="+id+"><td>"+itemID+"</td><td>"+itemName+"</td><td>"+quantity+"</td></tr>");
+        $("option#"+id).replaceWith("<option id="+id+" value="+id+">"+itemName+"</option>");
         $("#"+id+"").dblclick(function() {
           document.getElementById("item_id").value = id;
           document.getElementById("submit").click();
@@ -213,6 +213,132 @@ var Content = React.createClass({
           var num = parseFloat($(this).val());
           var cleanNum = num.toFixed(2);
           $(this).val(cleanNum);
+        });
+        $('#btnId').click(function() {
+          $("#itemList").empty();
+          var clicksId = $(this).data('clicks');
+          if (clicksId) {// odd clicks
+            var ref = firebase.database().ref('items').orderByKey();
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var itemID = id;
+              var itemName = data.val().item_name;
+              var quantity = data.val().quantity;
+              var isDeleted = data.val().isDeleted;
+              itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#itemList").append("<tr id="+id+"><td>"+itemID+"</td><td>"+itemName+"</td><td>"+quantity+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("item_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }else{// even clicks
+            var ref = firebase.database().ref('items').orderByKey();
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var itemID = id;
+              var itemName = data.val().item_name;
+              var quantity = data.val().quantity;
+              var isDeleted = data.val().isDeleted;
+              itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#itemList").prepend("<tr id="+id+"><td>"+itemID+"</td><td>"+itemName+"</td><td>"+quantity+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("item_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });  
+          }
+          $(this).data("clicks", !clicksId);       
+        });
+        $('#btnName').on('click',function(){
+          $("#itemList").empty();
+          var clicksName = $(this).data('clicks');
+          if (clicksName) {// odd clicks
+            var ref = firebase.database().ref('items').orderByChild("item_name");
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var itemID = id;
+              var itemName = data.val().item_name;
+              var quantity = data.val().quantity;
+              var isDeleted = data.val().isDeleted;
+              itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#itemList").append("<tr id="+id+"><td>"+itemID+"</td><td>"+itemName+"</td><td>"+quantity+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("item_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }else{// even clicks
+            var ref = firebase.database().ref('items').orderByChild("item_name");
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var itemID = id;
+              var itemName = data.val().item_name;
+              var quantity = data.val().quantity;
+              var isDeleted = data.val().isDeleted;
+              itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#itemList").prepend("<tr id="+id+"><td>"+itemID+"</td><td>"+itemName+"</td><td>"+quantity+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("item_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }
+          $(this).data("clicks", !clicksName);    
+        });
+        $('#btnStock').on('click',function(){
+          $("#itemList").empty();
+          var clicksStock = $(this).data('clicks');
+          if (clicksStock) {// odd clicks
+            var ref = firebase.database().ref('items').orderByChild("quantity");
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var itemID = id;
+              var itemName = data.val().item_name;
+              var quantity = data.val().quantity;
+              var isDeleted = data.val().isDeleted;
+              itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#itemList").append("<tr id="+id+"><td>"+itemID+"</td><td>"+itemName+"</td><td>"+quantity+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("item_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }else{
+            var ref = firebase.database().ref('items').orderByChild("quantity");
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var itemID = id;
+              var itemName = data.val().item_name;
+              var quantity = data.val().quantity;
+              var isDeleted = data.val().isDeleted;
+              itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              if(isDeleted == false){
+                $("#itemList").prepend("<tr id="+id+"><td>"+itemID+"</td><td>"+itemName+"</td><td>"+quantity+"</td></tr>");
+                $("#"+id+"").dblclick(function() {
+                  document.getElementById("item_id").value = id;
+                  document.getElementById("submit").click();
+                });
+              }
+            });
+          }
+          $(this).data("clicks", !clicksStock);    
         });
       }(jQuery));
     });
@@ -465,6 +591,10 @@ var Content = React.createClass({
     }
   },
 
+  columnSort:function(){
+    
+  },
+
   render: function() {
     var style={
       color: 'red'
@@ -505,9 +635,9 @@ var Content = React.createClass({
                   <table id="itemTable" className="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                       <thead>
                           <tr>
-                              <th><center>ITEM ID</center></th>
-                              <th><center>ITEM NAME</center></th>
-                              <th><center>IN STOCK</center></th>
+                              <th><center>ITEM ID <button id="btnId" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                              <th><center>ITEM NAME <button id="btnName" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                              <th><center>IN STOCK <button id="btnStock" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
                           </tr>
                       </thead>
                       <tbody id="itemList">

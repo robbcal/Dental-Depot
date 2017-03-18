@@ -134,7 +134,7 @@ var Content = React.createClass({
       user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
       customer = customer.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
-      $("#transactionList").prepend("<tr id="+id+"><td><center>"+id+"</center></td><td><center>"+total+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
+      $("#transactionList").prepend("<tr id="+id+"><td>"+id+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
       $("#"+id+"").dblclick(function() {
         $("#transactionTableBody tr").remove();
         document.getElementById("transID").value = id;
@@ -152,7 +152,7 @@ var Content = React.createClass({
           var itemPrice = data.val().item_price;
           var subtotal = data.val().item_subtotal;
 
-          $("#transactionTableBody").append("<tr id="+id+"><td><center>"+itemName+"</center></td><td><center>"+itemQuantity+"</center></td><td><center>"+itemPrice+"</center></td></td><td><center>"+subtotal+"</center></td></tr>");
+          $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+itemPrice+"</td></td><td>"+subtotal+"</td></tr>");
         });
       });
     });
@@ -165,16 +165,17 @@ var Content = React.createClass({
     //activity table
     firebase.database().ref('activities').orderByChild("date").on('child_added', function(data){
       var id = data.key;
-          var action = data.val().action_performed;
-          var object = data.val().object_changed;
-          var quantity = data.val().quantity;
-          var date = data.val().date;
-          var user = data.val().user;
-          object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-          user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+      var action = data.val().action_performed;
+      var object = data.val().object_changed;
+      var quantity = data.val().quantity;
+      var date = data.val().date;
+      var user = data.val().user;
+      object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+      user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
 
-          $("#activityList").prepend("<tr id="+id+"><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td><td><center>"+user+"</center></td></tr>");
+      $("#activityList").prepend("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
     });
+
     firebase.database().ref('activities').orderByKey().on('child_removed', function(data){
       var id=data.key
           $("tr#"+id).remove();
@@ -243,6 +244,471 @@ var Content = React.createClass({
           if($('#activityList tr:visible').length == 0){
             $('#no-data-activity').show();
           }
+        });
+        $('#btnId').on('click',function(){
+          $("#transactionList").empty();
+          var clicksId = $(this).data('clicks');
+          if (clicksId) {// odd clicks
+            var ref = firebase.database().ref('transactions').orderByKey();
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var total = data.val().total;
+              var date = data.val().date;
+              var userID = data.val().userID;
+              var user = data.val().user;
+              var release = data.val().release_method;
+              var customer = data.val().customer;
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              customer = customer.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#transactionList").prepend("<tr id="+id+"><td>"+id+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+              $("#"+id+"").dblclick(function() {
+                $("#transactionTableBody tr").remove();
+                document.getElementById("transID").value = id;
+                $('#transactionModal').modal('show');
+                document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
+                document.getElementById("transTotal").innerHTML = "Total: "+total;
+                document.getElementById("transDate").innerHTML = "Date: "+date;
+                document.getElementById("transRelease").innerHTML = "Release Method: "+release;
+                document.getElementById("transCustomer").innerHTML = "Customer: "+customer;
+
+                var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
+                ref.on('child_added', function(data) {
+                  var itemName = data.val().item_name;
+                  var itemQuantity = data.val().item_quantity;
+                  var itemPrice = data.val().item_price;
+                  var subtotal = data.val().item_subtotal;
+
+                  $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+itemPrice+"</td></td><td>"+subtotal+"</td></tr>");
+                });
+              });
+            });
+          }else{
+            var ref = firebase.database().ref('transactions').orderByKey();
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var total = data.val().total;
+              var date = data.val().date;
+              var userID = data.val().userID;
+              var user = data.val().user;
+              var release = data.val().release_method;
+              var customer = data.val().customer;
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              customer = customer.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#transactionList").append("<tr id="+id+"><td>"+id+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+              $("#"+id+"").dblclick(function() {
+                $("#transactionTableBody tr").remove();
+                document.getElementById("transID").value = id;
+                $('#transactionModal').modal('show');
+                document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
+                document.getElementById("transTotal").innerHTML = "Total: "+total;
+                document.getElementById("transDate").innerHTML = "Date: "+date;
+                document.getElementById("transRelease").innerHTML = "Release Method: "+release;
+                document.getElementById("transCustomer").innerHTML = "Customer: "+customer;
+
+                var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
+                ref.on('child_added', function(data) {
+                  var itemName = data.val().item_name;
+                  var itemQuantity = data.val().item_quantity;
+                  var itemPrice = data.val().item_price;
+                  var subtotal = data.val().item_subtotal;
+
+                  $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+itemPrice+"</td></td><td>"+subtotal+"</td></tr>");
+                });
+              });
+            });
+          }
+          $(this).data("clicks", !clicksId);    
+        });
+        $('#btnTotal').on('click',function(){
+          $("#transactionList").empty();
+          var clicksTotal = $(this).data('clicks');
+          if (clicksTotal) {// odd clicks
+            var ref = firebase.database().ref('transactions').orderByChild("total");
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var total = data.val().total;
+              var date = data.val().date;
+              var userID = data.val().userID;
+              var user = data.val().user;
+              var release = data.val().release_method;
+              var customer = data.val().customer;
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              customer = customer.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#transactionList").prepend("<tr id="+id+"><td>"+id+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+              $("#"+id+"").dblclick(function() {
+                $("#transactionTableBody tr").remove();
+                document.getElementById("transID").value = id;
+                $('#transactionModal').modal('show');
+                document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
+                document.getElementById("transTotal").innerHTML = "Total: "+total;
+                document.getElementById("transDate").innerHTML = "Date: "+date;
+                document.getElementById("transRelease").innerHTML = "Release Method: "+release;
+                document.getElementById("transCustomer").innerHTML = "Customer: "+customer;
+
+                var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
+                ref.on('child_added', function(data) {
+                  var itemName = data.val().item_name;
+                  var itemQuantity = data.val().item_quantity;
+                  var itemPrice = data.val().item_price;
+                  var subtotal = data.val().item_subtotal;
+
+                  $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+itemPrice+"</td></td><td>"+subtotal+"</td></tr>");
+                });
+              });
+            });
+          }else{
+            var ref = firebase.database().ref('transactions').orderByChild("total");
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var total = data.val().total;
+              var date = data.val().date;
+              var userID = data.val().userID;
+              var user = data.val().user;
+              var release = data.val().release_method;
+              var customer = data.val().customer;
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              customer = customer.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#transactionList").append("<tr id="+id+"><td>"+id+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+              $("#"+id+"").dblclick(function() {
+                $("#transactionTableBody tr").remove();
+                document.getElementById("transID").value = id;
+                $('#transactionModal').modal('show');
+                document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
+                document.getElementById("transTotal").innerHTML = "Total: "+total;
+                document.getElementById("transDate").innerHTML = "Date: "+date;
+                document.getElementById("transRelease").innerHTML = "Release Method: "+release;
+                document.getElementById("transCustomer").innerHTML = "Customer: "+customer;
+
+                var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
+                ref.on('child_added', function(data) {
+                  var itemName = data.val().item_name;
+                  var itemQuantity = data.val().item_quantity;
+                  var itemPrice = data.val().item_price;
+                  var subtotal = data.val().item_subtotal;
+
+                  $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+itemPrice+"</td></td><td>"+subtotal+"</td></tr>");
+                });
+              });
+            });
+          }
+          $(this).data("clicks", !clicksTotal);    
+        });
+        $('#btnDate').on('click',function(){
+          $("#transactionList").empty();
+          var clicksDate = $(this).data('clicks');
+          if (clicksDate) {// odd clicks
+            var ref = firebase.database().ref('transactions').orderByChild("date");
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var total = data.val().total;
+              var date = data.val().date;
+              var userID = data.val().userID;
+              var user = data.val().user;
+              var release = data.val().release_method;
+              var customer = data.val().customer;
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              customer = customer.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#transactionList").prepend("<tr id="+id+"><td>"+id+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+              $("#"+id+"").dblclick(function() {
+                $("#transactionTableBody tr").remove();
+                document.getElementById("transID").value = id;
+                $('#transactionModal').modal('show');
+                document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
+                document.getElementById("transTotal").innerHTML = "Total: "+total;
+                document.getElementById("transDate").innerHTML = "Date: "+date;
+                document.getElementById("transRelease").innerHTML = "Release Method: "+release;
+                document.getElementById("transCustomer").innerHTML = "Customer: "+customer;
+
+                var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
+                ref.on('child_added', function(data) {
+                  var itemName = data.val().item_name;
+                  var itemQuantity = data.val().item_quantity;
+                  var itemPrice = data.val().item_price;
+                  var subtotal = data.val().item_subtotal;
+
+                  $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+itemPrice+"</td></td><td>"+subtotal+"</td></tr>");
+                });
+              });
+            });
+          }else{
+            var ref = firebase.database().ref('transactions').orderByChild("date");
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var total = data.val().total;
+              var date = data.val().date;
+              var userID = data.val().userID;
+              var user = data.val().user;
+              var release = data.val().release_method;
+              var customer = data.val().customer;
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              customer = customer.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#transactionList").append("<tr id="+id+"><td>"+id+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+              $("#"+id+"").dblclick(function() {
+                $("#transactionTableBody tr").remove();
+                document.getElementById("transID").value = id;
+                $('#transactionModal').modal('show');
+                document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
+                document.getElementById("transTotal").innerHTML = "Total: "+total;
+                document.getElementById("transDate").innerHTML = "Date: "+date;
+                document.getElementById("transRelease").innerHTML = "Release Method: "+release;
+                document.getElementById("transCustomer").innerHTML = "Customer: "+customer;
+
+                var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
+                ref.on('child_added', function(data) {
+                  var itemName = data.val().item_name;
+                  var itemQuantity = data.val().item_quantity;
+                  var itemPrice = data.val().item_price;
+                  var subtotal = data.val().item_subtotal;
+
+                  $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+itemPrice+"</td></td><td>"+subtotal+"</td></tr>");
+                });
+              });
+            });
+          }
+          $(this).data("clicks", !clicksDate);    
+        });
+        $('#btnUser').on('click',function(){
+          $("#transactionList").empty();
+          var clicksUser = $(this).data('clicks');
+          if (clicksUser) {// odd clicks
+            var ref = firebase.database().ref('transactions').orderByChild("user");
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var total = data.val().total;
+              var date = data.val().date;
+              var userID = data.val().userID;
+              var user = data.val().user;
+              var release = data.val().release_method;
+              var customer = data.val().customer;
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              customer = customer.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#transactionList").prepend("<tr id="+id+"><td>"+id+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+              $("#"+id+"").dblclick(function() {
+                $("#transactionTableBody tr").remove();
+                document.getElementById("transID").value = id;
+                $('#transactionModal').modal('show');
+                document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
+                document.getElementById("transTotal").innerHTML = "Total: "+total;
+                document.getElementById("transDate").innerHTML = "Date: "+date;
+                document.getElementById("transRelease").innerHTML = "Release Method: "+release;
+                document.getElementById("transCustomer").innerHTML = "Customer: "+customer;
+
+                var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
+                ref.on('child_added', function(data) {
+                  var itemName = data.val().item_name;
+                  var itemQuantity = data.val().item_quantity;
+                  var itemPrice = data.val().item_price;
+                  var subtotal = data.val().item_subtotal;
+
+                  $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+itemPrice+"</td></td><td>"+subtotal+"</td></tr>");
+                });
+              });
+            });
+          }else{
+            var ref = firebase.database().ref('transactions').orderByChild("user");
+            ref.on('child_added', function(data) {
+              var id = data.key;
+              var total = data.val().total;
+              var date = data.val().date;
+              var userID = data.val().userID;
+              var user = data.val().user;
+              var release = data.val().release_method;
+              var customer = data.val().customer;
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              customer = customer.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#transactionList").append("<tr id="+id+"><td>"+id+"</td><td>"+total+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+              $("#"+id+"").dblclick(function() {
+                $("#transactionTableBody tr").remove();
+                document.getElementById("transID").value = id;
+                $('#transactionModal').modal('show');
+                document.getElementById("transHeader").innerHTML = "Transaction No. "+id;
+                document.getElementById("transTotal").innerHTML = "Total: "+total;
+                document.getElementById("transDate").innerHTML = "Date: "+date;
+                document.getElementById("transRelease").innerHTML = "Release Method: "+release;
+                document.getElementById("transCustomer").innerHTML = "Customer: "+customer;
+
+                var ref = firebase.database().ref('transactions/'+id+'/items_purchased').orderByChild("item_name");
+                ref.on('child_added', function(data) {
+                  var itemName = data.val().item_name;
+                  var itemQuantity = data.val().item_quantity;
+                  var itemPrice = data.val().item_price;
+                  var subtotal = data.val().item_subtotal;
+
+                  $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+itemPrice+"</td></td><td>"+subtotal+"</td></tr>");
+                });
+              });
+            });
+          }
+          $(this).data("clicks", !clicksUser);    
+        });
+
+        $('#btnAction').on('click',function(){
+          $("#activityList").empty();
+          var clicksAction = $(this).data('clicks');
+          if (clicksAction) {// odd clicks
+            firebase.database().ref('activities').orderByChild("action_performed").on('child_added', function(data){
+              var id = data.key;
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+              var user = data.val().user;
+              object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#activityList").prepend("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+            });
+          }else{
+            firebase.database().ref('activities').orderByChild("action_performed").on('child_added', function(data){
+              var id = data.key;
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+              var user = data.val().user;
+              object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#activityList").append("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+            });
+          }
+          $(this).data("clicks", !clicksAction);    
+        });
+        $('#btnObject').on('click',function(){
+          $("#activityList").empty();
+          var clicksObject = $(this).data('clicks');
+          if (clicksObject) {// odd clicks
+            firebase.database().ref('activities').orderByChild("object_changed").on('child_added', function(data){
+              var id = data.key;
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+              var user = data.val().user;
+              object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#activityList").prepend("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+            });
+          }else{
+            firebase.database().ref('activities').orderByChild("object_changed").on('child_added', function(data){
+              var id = data.key;
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+              var user = data.val().user;
+              object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#activityList").append("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+            });
+          }
+          $(this).data("clicks", !clicksObject);    
+        });
+        $('#btnQty').on('click',function(){
+          $("#activityList").empty();
+          var clicksQty = $(this).data('clicks');
+          if (clicksQty) {// odd clicks
+            firebase.database().ref('activities').orderByChild("quantity").on('child_added', function(data){
+              var id = data.key;
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+              var user = data.val().user;
+              object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#activityList").prepend("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+            });
+          }else{
+            firebase.database().ref('activities').orderByChild("quantity").on('child_added', function(data){
+              var id = data.key;
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+              var user = data.val().user;
+              object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#activityList").append("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+            });
+          }
+          $(this).data("clicks", !clicksQty);    
+        });
+        $('#btnActDate').on('click',function(){
+          $("#activityList").empty();
+          var clicksActDate = $(this).data('clicks');
+          if (clicksActDate) {// odd clicks
+            firebase.database().ref('activities').orderByChild("date").on('child_added', function(data){
+              var id = data.key;
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+              var user = data.val().user;
+              object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#activityList").prepend("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+            });
+          }else{
+            firebase.database().ref('activities').orderByChild("date").on('child_added', function(data){
+              var id = data.key;
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+              var user = data.val().user;
+              object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#activityList").append("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+            });
+          }
+          $(this).data("clicks", !clicksActDate);    
+        });
+        $('#btnActUser').on('click',function(){
+          $("#activityList").empty();
+          var clicksActUser = $(this).data('clicks');
+          if (clicksActUser) {// odd clicks
+            firebase.database().ref('activities').orderByChild("user").on('child_added', function(data){
+              var id = data.key;
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+              var user = data.val().user;
+              object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#activityList").prepend("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+            });
+          }else{
+            firebase.database().ref('activities').orderByChild("user").on('child_added', function(data){
+              var id = data.key;
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+              var user = data.val().user;
+              object = object.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+              user = user.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+
+              $("#activityList").append("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
+            });
+          }
+          $(this).data("clicks", !clicksActUser);    
         });
       }(jQuery));
     });
@@ -371,10 +837,10 @@ var Content = React.createClass({
                                   <table id="example1" className="table table-bordered table-hover dataTable">
                                       <thead>
                                           <tr>
-                                              <th><center>TRANSACTION ID</center></th>
-                                              <th><center>TOTAL</center></th>
-                                              <th><center>DATE</center></th>
-                                              <th><center>USER</center></th>
+                                              <th><center>TRANSACTION ID <button id="btnId" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                                              <th><center>TOTAL <button id="btnTotal" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                                              <th><center>DATE <button id="btnDate" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                                              <th><center>USER <button id="btnUser" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
                                           </tr>
                                       </thead>
                                       <tbody id="transactionList">
@@ -415,11 +881,11 @@ var Content = React.createClass({
                                   <table id="example1" className="table table-bordered table-hover dataTable">
                                       <thead>
                                           <tr>
-                                              <th><center>ACTION</center></th>
-                                              <th><center>OBJECT</center></th>
-                                              <th><center>QUANTITY</center></th>
-                                              <th><center>DATE</center></th>
-                                              <th><center>USER</center></th>
+                                              <th><center>ACTION <button id="btnAction" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                                              <th><center>OBJECT <button id="btnObject" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                                              <th><center>QUANTITY <button id="btnQty" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                                              <th><center>DATE <button id="btnActDate" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                                              <th><center>USER <button id="btnActUser" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
                                           </tr>
                                       </thead>
                                       <tbody id="activityList">

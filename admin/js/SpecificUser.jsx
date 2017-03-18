@@ -163,7 +163,7 @@ var Content = React.createClass({
       var quantity = data.val().quantity;
       var date = data.val().date;
 
-      $("#activityList").prepend("<tr><td><center>"+action+"</center></td><td><center>"+object+"</center></td><td><center>"+quantity+"</center></td><td><center>"+date+"</center></td></tr>");
+      $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
     });
 
     $(document).ready(function () {
@@ -211,6 +211,102 @@ var Content = React.createClass({
           if(yearNow - year > 99 || yearNow - year < 1){
             $('#birthDate').val("");
           }
+        });
+        $('#btnAction').on('click',function(){
+          $("#activityList").empty();
+          var clicksAction = $(this).data('clicks');
+          if (clicksAction) {// odd clicks
+            firebase.database().ref('users/'+USERID+'/activity').orderByChild("action_performed").on('child_added', function(data){
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+
+              $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
+            });
+          }else{
+            firebase.database().ref('users/'+USERID+'/activity').orderByChild("action_performed").on('child_added', function(data){
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+
+              $("#activityList").append("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
+            });
+          }
+          $(this).data("clicks", !clicksAction);    
+        });
+        $('#btnObject').on('click',function(){
+          $("#activityList").empty();
+          var clicksObject = $(this).data('clicks');
+          if (clicksObject) {// odd clicks
+            firebase.database().ref('users/'+USERID+'/activity').orderByChild("object_changed").on('child_added', function(data){
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+
+              $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
+            });
+          }else{
+            firebase.database().ref('users/'+USERID+'/activity').orderByChild("object_changed").on('child_added', function(data){
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+
+              $("#activityList").append("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
+            });
+          }
+          $(this).data("clicks", !clicksObject);    
+        });
+        $('#btnQty').on('click',function(){
+          $("#activityList").empty();
+          var clicksQty = $(this).data('clicks');
+          if (clicksQty) {// odd clicks
+            firebase.database().ref('users/'+USERID+'/activity').orderByChild("quantity").on('child_added', function(data){
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+
+              $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
+            });
+          }else{
+            firebase.database().ref('users/'+USERID+'/activity').orderByChild("quantity").on('child_added', function(data){
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+
+              $("#activityList").append("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
+            });
+          }
+          $(this).data("clicks", !clicksQty);    
+        });
+        $('#btnDate').on('click',function(){
+          $("#activityList").empty();
+          var clicksDate = $(this).data('clicks');
+          if (clicksDate) {// odd clicks
+            firebase.database().ref('users/'+USERID+'/activity').orderByChild("date").on('child_added', function(data){
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+
+              $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
+            });
+          }else{
+            firebase.database().ref('users/'+USERID+'/activity').orderByChild("date").on('child_added', function(data){
+              var action = data.val().action_performed;
+              var object = data.val().object_changed;
+              var quantity = data.val().quantity;
+              var date = data.val().date;
+
+              $("#activityList").append("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>");
+            });
+          }
+          $(this).data("clicks", !clicksDate);    
         });
       }(jQuery));
     });
@@ -482,10 +578,10 @@ var Content = React.createClass({
                                     <table id="example1" className="table table-bordered table-striped dataTable">
                                         <thead>
                                           <tr>
-                                            <th><center>ACTION</center></th>
-                                            <th><center>OBJECT</center></th>
-                                            <th><center>QUANTITY</center></th>
-                                            <th><center>DATE</center></th>
+                                            <th><center>ACTION <button id="btnAction" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                                            <th><center>OBJECT <button id="btnObject" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                                            <th><center>QUANTITY <button id="btnQty" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
+                                            <th><center>DATE <button id="btnDate" type="button" className="btn btn-default btn-xs pull-right"><i className="fa fa-arrows-v"></i></button></center></th>
                                           </tr>
                                         </thead>
                                         <tbody id="activityList">
