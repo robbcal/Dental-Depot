@@ -139,7 +139,7 @@ var Content = React.createClass({
     ref.on('value', function(snapshot) {
       var itemName =  snapshot.val().item_name;
       var isDeleted = snapshot.val().isDeleted;
-      if(isDeleted == false){ 
+      if(isDeleted == false){
         itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
         document.getElementById("NameOfItem").innerHTML = itemName;
         self.setState({
@@ -149,7 +149,7 @@ var Content = React.createClass({
           itemQty: snapshot.val().quantity
         });
       }else if(isDeleted == true){
-        window.location.replace("../admin/Inventory.html");  
+        window.location.replace("../admin/Inventory.html");
       }
     });
     var refHistory = firebase.database().ref('items/'+ITEMID+'/item_history');
@@ -477,7 +477,7 @@ var Content = React.createClass({
     var mm = ((now.getMinutes())>=10)? (now.getMinutes()) : '0' + (now.getMinutes());
     var ss = ((now.getSeconds())>=10)? (now.getSeconds()) : '0' + (now.getSeconds());
     var time = hh+":"+mm+":"+ss;
-    
+
     var month=((now.getMonth()+1)>=10)? (now.getMonth()+1) : '0' + (now.getMonth()+1);
     var day=((now.getDate())>=10)? (now.getDate()) : '0' + (now.getDate());
     var today = now.getFullYear()+"-"+month+"-"+day;
@@ -542,8 +542,8 @@ var Content = React.createClass({
                       <p className="text-muted">{this.state.itemDescription}</p>
                       <br/>
                       <center>
-                          <div className="btn-group dropup" id="specificItemButtons">
-                              <button className="btn bg-navy">STOCK</button>
+                          <div className="btn-group" id="specificItemButtons">
+                              <button className="btn bg-navy no-click">STOCK</button>
                               <button type="button" className="btn bg-navy dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                   <span className="caret"></span>
                                   <span className="sr-only">Toggle Dropdown</span>

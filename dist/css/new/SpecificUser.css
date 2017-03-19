@@ -58,3 +58,7 @@
     border:0;
     background:transparent;
 }
+
+#userAct td:nth-child(3), td:nth-child(4){
+    text-align: right;
+}

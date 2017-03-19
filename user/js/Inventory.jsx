@@ -135,7 +135,7 @@ var Content = React.createClass({
         var quantity = data.val().quantity;
         var isDeleted = data.val().isDeleted;
         itemName = itemName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-        
+
         if(data.val().isDeleted == false){
           $("#itemList").append("<tr id="+id+"><td>"+itemID+"</td><td>"+itemName+"</td><td>"+quantity+"</td></tr>");
           $("#item").append("<option id="+id+" value="+id+">"+itemName+"</option>");
@@ -175,17 +175,6 @@ var Content = React.createClass({
 
     $(document).ready(function () {
       (function ($) {
-        /*$('#inventorySearch').keyup(function () {
-          var rex = new RegExp($(this).val(), 'i');
-          $('#itemList tr').hide();
-          $('#itemList tr').filter(function () {
-            return rex.test($(this).text());
-          }).show();
-          $('#no-data').hide();
-          if($('#itemList tr:visible').length == 0){
-            $('#no-data').show();
-          }
-        });*/
         $("#newNumber, #newPrice, #additionalNumber").keypress(function(event) {
           if ( event.which == 45 ){
             event.preventDefault();
@@ -399,7 +388,7 @@ var Content = React.createClass({
     var addNumber = document.getElementById("additionalNumber").value;
     var date = document.getElementById("existingDate").value;
     date = date+" "+time;
-    
+
     var uid = firebase.auth().currentUser.uid;
     var action = "Restocked item."
 
@@ -464,20 +453,8 @@ var Content = React.createClass({
           </form>
           <div className="box">
               <div className="box-header" id="headerContent">
-                  <div className="col-sm-4">
-                      {/*<div className="input-group stylish-input-group">
-                          <input type="text" name="tableSearch" className="form-control pull-right" id="inventorySearch" placeholder="Search" onChange={this.showTable}/>
-                          <span className="input-group-addon">
-                              <div>
-                                  <span className="glyphicon glyphicon-search"></span>
-                              </div>
-                          </span>
-                      </div>*/}
-                  </div>
-                  <div className="col-sm-4"></div>
-                  <div className="col-sm-2"></div>
                   <div className="btn-group col-sm-2">
-                      <button className="btn btn-primary">ADD ITEM</button>
+                      <button className="btn btn-primary no-click">ADD ITEM</button>
                       <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                           <span className="caret"></span>
                           <span className="sr-only">Toggle Dropdown</span>
@@ -498,11 +475,6 @@ var Content = React.createClass({
                           </tr>
                       </thead>
                       <tbody id="itemList">
-                          {/*<tr id="no-data" style={{display:'none'}}>
-                              <td><center>No Results Found.</center></td>
-                              <td><center>No Results Found.</center></td>
-                              <td><center>No Results Found.</center></td>
-                          </tr>*/}
                       </tbody>
                   </table>
               </div>

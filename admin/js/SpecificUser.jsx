@@ -146,7 +146,7 @@ var Content = React.createClass({
           userType: snapshot.val().user_type
         });
       }else if(isDeleted == true){
-        window.location.replace("../admin/Users.html");  
+        window.location.replace("../admin/Users.html");
       }
     });
 
@@ -165,7 +165,7 @@ var Content = React.createClass({
         var object = data.val().object_changed;
         var quantity = data.val().quantity;
         var date = data.val().date;
-        
+
         $("#activityList").prepend("<tr><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td></tr>")
       });
       $('#userAct').DataTable({
@@ -182,17 +182,6 @@ var Content = React.createClass({
 
     $(document).ready(function () {
       (function ($) {
-        /*$('#activitySearch').keyup(function () {
-          var rex = new RegExp($(this).val(), 'i');
-          $('#activityList tr').hide();
-          $('#activityList tr').filter(function () {
-            return rex.test($(this).text());
-          }).show();
-          $('#no-data').hide();
-          if($('#activityList tr:visible').length == 0){
-            $('#no-data').show();
-          }
-        });*/
         $("#age").keypress(function(event) {
           if (event.which == 45 || event.which == 46){
             event.preventDefault();
@@ -203,7 +192,7 @@ var Content = React.createClass({
           var month = dtToday.getMonth() + 1;
           var day = dtToday.getDate();
           var year = dtToday.getFullYear();
-          var minYear = year - 99;  
+          var minYear = year - 99;
 
           if(month < 10){
             month = '0' + month.toString();
@@ -474,41 +463,20 @@ var Content = React.createClass({
                     </div>
 
                     <div className="tab-pane" id="activity">
-                        <div className="row">
-                            <div className="col-sm-8"></div>
-                            <div className="col-sm-4 pull-right">
-                                {/*<div className="box-tools pull-right">
-                                    <div className="input-group stylish-input-group" id="searchField">
-                                        <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="activitySearch"/>
-                                        <span className="input-group-addon">
-                                            <div>
-                                                <span className="glyphicon glyphicon-search"></span>
-                                            </div>
-                                        </span>
-                                    </div>
-                                </div>*/}
-                            </div>
-                        </div>
                         <div className="table-responsive">
                             <div className="col-sm-12">
                                 <br/>
                                 <div className="box-body">
                                     <table id="userAct" className="table table-bordered table-hover">
                                         <thead>
-                                          <tr>
-                                            <th><center>ACTION</center></th>
-                                            <th><center>OBJECT</center></th>
-                                            <th><center>QUANTITY</center></th>
-                                            <th><center>DATE</center></th>
-                                          </tr>
+                                            <tr>
+                                                <th><center>ACTION</center></th>
+                                                <th><center>OBJECT</center></th>
+                                                <th><center>QUANTITY</center></th>
+                                                <th><center>DATE</center></th>
+                                            </tr>
                                         </thead>
                                         <tbody id="activityList">
-                                          {/*<tr id="no-data" style={{display:'none'}}>
-                                            <td><center>No Results Found.</center></td>
-                                            <td><center>No Results Found.</center></td>
-                                            <td><center>No Results Found.</center></td>
-                                            <td><center>No Results Found.</center></td>
-                                          </tr>*/}
                                         </tbody>
                                     </table>
                                 </div>

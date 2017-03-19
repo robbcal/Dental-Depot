@@ -53,3 +53,23 @@
     border:0;
     background:transparent;
 }
+
+#transactionTable td:nth-child(2), td:nth-child(3){
+    text-align: right;
+}
+
+#transactionTable td:nth-child(4){
+    text-align: left;
+}
+
+#transactionItemTable td:nth-child(2), td:nth-child(3), td:nth-child(4){
+    text-align: right;
+}
+
+#activityTable td:nth-child(4){
+    text-align: right;
+}
+
+#space{
+    margin-top: 20px;
+}

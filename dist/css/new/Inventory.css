@@ -11,6 +11,14 @@
     padding-right: 25px;
 }
 
+#itemTable td:nth-child(3) {
+    text-align: right;
+}
+
+.no-click {
+    pointer-events: none;
+}
+
 #userTable{
     margin-bottom: 20px;
 }

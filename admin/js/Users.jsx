@@ -134,7 +134,7 @@ var Content = React.createClass({
         var isDeleted = data.val().isDeleted;
         firstName = firstName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
         lastName = lastName.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-        
+
         if(isDeleted == false){
           $("#userList").append("<tr id="+id+"><td>"+firstName+" "+lastName+"</td><td>"+email+"</td><td>"+userType+"</td><td>"+status+"</td></tr>");
           $("#"+id+"").dblclick(function() {
@@ -168,17 +168,6 @@ var Content = React.createClass({
 
     $(document).ready(function () {
       (function ($) {
-        /*$('#tableSearch').keyup(function () {
-          var rex = new RegExp($(this).val(), 'i');
-          $('#userList tr').hide();
-          $('#userList tr').filter(function () {
-            return rex.test($(this).text());
-          }).show();
-          $('#no-data').hide();
-          if($('#userList tr:visible').length == 0){
-            $('#no-data').show();
-          }
-        });*/
         $("#age").keypress(function(event) {
           if (event.which == 45 || event.which == 46) {
             event.preventDefault();
@@ -189,15 +178,15 @@ var Content = React.createClass({
           var month = dtToday.getMonth() + 1;
           var day = dtToday.getDate();
           var year = dtToday.getFullYear();
-          var minYear = year - 99;  
+          var minYear = year - 99;
 
           if(month < 10){
             month = '0' + month.toString();
           }
           if(day < 10){
             day = '0' + day.toString();
-          }    
-              
+          }
+
           var maxDate = year + '-' + month + '-' + day;
           var minDate = minYear + '-' + month + '-' + day;
           $('#birthDate').attr('max', maxDate);
@@ -385,25 +374,12 @@ var Content = React.createClass({
           </form>
           <div className="box">
               <div className="box-header" id="headerContent">
-                  <div className="col-sm-4">
-                      {/*<div className="input-group stylish-input-group">
-                          <input type="text" name="tableSearch" id="tableSearch" className="form-control pull-right" placeholder="Search"/>
-                          <span className="input-group-addon">
-                              <div>
-                                  <span className="glyphicon glyphicon-search"></span>
-                              </div>
-                          </span>
-                      </div>*/}
-                  </div>
-                  <div className="col-sm-2"></div>
                   <div className="col-sm-6">
-                      <span className="pull-right">
-                          <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal">ADD USER</a>
-                      </span>
+                      <a className="btn btn-primary" id="addUserButton" href="" data-toggle="modal" data-target="#addUserModal">ADD USER</a>
                   </div>
               </div>
               <div className="box-body table-responsive" id="usersMainTable">
-                  <table id="user_table" className="table table-bordered table-hover">
+                  <table id="user_table" className="table table-bordered table-hover hover">
                       <thead>
                           <tr>
                               <th><center>USERNAME</center></th>
@@ -413,12 +389,6 @@ var Content = React.createClass({
                           </tr>
                       </thead>
                       <tbody id="userList">
-                          {/*<tr id="no-data" style={{display:'none'}}>
-                              <td><center>No Results Found.</center></td>
-                              <td><center>No Results Found.</center></td>
-                              <td><center>No Results Found.</center></td>
-                              <td><center>No Results Found.</center></td>
-                          </tr>*/}
                       </tbody>
                   </table>
               </div>

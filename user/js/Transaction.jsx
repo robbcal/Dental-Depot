@@ -160,7 +160,7 @@ var Content = React.createClass({
             var key = e.which;
             if ($.inArray(key, ar) > -1){
               e.preventDefault();
-              return false; 
+              return false;
             }
             return true;
         });
@@ -169,7 +169,7 @@ var Content = React.createClass({
             event.preventDefault();
           }
         });
-        $("#stock, #price").keydown(function(e){    
+        $("#stock, #price").keydown(function(e){
           e.preventDefault();
           return false;
         });
@@ -214,7 +214,7 @@ var Content = React.createClass({
       document.getElementById("errorMessage").innerHTML= "Insufficient stock";
       $('#errorModal').appendTo("body").modal('show');
       document.getElementById("number").value = "";
-    }  
+    }
   },
 
   addItemToTable: function(){
@@ -287,7 +287,7 @@ var Content = React.createClass({
 
     var date = document.getElementById("date").value;
     date = date+" "+time;
-    
+
     var release = document.getElementById("release").value;
     var total = document.getElementById("total").value;
     var tableLength = document.getElementById("transactionTable").rows.length - 1;

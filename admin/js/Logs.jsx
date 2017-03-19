@@ -249,34 +249,6 @@ var Content = React.createClass({
         });
     });
     document.getElementById("dateYesterday").innerHTML = yesterday;
-
-    $(document).ready(function () {
-      (function ($) {
-        /*$('#logsSearch').keyup(function () {
-          var rex = new RegExp($(this).val(), 'i');
-          $('#transactionList tr').hide();
-          $('#transactionList tr').filter(function () {
-              return rex.test($(this).text());
-          }).show();
-          $('#no-data-trans').hide();
-          if($('#transactionList tr:visible').length == 0){
-            $('#no-data-trans').show();
-          }
-        });
-
-        $('#activitySearch').keyup(function () {
-          var rex = new RegExp($(this).val(), 'i');
-          $('#activityList tr').hide();
-          $('#activityList tr').filter(function () {
-              return rex.test($(this).text());
-          }).show();
-          $('#no-data-activity').hide();
-          if($('#activityList tr:visible').length == 0){
-            $('#no-data-activity').show();
-          }
-        });*/
-      }(jQuery));
-    });
   },
 
   showTable: function(){
@@ -380,26 +352,11 @@ var Content = React.createClass({
                   </div>
 
                   <div className="tab-pane" id="transaction">
-                      <div className="row">
-                          <div className="col-sm-8"></div>
-                          <div className="col-sm-4 pull-right">
-                              {/*<div className="box-tools pull-right">
-                                  <div className="input-group stylish-input-group" id="logsTransSearch">
-                                      <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="logsSearch" onChange={this.showTable}/>
-                                      <span className="input-group-addon">
-                                          <div>
-                                              <span className="glyphicon glyphicon-search"></span>
-                                          </div>
-                                      </span>
-                                  </div>
-                              </div>*/}
-                          </div>
-                      </div>
                       <div className="table-responsive">
                           <div className="col-sm-12">
                               <br/>
                               <div className="box-body">
-                                  <table id="transactionTable" className="table table-bordered table-hover">
+                                  <table id="transactionTable" className="table table-bordered table-hover hover">
                                       <thead>
                                           <tr>
                                               <th><center>TRANSACTION ID</center></th>
@@ -409,12 +366,6 @@ var Content = React.createClass({
                                           </tr>
                                       </thead>
                                       <tbody id="transactionList">
-                                          {/*<tr id="no-data-trans" style={{display:'none'}}>
-                                              <td><center>No Results Found.</center></td>
-                                              <td><center>No Results Found.</center></td>
-                                              <td><center>No Results Found.</center></td>
-                                              <td><center>No Results Found.</center></td>
-                                          </tr>*/}
                                       </tbody>
                                   </table>
                               </div>
@@ -425,18 +376,7 @@ var Content = React.createClass({
                   <div className="tab-pane" id="activity">
                       <div className="row">
                           <div className="col-sm-8"></div>
-                          <div className="col-sm-4 pull-right">
-                              {/*<div className="box-tools pull-right">
-                                  <div className="input-group stylish-input-group" id="logsTransSearch">
-                                      <input type="text" name="tableSearch" className="form-control pull-right" placeholder="Search" id="activitySearch" onChange={this.showActivityTable}/>
-                                      <span className="input-group-addon">
-                                          <div>
-                                              <span className="glyphicon glyphicon-search"></span>
-                                          </div>
-                                      </span>
-                                  </div>
-                              </div>*/}
-                          </div>
+                          <div className="col-sm-4 pull-right"></div>
                       </div>
                       <div className="table-responsive">
                           <div className="col-sm-12">
@@ -454,13 +394,6 @@ var Content = React.createClass({
                                           </tr>
                                       </thead>
                                       <tbody id="activityList">
-                                          {/*<tr id="no-data-activity" style={{display:'none'}}>
-                                              <td><center>No Results Found.</center></td>
-                                              <td><center>No Results Found.</center></td>
-                                              <td><center>No Results Found.</center></td>
-                                              <td><center>No Results Found.</center></td>
-                                              <td><center>No Results Found.</center></td>
-                                          </tr>*/}
                                       </tbody>
                                   </table>
                               </div>
@@ -480,7 +413,7 @@ var Content = React.createClass({
                       <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12 table-responsive">
                           <div className="row">
                               <div className="col-sm-12" id="transTable">
-                                  <table className="table table-bordered table-striped dataTable" id="transactionItemTable">
+                                  <table className="table table-bordered dataTable hover" id="transactionItemTable">
                                       <thead>
                                           <tr>
                                               <th><center>ITEM NAME</center></th>
@@ -490,11 +423,11 @@ var Content = React.createClass({
                                           </tr>
                                       </thead>
                                       <tbody id="transactionTableBody">
-
                                       </tbody>
                                   </table>
                               </div>
                           </div>
+                          <div className="row" id="space"></div>
                           <div className="row">
                               <div className="col-sm-6">
                                   <h5 id="transDate"></h5>

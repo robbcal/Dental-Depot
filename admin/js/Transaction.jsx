@@ -120,9 +120,9 @@ var Content = React.createClass({
     });
 
     ref.on('child_removed', function(data) {
-      var id=data.key
+        var id=data.key
 
-      $("option#"+id).remove();
+        $("option#"+id).remove();
     });
 
     var now = new Date();
@@ -158,7 +158,7 @@ var Content = React.createClass({
             var key = e.which;
             if ($.inArray(key, ar) > -1){
               e.preventDefault();
-              return false; 
+              return false;
            }
           return true;
         });
@@ -167,7 +167,7 @@ var Content = React.createClass({
             event.preventDefault();
           }
         });
-        $("#stock, #price").keydown(function(e) {    
+        $("#stock, #price").keydown(function(e) {
           e.preventDefault();
           return false;
         });
@@ -205,14 +205,14 @@ var Content = React.createClass({
 
   checkStock: function(){
     var num = document.getElementById("number").value;
-    var max = document.getElementById("stock").value;  
+    var max = document.getElementById("stock").value;
     num = 0+num;
 
     if(Number(num) > max){
       document.getElementById("errorMessage").innerHTML= "Insufficient stock";
       $('#errorModal').appendTo("body").modal('show');
       document.getElementById("number").value = "";
-    }  
+    }
   },
 
   addItemToTable: function(){
@@ -225,7 +225,7 @@ var Content = React.createClass({
     if(id && num > 0){
       var ref = firebase.database().ref('items/'+id);
       ref.once('value', function(snapshot) {
-        var newStock = (Number(stock) - Number(num)); 
+        var newStock = (Number(stock) - Number(num));
         var subtotal = (Number(snapshot.val().price) * Number(num))
         var runningTotal = Number(total) + subtotal ;
 
@@ -285,7 +285,7 @@ var Content = React.createClass({
 
     var date = document.getElementById("date").value;
     date = date+" "+time;
-    
+
     var release = document.getElementById("release").value;
     var total = document.getElementById("total").value;
     var tableLength = document.getElementById("transactionTable").rows.length - 1;
@@ -398,7 +398,7 @@ var Content = React.createClass({
                       <div className="row">
                           <div className="col-sm-12">
                               <label>Item Name</label>
-                              <select id="item" className="form-control" onChange={this.displayItemOnModal}>
+                              <select id="item" className="form-control scrollable-menu" onChange={this.displayItemOnModal}>
                                   <option id="header" value="0">- Choose an item -</option>
                               </select>
                           </div>
