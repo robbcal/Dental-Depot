@@ -158,7 +158,7 @@ var Content = React.createClass({
     });
 
     $('#existingItemModal').on('hidden.bs.modal', function () {
-      $("#item option:eq(0)").attr("selected", "selected");
+      $('#item option').eq(0).prop('selected', true);
       document.getElementById("ID").value = "";
       document.getElementById("existingDescription").value = "";
       document.getElementById("existingPrice").value = "";
