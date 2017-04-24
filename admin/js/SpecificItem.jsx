@@ -897,7 +897,7 @@ var MainContent = React.createClass({
     if(this.state.signedIn == true){
       if(this.state.type == "admin"){
         res = (
-          <div>
+          <div className="wrapper">
               <Header/>
               <Body/>
           </div>

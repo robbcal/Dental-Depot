@@ -715,7 +715,7 @@ var MainContent = React.createClass({
         window.location.replace("../admin/Inventory.html");
       }else if(this.state.type == "user"){
         res = (
-          <div>
+          <div className="wrapper">
               <Header/>
               <Body/>
           </div>
