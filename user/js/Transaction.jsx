@@ -48,7 +48,7 @@ var Body = React.createClass({
                   </ul>
               </div>
           </div>
-          <div className="content-wrapper" style={{height: '100%', backgroundColor: '#e1e1e1'}}>
+          <div className="content-wrapper" style={{height: '100vh', backgroundColor: '#e1e1e1'}}>
               <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
                   <Content/>
               </div>

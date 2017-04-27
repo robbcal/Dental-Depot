@@ -77,7 +77,7 @@ var Body = React.createClass({
                   </ul>
               </section>
           </aside>
-          <div className="content-wrapper" style={{height: '100%', backgroundColor: '#e1e1e1'}}>
+          <div className="content-wrapper" style={{height: '100vh', backgroundColor: '#e1e1e1'}}>
               <div id="content" className="content" style={{backgroundColor: '#e1e1e1'}}>
                   <Content/>
               </div>
@@ -161,6 +161,8 @@ var Content = React.createClass({
               $("#transactionTableBody").append("<tr id="+id+"><td>"+itemName+"</td><td>"+itemQuantity+"</td><td>"+itemPrice+"</td></td><td>"+subtotal+"</td></tr>");
             });
             $('#transactionItemTable').DataTable({
+              dom: 'Bfrtip',
+              buttons: ['print'],
               "paging": true,
               "lengthChange": true,
               "searching": true,
@@ -174,6 +176,8 @@ var Content = React.createClass({
         });
       });
       $('#transactionTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: ['print'],
         "paging": true,
         "lengthChange": true,
         "searching": true,
@@ -202,6 +206,8 @@ var Content = React.createClass({
         $("#activityList").prepend("<tr id="+id+"><td>"+action+"</td><td>"+object+"</td><td>"+quantity+"</td><td>"+date+"</td><td>"+user+"</td></tr>");
       });
       $('#activityTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: ['print'],
         "paging": true,
         "lengthChange": true,
         "searching": true,
