@@ -63,6 +63,20 @@ var Content = React.createClass({
     }
   },
 
+  resetPassword: function(){
+    var emailAddress = document.getElementById("fEmail").value;
+
+    firebase.auth().sendPasswordResetEmail(emailAddress).then(function() {
+      $('#forgetPassModal').modal('hide');
+      $('#informSuccessAddExisting').appendTo("body").modal('show');
+      setTimeout(function() { $("#informSuccessAddExisting").modal('hide'); }, 1000);
+    }, function(error) {
+      $('#forgetPassModal').modal('hide');
+      document.getElementById("errorAlert").innerHTML= error;
+      $('#errorBox').show();
+    });
+  },
+
   render: function() {
     return (
     <div>
@@ -90,7 +104,47 @@ var Content = React.createClass({
                         LOGIN
                     </button></center>
                 </div>
-                <br/><br/>
+                <br/><br/><br/>
+                <div>
+                  <center><a id="forgotPassword" href="#" data-toggle="modal" data-target="#forgetPassModal" style={{color: 'red'}}>Forgot password?</a></center>
+                </div>
+
+                <div className="modal fade bs-example-modal-sm" id="forgetPassModal">
+                  <div className="modal-dialog modal-sm">
+                      <div className="modal-content">
+                          <div className="modal-header">
+                              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                              <h4 className="modal-title">Forgot Password?</h4>
+                          </div>
+                          <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                              <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                  <div>
+                                      <label>An email will be sent to your email address.</label>
+                                  </div>
+                                  <div>
+                                      <input type="email" id="fEmail" className="form-control" placeholder="Email" maxLength="50"/>
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="modal-footer">
+                              <button type="button" className="btn btn-primary" onClick={this.resetPassword}>SUBMIT</button>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+
+                <div className="modal fade modal-success" id="informSuccessAddExisting">
+                    <div className="modal-dialog modal-md">
+                        <div className="modal-content">
+                            <div className="modal-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <center>
+                                    <h4><strong>Email sent.</strong></h4>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div className="col-sm-12 col-lg-12 col-md-12">
                 <div className="alert alert-danger alert-dismissible col-sm-12" style={{display:'none'}} id="errorBox">
