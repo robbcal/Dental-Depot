@@ -1,4 +1,6 @@
-Dental-Depot
+#Dental-Depot
+
+deployed at: https://dental-depot.firebaseapp.com/
 
 An inventory software for Pamela's Dental Suppplies in fulfillment of our Software Engineering course
 
